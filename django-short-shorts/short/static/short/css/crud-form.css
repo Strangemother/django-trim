@@ -1,0 +1,18 @@
+
+* {/* color: #b07474; */}
+
+
+ul.crud-form {
+    /* border: solid; */
+    display: table;
+    margin: 0;
+    padding: 0;
+}
+
+ul.crud-form li {
+    display: table-row;
+}
+
+ul.crud-form li > * {
+    display: table-cell;
+}

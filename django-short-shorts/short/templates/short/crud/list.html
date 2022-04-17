@@ -1,0 +1,23 @@
+{% load static %}
+
+<h4>appname: {{ appname }}</h4>
+{{ model_name }}
+
+<a href='{% url appname|add:":"|add:model_name.lower|add:"-create" %}'>new</a>
+
+{% for item in object_list %}
+    <li><a href='{% url appname|add:":"|add:model_name.lower|add:"-detail" item.pk %}'>{{ item }}</a></li>
+{% endfor %}
+
+{% comment %}
+<ul>
+    <li><a href='{% url "create" %}'>new</a></li>
+</ul>
+
+<ul>
+    {% for item in object_list %}
+    <li><a href='{% url "detail" item.pk %}'>{{ item }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endcomment %}
