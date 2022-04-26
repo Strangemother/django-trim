@@ -3,6 +3,7 @@ from short import rand
 from django.contrib.auth import get_user_model as orig_get_user_model
 from uuid import uuid4 as orig_uuid4
 
+sys_bool = bool
 
 def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
 
@@ -12,7 +13,7 @@ def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
         if ('nil' in kw) or ('nil' in params):
             val = kw.get('nil', None) or params.get('nil', None)
 
-            if isinstance(val, bool):
+            if isinstance(val, sys_bool):
                 val = [val] * 2
 
                 kw.update(**blank_null(*val))
@@ -201,7 +202,8 @@ def fk(other, *a, on_delete=None, **kw):
 
 
 def user_fk(*a,**kw):
-    return fk(get_user_model(), *a, nil=True, **kw)
+    kw = defaults(a, kw, nil=True)
+    return fk(get_user_model(), *a, **kw)
 
 
 def m2m(other, *a, **kw):
@@ -213,7 +215,7 @@ def m2m(other, *a, **kw):
 
 def o2o(other, *a, on_delete=None, **kw):
     kw = defaults(a, kw, on_delete=on_delete or models.CASCADE)
-    return models.OneToOneField(other, *a, on_delete=on_delete, **kw)
+    return models.OneToOneField(other, *a, **kw)
 
 
 def user_o2o(*a, **kw):
@@ -414,7 +416,6 @@ def ip_addr(*a, **kw):
     return models.GenericIPAddressField(*a, **kw)
 
 
-
 def json(*a, **kw):
     """
     A field for storing JSON encoded data. In Python the data is represented
@@ -487,7 +488,6 @@ def pos_small_int(*a, **kw):
     """
     kw = defaults(a, kw, max_length=50, nil=True)
     return models.PositiveSmallIntegerField(*a, **kw)
-
 
 
 def slug(*a, **kw):
@@ -584,7 +584,15 @@ int_pos = pos_int
 int_small_pos = pos_small_int
 int_big_pos = pos_big_int
 int_ = integer
+int = integer
+
+bool_null = null_bool
+bool_true = true_bool
+bool_false = false_bool
+bool = boolean
+
 dt_blank = blank_dt
 
 o2o_user = user_o2o
 fk_user = user_fk
+

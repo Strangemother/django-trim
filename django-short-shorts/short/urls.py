@@ -89,7 +89,7 @@ def index(name):
     return
 
 
-def path_include(url_name, url_module, path_name=None):
+def path_include(url_name, url_module=None, path_name=None):
     """
         path_include('products/',)
         path_include('mythings/', 'products.urls', ) # name=mythings
@@ -120,7 +120,8 @@ def path_include(url_name, url_module, path_name=None):
     if name.endswith('/'):
         name = name[1:]
 
-    r[name] = (url, django_include(f'{name}.urls'), )
+    urlm = url_module or f'{name}.urls'
+    r[name] = (url, django_include(urlm), )
 
     return paths(**r)
 
@@ -363,10 +364,11 @@ def paths(**path_dict):
         (url, unit) = params
         func = unit
         if isinstance(func, tuple) is False:
+            if inspect.isfunction(func) is False:
 
-            mros = inspect.getmro(unit)
-            if flag_class in mros:
-                func = unit.as_view()
+                mros = inspect.getmro(unit)
+                if flag_class in mros:
+                    func = unit.as_view()
 
         p = path(url, func, name=name)
         r += (p,)
