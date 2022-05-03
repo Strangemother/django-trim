@@ -19,9 +19,11 @@ def grab_models(_models, ignore=None):
     items = ()
     for name in dir(_models):
         unit = getattr(_models, name)
-        if (name in ignore) or (unit in ignore):
+        meta = getattr(unit, '_meta', None)
+        if ((name in ignore)
+             or (unit in ignore)
+             or (meta and (meta.abstract is True))):
             continue
-
         if is_model(name, unit):
             items += (unit, )
     return items

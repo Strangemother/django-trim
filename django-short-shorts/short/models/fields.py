@@ -14,8 +14,10 @@ def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
             val = kw.get('nil', None) or params.get('nil', None)
 
             if isinstance(val, sys_bool):
+                # if the given value is a single bool,
+                # unpack and multiply into the count of
+                # args for the blank_null func,
                 val = [val] * 2
-
                 kw.update(**blank_null(*val))
 
     for k,v in kw.items():
@@ -575,6 +577,110 @@ def uuid(*a, **kw):
     kw  = defaults(a, kw, editable=False, default=orig_uuid4)
     return models.UUIDField(*a, **kw)
 
+# from django.contrib.contenttypes.fields import GenericForeignKey
+# from django.contrib.contenttypes.models import ContentType
+from django.apps import apps
+
+
+class LazyImport:
+    def get_GenericForeignKey(self):
+        from django.contrib.contenttypes.fields import GenericForeignKey
+        return GenericForeignKey
+
+    def get_ContentType(self):
+        from django.contrib.contenttypes.models import ContentType
+        # from django.contrib.contenttypes.fields import GenericForeignKey
+        return ContentType
+
+    def __getitem__(self, name):
+        return getattr(self, f'get_{name}')()
+
+
+GEN_C = {
+    'lazy': LazyImport()
+}
+
+
+def get_cached(name):
+    v = GEN_C.get(name, None)
+    if v is None:
+        v = GEN_C[name] = GEN_C['lazy'][name]
+    return v
+
+
+def contenttype_fk(content_type=None, *a, **kw):
+
+    # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    is_str = isinstance(content_type, str)
+    ContentType = get_cached('ContentType')
+    content_type = apps.get_model(content_type) if is_str else content_type
+    content_type = ContentType if content_type is None else content_type
+    kw  = defaults(a, kw, on_delete=models.CASCADE)
+    return fk(content_type, **kw)
+
+
+def generic_fk(content_type_field='content_type', id_field='object_id', **kw):
+    # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    # object_id = models.PositiveIntegerField()
+    # content_object = GenericForeignKey('content_type', 'object_id')
+    kw  = defaults(None, kw)
+    GenericForeignKey = get_cached('GenericForeignKey')
+
+    return GenericForeignKey(content_type_field, id_field)
+
+
+def any_model_set(*a, nil=True, **kw):
+    """
+    Apply a generic foreignkey insertion on a model using three fields:
+
+        GenericForeignKey   the field to manipulate: e.g. "Product.parent_entity"
+        FK: ContentType     The FK content_type, to store the ContentType model filter
+        Pos Int             The key of the target model.
+
+    Apply to the class as three arguments,
+
+        class Product(models.Model):
+            owner, content_type, object_id = shorts.any_model_set()
+
+    The name of `content_type` and `object_id` should match the key values
+    through the GenericForeignKey:
+
+
+        class Product(models.Model):
+            ( hobby,
+              hobby_content_type,
+              hobby_pk) = shorts.any_model_set(
+                                             "hobby_content_type",
+                                             "hobby_pk"
+                                             )
+
+    The first two parameters for the `any_model_set` function should match the
+    fields collected within the class:
+
+        class Product(models.Model):
+            owner, owner_content_type, owner_object_id = shorts.any_model_set(
+                                    # owner Generif FK target attributes.
+                                    'owner_content_type', 'owner_object_id')
+
+            (hobby,
+             hobby_content_type,
+             hobby_object_id) = shorts.any_model_set(
+                                        'hobby_content_type',
+                                        'hobby_object_id'
+                                    )
+
+
+    Use the field through the primary field name, in this case `owner`:
+
+        item = Product.objects.get(100)
+        item.owner = Other.objects.get(id=200)
+        item.save()
+    """
+    return (
+            generic_fk(*a, nil=nil),
+            contenttype_fk(nil=nil),
+            pos_int(nil=nil)
+        )
 
 auto_small = small_auto
 auto_big = big_auto
