@@ -1,6 +1,6 @@
 # Django Short Shorts
 
-Django Short Shorts (Or `short-shorts` for short) helps you quickly build boilerplate work for very fast prototyping and dev jumpstarts. With `short-shorts` minimal boilerplate code parts, build conventional urls, views, models without the hassle.
+Django Short Shorts helps boilerplate work for very fast prototyping and dev jumpstarts. With `short horts` minimal boilerplate code parts, build conventional urls, views, models without the hassle.
 
 > Use Short Shorts for boilerplate, PoC, or just pure laziness, to quickly write common django components.
 
@@ -10,10 +10,10 @@ Django Short Shorts (Or `short-shorts` for short) helps you quickly build boiler
 
 Download:
 
-    pip install PATH
+    pip install django-short-shorts
 
 
-### Integrate:
+### Install:
 
 Apply the app `short` to your `INSTALLED_APPS` within your `settings.py`:
 
@@ -34,8 +34,9 @@ You're ready to go.
 
 #### Optional Integration
 
-For usage of some micro tooling you may need to apply an entry to your `context_processors`
-Within the `TEMPLATES` entity, add `short.context.appname` to the `OPTIONS.context_processors`:
+Later-on you may need to apply an entry to your `context_processors`.
+
+Within the your settings `TEMPLATES` entity, add `short.context.appname` to the `OPTIONS.context_processors`:
 
     TEMPLATES = [
         {
@@ -51,6 +52,8 @@ Within the `TEMPLATES` entity, add `short.context.appname` to the `OPTIONS.conte
         },
     ]
 
+
+And that's it.
 
 
 ## Quick Guide
@@ -81,7 +84,7 @@ class Product(models.Model):
 
 Easy integrate `__str__` and `__repr__` with the `_short_string` trick:
 
-default:
+**Before** (default):
 
 ```py
 >>> p = models.Product.objects.first()
@@ -90,7 +93,7 @@ default:
 Product object (3)
 ```
 
-Short shorts upgrade:
+**add shorts** upgrade:
 
 ```py
 class Product(models.Model):
@@ -102,7 +105,7 @@ class Product(models.Model):
         return s.format(self=self)
 ```
 
-After:
+**After:**
 
 ```py
 >>> p = models.Product.objects.first()

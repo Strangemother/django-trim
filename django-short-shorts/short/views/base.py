@@ -25,6 +25,9 @@ from django.views.generic.dates import (
     YearArchiveView,
 )
 
+from django.contrib.auth import get_user_model
+
+
 from short import names as short_names
 
 

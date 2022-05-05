@@ -13,10 +13,26 @@ def is_model(name, unit):
 
     return False
 
+MODEL_CACHE = {}
+
+def cache_known(*_models):
+    for m in _models:
+        MODEL_CACHE[m._meta.label] = MODEL_CACHE[m._meta.model_name] = m
+
 
 def grab_models(_models, ignore=None):
     ignore = ignore or ()
+    if isinstance(ignore, str):
+        if ignore.endswith('.admin'):
+            # filter for any cached model, starting with the
+            # same key
+            a = ignore.split('.')[0]
+            a_dot = f'{a}.'
+            keep = {y for x,y in MODEL_CACHE.items() if x.startswith(a_dot)}
+            ignore = tuple(keep)
+
     items = ()
+
     for name in dir(_models):
         unit = getattr(_models, name)
         meta = getattr(unit, '_meta', None)
