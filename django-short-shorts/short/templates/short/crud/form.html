@@ -1,6 +1,4 @@
-{% extends "short/crud/base.html" %}
 {% load static %}
-{% block page_content %}
 
 <form method="post">
     <ul class="crud-form">
@@ -10,8 +8,5 @@
     {% csrf_token %}
 </form>
 
-{% endblock page_content %}
+<link rel="stylesheet" href="{% static 'short/css/crud-form.css' %}">
 
-{% block footer_js %}
-    <link rel="stylesheet" href="{% static 'short/css/crud-form.css' %}">
-{% endblock footer_js %}

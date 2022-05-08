@@ -178,6 +178,7 @@ def dt_updated(*a, **kw):
 
 
 def datetime(*a, **kw):
+    kw = defaults(a, kw)
     return models.DateTimeField(*a, **kw)
 
 
@@ -191,6 +192,7 @@ def integer(*a, **kw):
 
     if value is not None:
         kw.setdefault('default', value)
+    kw = defaults(a, kw)
     return models.IntegerField(*a, **kw)
 
 
@@ -576,6 +578,10 @@ def uuid(*a, **kw):
     """
     kw  = defaults(a, kw, editable=False, default=orig_uuid4)
     return models.UUIDField(*a, **kw)
+
+def str_uuid(*a, **kw):
+    kw  = defaults(a, kw, default=orig_uuid4)
+    return chars(*a, **kw)
 
 # from django.contrib.contenttypes.fields import GenericForeignKey
 # from django.contrib.contenttypes.models import ContentType

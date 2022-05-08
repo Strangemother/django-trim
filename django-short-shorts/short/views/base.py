@@ -360,7 +360,7 @@ def gen_class(crud_name, crud_parents, class_definition, class_module_name=None,
     class_members = copy_update(class_definition, **params)
     new_view_class = type(view_class_name, crud_parents, class_members)
 
-    print('Generating', view_class_name)
+    # print('Generating', view_class_name)
     setattr(module, view_class_name, new_view_class)
 
     return new_view_class

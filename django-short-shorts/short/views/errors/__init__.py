@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from .custom404 import *
 
 def handler404(request, exception):
     # page_not_found_view
@@ -19,3 +19,4 @@ def handler403(request, exception=None):
 def handler400(request, exception=None):
     # bad_request_view
     return render(request, "short/errors/400.html", { 'status_code': 400})
+
