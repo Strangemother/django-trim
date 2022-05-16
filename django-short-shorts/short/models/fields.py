@@ -2,8 +2,14 @@ from django.db import models
 from short import rand
 from django.contrib.auth import get_user_model as orig_get_user_model
 from uuid import uuid4 as orig_uuid4
+# from django.contrib.contenttypes.fields import GenericForeignKey
+# from django.contrib.contenttypes.models import ContentType
+from django.apps import apps
+
 
 sys_bool = bool
+sys_int = int
+
 
 def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
 
@@ -224,6 +230,14 @@ def o2o(other, *a, on_delete=None, **kw):
 
 def user_o2o(*a, **kw):
     return o2o(get_user_model(), *a, **kw)
+
+
+def user_m2m(*a, **kw):
+    """Create a many to many relationship to the user model,
+    bound through get_user_model().
+    """
+    return m2m(get_user_model(), *a, **kw)
+
 
 
 def image(*a, **kw):
@@ -579,13 +593,10 @@ def uuid(*a, **kw):
     kw  = defaults(a, kw, editable=False, default=orig_uuid4)
     return models.UUIDField(*a, **kw)
 
+
 def str_uuid(*a, **kw):
     kw  = defaults(a, kw, default=orig_uuid4)
     return chars(*a, **kw)
-
-# from django.contrib.contenttypes.fields import GenericForeignKey
-# from django.contrib.contenttypes.models import ContentType
-from django.apps import apps
 
 
 class LazyImport:
