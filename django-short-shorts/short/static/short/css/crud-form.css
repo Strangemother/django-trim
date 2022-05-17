@@ -16,3 +16,37 @@ ul.crud-form li {
 ul.crud-form li > * {
     display: table-cell;
 }
+
+
+.grid ul.crud-form > li {
+    display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr 1fr auto;
+  grid-auto-columns: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+margin: 1em 0;}
+
+.grid ul.crud-form li label { /* border:solid; */ grid-area: 2 / 1 / 3 / 2; align-items: flex-end;/* border: solid; */display: flex;z-index: 1;border-bottom: solid 3px transparent;/* transition: all .3s ease; */color: #0158a9;font-size: 1em;}
+
+.grid ul.crud-form li input { grid-area: 3 / 1 / 3 / 2; font-family: inherit;}
+
+.grid ul.crud-form li .helptext { grid-area: 4 / 1 / 4 / 2; color: #606060; max-width: 22em;padding-right: 2em;font-size: 1rem;}
+
+
+.grid ul.crud-form li input[type="text"], .grid ul.crud-form li input[type="password"] {font-size: inherit;padding: 0.4em 0.3em 0.3em;border: none;border-bottom: solid 3px #ddd;font-size: 1.2em;background: transparent;}
+
+.grid ul.crud-form li:focus-within {/* color: red; */}
+
+.grid ul.crud-form li:focus-within label {/* grid-area: 1 / 1 / 2 / 2; */}
+
+.grid ul.crud-form {}
+
+.grid ul.crud-form li input[type="text"]:focus {outline: none;border-bottom-color: #0158a9;color: black;text-shadow: 0 0 0.6px #000000b8;}
+
+.grid {/* background: #f1f1f1; */padding: 1em 2em 2em;border: solid 1px #50779b66;/* border-radius: 0.4em; */box-shadow: 0em 0.1em 0.3em -0.1em #0000007a;}
+
+.grid ul.crud-form li:first-child {margin-top: 0;}
+
+
+.grid ul.crud-form+.actions {justify-content: flex-end;display: flex;padding-top: 2em;}

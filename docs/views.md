@@ -1,5 +1,62 @@
 # Views
 
+`short.views` contains a range of view generators, to produce clean class based views automatically.
+
+! Note:
+  Be careful when implementing auto-views and auto-urls as they **will** expose urls you won't want in production.
+
+Views are generated at runtime (before django loads) to act the same as physically typed classes.
+
+The finished classes are:
+
++ Inheritable: You can extend upon these ghost classes
++ Importable: Import them as if they exist in the code
++ Inspectable: Generate Docs or use runtime inspectors against the classes
++ Independent injected: Run the crud_classes function from anywhere (such as a ready function)
+
+> consider the `shorts.urls.as_templates()` for producing views for HTML files
+
+## Generating Views:
+
+In dev it would be nice to quickly spit out a model, with a Create, Read, Update, Delete viewset.
+
+Within your app `views.py`, apply the magic methods:
+
+
+_views.py_
+```py
+from short import views as shorts
+
+shorts.crud_classes()
+# shorts.history_classes()
+```
+
+This will produce all the listed views, for all discovered models, within this app.
+
+You'll need URLs to match:
+
+_urls.py_
+```py
+from short import grab_models, names, urls as shorts
+# Our app usual components
+from . import views, models
+
+app_name = 'products'
+
+urlpatterns = shorts.paths_default(views, grab_models(models),
+    views=names.crud()# + names.history(),
+)
+```
+
+And that's it. For all models within this app, we have a crud set:
+
+```
+    orgs/ company/list/ [name='company-list']
+    orgs/ company/create/ [name='company-create']
+    orgs/ company/update/<str:pk>/ [name='company-update']
+    orgs/ company/delete/<str:pk>/ [name='company-delete']
+    orgs/ company/detail/<str:pk>/ [name='company-detail']
+```
 
 ## Overriding Views
 
@@ -63,5 +120,197 @@ class MyModelDetailView(shorts.DetailView):
 
 
 shorts.crud_classes() # Will detect MyModelDetailView and reuse it.
+```
+
+
+Or with less magic, Generate views for a single or many target models:
+
+```py
+# from django.shortcuts import render
+from short import views as shorts
+from short.models import grab_models
+from . import models
+
+# Generate class views for the Product model in this module ("product.views")
+shorts.crud_classes(__name__, models.Product)
+
+# Generate views for all models from the import:
+shorts.crud_classes(__name__, grab_models(models))
+```
+
+
+## Implementing Views for a Model
+
+In this example, we'll product a range of views for a single model.
+
+
++ Working with our custom app `orgs`, created with: `python manage.py orgs`
++ Your own templates are required `appname/templates/appname/modelname_viewname.html`
+
+
+We start with a model in `models.py`:
+
+```py
+from django.db import models
+from short import shorts
+
+class Company(models.Model):
+    name = shorts.chars(255)
+    owner = shorts.user_m2m(related_name='company_owner')
+    # All users associated with this company.
+    people = shorts.user_m2m()
+    created = shorts.dt_created()
+    updated = shorts.dt_updated()
+```
+
+Then we need a view for the model (or many models). Within `views.py`:
+
+```py
+from django.shortcuts import render
+from short import views as shorts
+
+from . import models
+
+
+# create Create, List, Update, Delete
+shorts.crud_classes(__name__, models.Company)
+```
+
+Finally we bind those views to some urls. Within the `urls.py`:
+
+```py
+urlpatterns += shorts.paths_default(views, grab_models(models),
+    views=names.crud()
+)
+```
+
+this one is slightly _magic_, for it lists _names_ `list, create, update...` and
+`shorts` is aware of the convention to provide the correct class inheritance.
+
+This will produce a list of views for your model:
+
+```
+    orgs/ company/list/ [name='company-list']
+    orgs/ company/create/ [name='company-create']
+    orgs/ company/update/<str:pk>/ [name='company-update']
+    orgs/ company/delete/<str:pk>/ [name='company-delete']
+    orgs/ company/detail/<str:pk>/ [name='company-detail']
+```
+
+This app `orgs` should be installed and applied as an `include` within the
+primary application routing `urls.py`
+
+Import the include and use the name of the module as the url primary pattern:
+
+Within your **primary url dispatch** (your main app `urls.py`), extend the existing
+urlpatterns:
+
+
+```py
+
+urlpatterns = urlpatterns + [
+    # For anything not caught by a more specific rule above, hand over to
+    # Wagtail's page serving mechanism. This should be the last pattern in
+    # the list:
+    path("", include(wagtail_urls)),
+
+
+
+
+    path("", IndexView.as_view()),
+    # url('', include('social_django.urls', namespace='social'))
+    path("pages/", include(wagtail_urls)),
+
+] + includes(       # ... same as:
+      'account',    # path("account/", include('account.urls')),
+      'products',   # path("products/", include('products.urls')),
+      'baskets',    # path("baskets/", include('baskets.urls')),
+      'orgs',
+    )
+```
+
+## Implementing Views for All Models
+
+In the previous example the `views.py` captures one model, but you can perform the same on _all_ existing models.
+
+
+Within your application `views.py` (in our case the `orgs` app):
+
+```py
+# from django.shortcuts import render
+from short import views as shorts
+from short.models import grab_models
+from . import models
+
+
+# Generate class views for the Product model in this module ("product.views")
+# shorts.crud_classes(__name__, models.Product) # replace this
+
+# Generate views for all models from the import:
+shorts.crud_classes(__name__, grab_models(models))
+```
+
+### Understanding `crud_classes`
+
+The `crud_classes` function produces runtime classes using meta-programming and inserts the finished product into a target module. Essentially `shorts` attempts to _write the real class_ into the module.
+
+The finished classes are:
+
++ Inheritable: You can extend upon these ghost classes
++ Importable: Import them as if they exist in the code
++ Inspectable: Generate Docs or use runtime inspectors against the classes
++ Independent injected: Run the crud_classes function from anywhere (such as a ready function)
+
+we pass `__name__` here to ensure the new classes are inserted into our target (runtime) module. This could also say:
+
+```
+shorts.crud_classes("product.views", grab_models(models))
+```
+
+## Implementing History Classes for Models
+
+
+For a single
+
+Generate the set of class based views for a single model for 'history' models:
+
++ ArchiveIndexView
++ DateDetailView
++ DayArchiveView
++ MonthArchiveView
++ TodayArchiveView
++ WeekArchiveView
++ YearArchiveView
+
+
+_views.py_
+```py
+# from django.shortcuts import render
+from short import views as shorts
+from . import models
+
+# Build many views for the single model
+shorts.history(models.Product)
+
+# Specify the target module (this one "products.views") and the views `date_field`
+shorts.history(models.Product, __name__, date_field='created')
+```
+
+Apply a range of URLs for the history views. user `shorts.names.history()` for easy typing:
+
+_urls.py_
+```py
+from django.urls import path
+
+from short import grab_models, urls as shorts, names
+from . import views, models
+
+app_name = 'products'
+
+urlpatterns = shorts.paths_default(views, grab_models(models),
+    # names are lists of strings, we can append to the exist
+    # (from the previous example)
+    views=names.crud() + names.history(),
+)
 ```
 
