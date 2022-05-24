@@ -715,6 +715,7 @@ bool_false = false_bool
 bool = boolean
 
 dt_blank = blank_dt
+dt = datetime
 
 o2o_user = user_o2o
 fk_user = user_fk
