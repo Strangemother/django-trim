@@ -214,8 +214,8 @@ def paths_named(views, view_prefix=None, ignore_missing_views=False, url_pattern
             # convert the 'list' to 'ListView'
             solution = (MAPPED_NAMES.get(app_name), solution)
 
-        class_name, url = solution
-        new_patterns[class_name] = (app_name, url)
+        class_name, url, *extra = solution
+        new_patterns[class_name] = (app_name, url,) + tuple(extra)
 
     return paths_dict(views, new_patterns, view_prefix,
         url_pattern_prefix=url_pattern_prefix,
@@ -310,11 +310,11 @@ def paths_dict(views, patterns, view_prefix=None,
             app_name = MAPPED_CLASS.get(last_name, current_name)
             solution = (app_name, solution,)
 
-        path_name, url = solution
+        path_name, url, *extra = solution
 
         furl = f'{url_pattern_prefix}{url}'
         fname = f'{url_name_prefix}{path_name}'
-        d[fname] = (furl, view)
+        d[fname] = (furl, view,) + tuple(extra)
 
     return paths(**d)
 
@@ -337,6 +337,8 @@ def as_templates(**props):
 
     """
     return [template_view(*v, name=k) for k,v in props.items()]
+
+from functools import reduce
 
 
 def paths(**path_dict):
@@ -361,14 +363,15 @@ def paths(**path_dict):
     flag_class = View
     r = ()
     for name, params in dict(path_dict).items():
-        (url, unit) = params
+        (url, unit, *extra) = params
         func = unit
         if isinstance(func, tuple) is False:
             if inspect.isfunction(func) is False:
 
                 mros = inspect.getmro(unit)
                 if flag_class in mros:
-                    func = unit.as_view()
+                    view_params = {k: v for d in extra for k, v in d.items()}
+                    func = unit.as_view(**view_params)
 
         p = path(url, func, name=name)
         r += (p,)
