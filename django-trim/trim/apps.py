@@ -4,7 +4,7 @@ from django.db.models.signals import pre_init
 
 class ShortConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'short'
+    name = 'trim'
 
     def ready(self):
         # Implicitly connect a signal handlers decorated with @receiver.

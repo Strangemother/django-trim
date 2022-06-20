@@ -1,6 +1,6 @@
 
 from django.http import Http404
-from django.shortcuts import redirect
+from django.trimcuts import redirect
 from django.urls import reverse
 
 
@@ -12,7 +12,7 @@ from django.views.generic import TemplateView
 
 class Custom404TemplateView(TemplateView):
     status_code = 404
-    template_name = 'short/errors/404.html'
+    template_name = 'trim/errors/404.html'
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)

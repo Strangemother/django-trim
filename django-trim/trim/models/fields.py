@@ -1,5 +1,5 @@
 from django.db import models
-from short import rand
+from trim import rand
 from django.contrib.auth import get_user_model as orig_get_user_model
 from uuid import uuid4 as orig_uuid4
 # from django.contrib.contenttypes.fields import GenericForeignKey
@@ -44,7 +44,7 @@ def url(*a, **kw):
     provide as a standard field:
 
         class MyModel(models.Model):
-            url = shorts.url(max_length=2000)
+            url = trims.url(max_length=2000)
 
     A CharField for a URL, validated by URLValidator.
     The default form widget for this field is a URLInput.
@@ -81,7 +81,7 @@ def chars(first_var=None, *a, **kw):
         # Set as default
         max_length = kw.get('max_length', None)
         if kw.get('default', None) is not None:
-            s = ('shorts.chars(*default_or_max_length, **params) accepts a'
+            s = ('trims.chars(*default_or_max_length, **params) accepts a'
                 ' "default" keyword argument or a function as the first'
                 ' argument. Not both.')
             # chars(255)
@@ -509,7 +509,7 @@ def pos_small_int(*a, **kw):
 
 
 def slug(*a, **kw):
-    """Slug is a newspaper term. A slug is a short label for something,
+    """Slug is a newspaper term. A slug is a trim label for something,
     containing only letters, numbers, underscores or hyphens. They’re generally
     used in URLs.
 
@@ -549,7 +549,7 @@ def time(*a, **kw):
 
         class TimeField(auto_now=False, auto_now_add=False, **options)
 
-    The default form widget for this field is a TimeInput. The admin adds some JavaScript shortcuts.
+    The default form widget for this field is a TimeInput. The admin adds some JavaScript trimcuts.
     """
     kw = defaults(a, kw, nil=True)
     return models.TimeField(*a, **kw)
@@ -657,7 +657,7 @@ def any_model_set(*a, nil=True, **kw):
     Apply to the class as three arguments,
 
         class Product(models.Model):
-            owner, content_type, object_id = shorts.any_model_set()
+            owner, content_type, object_id = trims.any_model_set()
 
     The name of `content_type` and `object_id` should match the key values
     through the GenericForeignKey:
@@ -666,7 +666,7 @@ def any_model_set(*a, nil=True, **kw):
         class Product(models.Model):
             ( hobby,
               hobby_content_type,
-              hobby_pk) = shorts.any_model_set(
+              hobby_pk) = trims.any_model_set(
                                              "hobby_content_type",
                                              "hobby_pk"
                                              )
@@ -675,13 +675,13 @@ def any_model_set(*a, nil=True, **kw):
     fields collected within the class:
 
         class Product(models.Model):
-            owner, owner_content_type, owner_object_id = shorts.any_model_set(
+            owner, owner_content_type, owner_object_id = trims.any_model_set(
                                     # owner Generif FK target attributes.
                                     'owner_content_type', 'owner_object_id')
 
             (hobby,
              hobby_content_type,
-             hobby_object_id) = shorts.any_model_set(
+             hobby_object_id) = trims.any_model_set(
                                         'hobby_content_type',
                                         'hobby_object_id'
                                     )

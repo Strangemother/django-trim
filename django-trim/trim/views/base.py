@@ -3,7 +3,7 @@ import inspect
 from pathlib import Path
 
 from django.apps import apps
-from django.shortcuts import render
+from django.trimcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
@@ -28,7 +28,7 @@ from django.views.generic.dates import (
 from django.contrib.auth import get_user_model
 
 
-from short import names as short_names
+from trim import names as trim_names
 
 
 ALL = '__ALL__'
@@ -38,7 +38,7 @@ class ShortMixin:
 
     def get_template_names(self):
         v = super().get_template_names()
-        mapped_name = short_names.get_mapped_name(self)
+        mapped_name = trim_names.get_mapped_name(self)
         p = Path(v[0])
         name = p.stem.replace(f'{self.model.__name__.lower()}_', '')
         v += [
@@ -46,8 +46,8 @@ class ShortMixin:
             f'crud/{name}.html',
             f'crud/{mapped_name}.html',
             # Builtins
-            f'short/crud/{name}.html',
-            f'short/crud/{mapped_name}.html',
+            f'trim/crud/{name}.html',
+            f'trim/crud/{mapped_name}.html',
         ]
         return v
 
@@ -78,8 +78,8 @@ def first_bit(word):
 
 def discover_models(target_name, models=None, module_needles=None):
     """
-    shorts.guess_classes(models=grab_models(models))
-    shorts.guess_classes()
+    trims.guess_classes(models=grab_models(models))
+    trims.guess_classes()
     """
 
     if models is not None:
@@ -131,7 +131,7 @@ def crud_classes(target_name=None, model_class=None, success_url=None,
 def history_classes(target_name=None, model_class=None, models=None, class_module_name=None,
                     module_needles=None, **base_definition) -> tuple:
     """Generate a range of "history" class-based-views for the given `model_class`
-    list. This is synonymous to calling `short.views.history` repeatedly.
+    list. This is synonymous to calling `trim.views.history` repeatedly.
 
     Given a `model_class` as a `models.Model`, `list` or `tuple` type, build a
     set of Archive based views into the `target_name`.
@@ -146,7 +146,7 @@ def history_classes(target_name=None, model_class=None, models=None, class_modul
             is applied. (default: {None})
         model_class {models.Model, tuple, list} -- The target model or models
             to generate views. If `None` dicover the models using
-            `short.views.discover_models` (default: {None})
+            `trim.views.discover_models` (default: {None})
         models {list, tuple} -- Use an explicit list of `models` over `model_class`.
             If `None` the model_class is used (default: {None})
         class_module_name {str} -- The string name of the module to insert the
@@ -246,7 +246,7 @@ def crud(model, class_module_name=None, success_url=None, success_url_bit='list'
 
 def history(model, class_module_name=None, **base_definition):
     """
-        shorts.history(models.Product, __name__, date_field='created')
+        trims.history(models.Product, __name__, date_field='created')
     """
 
     if class_module_name is None:

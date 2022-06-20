@@ -2,11 +2,11 @@
 Register your models in the admin -
 
     from django.contrib import admin
-    from short import admin as shorts
+    from trim import admin as trims
 
     from . import models
 
-    shorts.register_models(models)
+    trims.register_models(models)
 
 """
 
@@ -18,24 +18,24 @@ from .models import grab_models, cache_known
 
 def register_models(models, ignore=None):
     """Register a list of models within the standard admin site register,
-    calling upon short.models.grab_models() to detect the inbound models.
+    calling upon trim.models.grab_models() to detect the inbound models.
 
     Provide an ignore list to omit models from the register; in such cases as
     model pollution from app imports, or modeladmin customisation.
 
     string method:
 
-        shorts.register_models(models, ignore=['GenericProduct'])
+        trims.register_models(models, ignore=['GenericProduct'])
 
     models:
 
-        shorts.register_models(models, ignore=[models.GenericProduct])
+        trims.register_models(models, ignore=[models.GenericProduct])
 
     With model register detection:
 
-        shorts.register_models(models, ignore=__name__)
+        trims.register_models(models, ignore=__name__)
 
-    Use `ignore=__name__` in conjunction with the `@short.admin.register`
+    Use `ignore=__name__` in conjunction with the `@trim.admin.register`
     """
     return admin.site.register(grab_models(models, ignore=ignore))
 
@@ -44,10 +44,10 @@ def register(*a, **kw):
     """Perform a standard django `admin.register(Model)` with the model being
     _cached_ for later assessment duringthe grab models ignore filters.
 
-    Replace `admin.register` with `shorts.register`:
+    Replace `admin.register` with `trims.register`:
 
         from django.contrib import admin
-        from short import admin as shorts
+        from trim import admin as trims
         from . import models
 
         # Standard
@@ -56,17 +56,17 @@ def register(*a, **kw):
             pass
 
 
-    Exactly the same through shorts:
+    Exactly the same through trims:
 
         from django.contrib import admin
-        from short import admin as shorts
+        from trim import admin as trims
         from . import models
 
-        @shorts.register(models.GenericProduct)
+        @trims.register(models.GenericProduct)
         class GenericProductAdmin(admin.ModelAdmin):
             pass
 
-    Utilising `shorts.register` captures the used model, therefore when
+    Utilising `trims.register` captures the used model, therefore when
     registering generic model views, the `ignore` method may identify the module
     names to exclude:
 
@@ -78,14 +78,14 @@ def register(*a, **kw):
                             models.AnotherModel, ...)
 
 
-    short method allows importing of _all_ models:
+    trim method allows importing of _all_ models:
 
         from . import models
-        shorts.register_models(models)
+        trims.register_models(models)
 
     Ignore previously registered models:
 
-        shorts.register_models(models,
+        trims.register_models(models,
                 ignore=['GenericProduct', models.Anothermodel])
 
 
@@ -93,12 +93,12 @@ def register(*a, **kw):
     the _current_ module e.g. `products.admin`.
 
         # within admin.py
-        shorts.register_models(models, ignore=__name__)
+        trims.register_models(models, ignore=__name__)
 
         ## Synonymous to
-        shorts.register_models(models, ignore='products.admin')
+        trims.register_models(models, ignore='products.admin')
 
-    Any model previously utilised by `@shorts.register` for the products module
+    Any model previously utilised by `@trims.register` for the products module
     is automatically exlcuded.
     """
     cache_known(*a)

@@ -17,9 +17,9 @@ Short URL to help lighten the load for dev urls
     to this:
 
         from . import models
-        from short.models import grab_models
+        from trim.models import grab_models
 
-        urlpatterns = shorts.paths_default(views, grab_models(models),
+        urlpatterns = trims.paths_default(views, grab_models(models),
             views=('list', 'create', 'update', 'delete', 'detail',),
         )
 
@@ -27,9 +27,9 @@ Short URL to help lighten the load for dev urls
     or this:
 
         from . import models
-        from short.models import grab_models
+        from trim.models import grab_models
 
-        urlpatterns = shorts.paths_less(views, grab_models(models),
+        urlpatterns = trims.paths_less(views, grab_models(models),
             ignore_missing_views=True,
             list='',
             create='new/',
@@ -47,8 +47,8 @@ from  django.views.generic import View, TemplateView
 import inspect
 import sys
 
-from short.names import *
-from . import names as short_names
+from trim.names import *
+from . import names as trim_names
 
 
 urlpatterns = [
@@ -101,7 +101,7 @@ def path_include(url_name, url_module=None, path_name=None):
         from django.contrib import admin
         from django.urls import path, include
 
-        from short.urls import path_include, path_includes, error_handlers
+        from trim.urls import path_include, path_includes, error_handlers
 
         app_name = 'shoppinglist'
 
@@ -129,9 +129,9 @@ def path_include(url_name, url_module=None, path_name=None):
 def paths_default(views_module, model_list, ignore_missing_views=True, views=None, **options):
     """
         from . import models
-        from short.models import grab_models
+        from trim.models import grab_models
 
-        urlpatterns = shorts.paths_default(views, grab_models(models),
+        urlpatterns = trims.paths_default(views, grab_models(models),
             ignore_missing_views=True,
             views=('list', 'create', 'update', 'delete', 'detail',),
         )
@@ -139,7 +139,7 @@ def paths_default(views_module, model_list, ignore_missing_views=True, views=Non
     patterns = {}
 
     for name in views:
-        url = short_names.get_url(name)
+        url = trim_names.get_url(name)
         patterns[name] = url
 
     return paths_less(
@@ -152,9 +152,9 @@ def paths_default(views_module, model_list, ignore_missing_views=True, views=Non
 def paths_less(views, model_list, ignore_missing_views=False, **patterns):
     """
         from . import models
-        from short.models import grab_models
+        from trim.models import grab_models
 
-        urlpatterns = shorts.paths_less(views, grab_models(models),
+        urlpatterns = trims.paths_less(views, grab_models(models),
             ignore_missing_views=True,
             list='',
             create='new/',
@@ -183,7 +183,7 @@ def paths_less(views, model_list, ignore_missing_views=False, **patterns):
 def paths_named(views, view_prefix=None, ignore_missing_views=False, url_pattern_prefix=None,
         url_name_prefix=None, **patterns):
     """
-        urlpatterns = shorts.paths_named(views,
+        urlpatterns = trims.paths_named(views,
             view_prefix='Product',
 
             list=('ListView',''),
@@ -195,9 +195,9 @@ def paths_named(views, view_prefix=None, ignore_missing_views=False, url_pattern
 
     or less:
 
-        from short import urls as shorts
+        from trim import urls as trims
 
-        urlpatterns = shorts.paths_named(views,
+        urlpatterns = trims.paths_named(views,
             view_prefix='Product',
             # name_genfix="{view_prefix}{mapped_name}View",
             list='',
@@ -227,27 +227,27 @@ def paths_tuple(views, patterns, **kw):
     """Setup URLS using a tuple of tuples, with each given tuple prepared
     and passed to the paths_dict:
 
-        from short import urls as shorts
+        from trim import urls as trims
 
-        short_patterns = (
+        trim_patterns = (
             ('NoteIndexView', 'index', '' ),
             ('EntryJsonList', 'entity-list-json', 'entry/list/json/' ),
             ('EntryDetailView', 'entry-detail-json', '<str:pk>/json/' ),
         )
 
-        urlpatterns = shorts.paths_tuple(views, short_patterns)
+        urlpatterns = trims.paths_tuple(views, trim_patterns)
 
     Of which is the same as:
 
-        from short import urls as shorts
+        from trim import urls as trims
 
-        short_patterns = dict(
+        trim_patterns = dict(
             NoteIndexView=('index', ''),
             EntryJsonList=('entity-list-json', 'entry/list/json/',),
             EntryDetailView=('entry-detail-json', '<str:pk>/json/', ),
         )
 
-        urlpatterns = shorts.paths_dict(views, short_patterns)
+        urlpatterns = trims.paths_dict(views, trim_patterns)
     """
     d_patt = {}
 
@@ -265,7 +265,7 @@ def paths_dict(views, patterns, view_prefix=None,
     """Given the views module and the patterns,
     generate a shjort path list.
 
-        short_patterns = {
+        trim_patterns = {
             'ProductListView': '',
             'ProductCreateView': ('create', 'new/'),
             'ProductUpdateView': ('update', 'change/<str:pk>/'),
@@ -273,9 +273,9 @@ def paths_dict(views, patterns, view_prefix=None,
             'ProductDetailView': '<str:pk>/',
         }
 
-        urlpatterns = shorts.paths_dict(views, short_patterns)
+        urlpatterns = trims.paths_dict(views, trim_patterns)
 
-        short_patterns = dict(
+        trim_patterns = dict(
             ListView='',
             CreateView=('create', 'new/'),
             UpdateView=('update', 'change/<str:pk>/'),
@@ -283,8 +283,8 @@ def paths_dict(views, patterns, view_prefix=None,
             DetailView='<str:pk>/',
         )
 
-        urlpatterns = shorts.paths_dict(views, short_patterns, view_prefix='Product')
-        urlpatterns = shorts.paths_dict(views, short_patterns, view_prefix='People')
+        urlpatterns = trims.paths_dict(views, trim_patterns, view_prefix='Product')
+        urlpatterns = trims.paths_dict(views, trim_patterns, view_prefix='People')
 
     """
     flag_class = View
@@ -322,7 +322,7 @@ def paths_dict(views, patterns, view_prefix=None,
 def template_view(url_string, html_path, name='template_view'):
 
     # urlpatterns += [
-    #     shorts.template_view('mockup/', 'mockup/crystal-geometries.html')
+    #     trims.template_view('mockup/', 'mockup/crystal-geometries.html')
     # ]
 
     return path(url_string, TemplateView.as_view(template_name=html_path), name=name)
@@ -331,7 +331,7 @@ def template_view(url_string, html_path, name='template_view'):
 def as_templates(**props):
     """
 
-        urlpatterns += shorts.as_templates(
+        urlpatterns += trims.as_templates(
             geoms=('mockup/', 'mockup/crystal-geometries.html')
         )
 
@@ -343,7 +343,7 @@ from functools import reduce
 
 def paths(**path_dict):
     """
-        urlpatterns = shorts.paths(
+        urlpatterns = trims.paths(
             list=('', views.ProductListView,),
             create=('new/', views.ProductCreateView,),
             update=('change/<str:pk>/', views.ProductUpdateView,),
@@ -384,22 +384,22 @@ def error_handlers(name, setup=None, template_dir=None):
 
         error_handers(__name__)
         error_handers(__name__, {
-                400: 'shorts.views.errors.handler400',
-                403: 'shorts.views.errors.handler403',
-                404: 'shorts.views.errors.handler404',
-                500: 'shorts.views.errors.handler500',
-            }, template_dir='short/errors/'
+                400: 'trims.views.errors.handler400',
+                403: 'trims.views.errors.handler403',
+                404: 'trims.views.errors.handler404',
+                500: 'trims.views.errors.handler500',
+            }, template_dir='trim/errors/'
         )
 
     """
 
     defaults = {
-        400: 'short.views.errors.handler400',
-        403: 'short.views.errors.handler403',
-        404: 'short.views.errors.handler404',
-        500: 'short.views.errors.handler500',
+        400: 'trim.views.errors.handler400',
+        403: 'trim.views.errors.handler403',
+        404: 'trim.views.errors.handler404',
+        500: 'trim.views.errors.handler500',
     }
-    default_template_dir = 'short/errors/'
+    default_template_dir = 'trim/errors/'
     template_dir = template_dir or default_template_dir
     defaults.update(setup or {})
 

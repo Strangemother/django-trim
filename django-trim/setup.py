@@ -1,13 +1,13 @@
 from setuptools import setup
 
-setup(name='django-short-shorts',
+setup(name='django-trim',
       version='0.1',
-      description='Django Short Shorts',
+      description='Django Trim',
       url='http://github.com/strangemother/django-short-shorts',
-      author='Jay Jagpal',
-      author_email='jay@strangemother.com',
+      author='Just Jay',
+      author_email='django-trim@strangemother.com',
       license='MIT',
-      py_modules=['short'],
+      py_modules=['trim'],
       classifiers=[
         'Programming Language :: Python :: 3',
       ],
