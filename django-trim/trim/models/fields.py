@@ -720,3 +720,5 @@ dt = datetime
 o2o_user = user_o2o
 fk_user = user_fk
 
+created = dt_created
+updated = dt_updated

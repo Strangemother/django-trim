@@ -5,6 +5,9 @@ from django.forms import widgets
 def boolean(*a, **kw):
     return forms.BooleanField(*a,**kw)
 
+def boolean_false(*a, **kw):
+    kw.setdefault('required', False)
+    return boolean(*a, **kw)
 
 def chars(*a, **kw):
     return forms.CharField(*a,**kw)
@@ -12,6 +15,12 @@ def chars(*a, **kw):
 
 def password(*a, **kw):
     widget = widgets.PasswordInput()
+    kw.setdefault('widget', widget)
+    return char(*a, **kw)
+
+def text(*a, attrs=None,rows=3, cols=30, **kw):
+    attrs = attrs or {'rows': rows, 'cols': cols}
+    widget = widgets.Textarea(attrs=attrs)
     kw.setdefault('widget', widget)
     return char(*a, **kw)
 
@@ -120,4 +129,6 @@ img = image
 int = integer
 pwd = password
 bool = boolean
+bool_false = boolean_false
 str = char = chars
+textarea = text
