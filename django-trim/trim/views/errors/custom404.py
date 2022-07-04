@@ -1,6 +1,6 @@
 
 from django.http import Http404
-from django.trimcuts import redirect
+from django.shortcuts import redirect
 from django.urls import reverse
 
 

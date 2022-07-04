@@ -183,6 +183,13 @@ def dt_updated(*a, **kw):
     return datetime(*a, **kw)
 
 
+def dt_cu_pair(*a, **kw):
+    return (
+        dt_created(*a, **kw),
+        dt_updated(*a, **kw),
+    )
+
+
 def datetime(*a, **kw):
     kw = defaults(a, kw)
     return models.DateTimeField(*a, **kw)
@@ -237,7 +244,6 @@ def user_m2m(*a, **kw):
     bound through get_user_model().
     """
     return m2m(get_user_model(), *a, **kw)
-
 
 
 def image(*a, **kw):
@@ -636,7 +642,11 @@ def contenttype_fk(content_type=None, *a, **kw):
     return fk(content_type, **kw)
 
 
-def generic_fk(content_type_field='content_type', id_field='object_id', **kw):
+CONTENT_TYPE_FIELD = 'content_type'
+ID_FIELD = 'object_id'
+
+
+def generic_fk(content_type_field=CONTENT_TYPE_FIELD, id_field=ID_FIELD, **kw):
     # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     # object_id = models.PositiveIntegerField()
     # content_object = GenericForeignKey('content_type', 'object_id')
@@ -644,6 +654,42 @@ def generic_fk(content_type_field='content_type', id_field='object_id', **kw):
     GenericForeignKey = get_cached('GenericForeignKey')
 
     return GenericForeignKey(content_type_field, id_field)
+
+
+def add_generic_key(model, field, content_type_field=None, id_field=None, **kw):
+    owner, content_type, object_id = any_model_set(**kw)
+    setattr(model, field, owner)
+    content_type_field = content_type_field or f"{field}_content_type"
+    pk_field = id_field or f"{field}_object_id"
+    setattr(model, content_type_field, content_type)
+    setattr(model, pk_field, object_id)
+    return model
+
+
+def any(prefix, content_type_field=None, id_field=None, **kw):
+    """Allow a shorter syntax for calling any_model_set by assigning a 'prefix'
+    to the default content_type and object_id associated fields names.
+
+    before:
+
+       (unit,
+        unit_content_type,
+        unit_object_id) = fields.any_model_set('unit_content_type',
+                                               'unit_object_id'
+                                               )
+
+    after:
+
+        unit, unit_content_type, unit_object_id = fields.any(prefix='unit')
+
+
+    """
+    prefix = prefix or ""
+    pr_u = f"{prefix}_" if len(prefix) > 0 else ''
+    content_type_field = content_type_field or f"{pr_u}{CONTENT_TYPE_FIELD}"
+    id_field = id_field or f"{pr_u}{ID_FIELD}"
+
+    return any_model_set(content_type_field, id_field, **kw)
 
 
 def any_model_set(*a, nil=True, **kw):
@@ -698,6 +744,9 @@ def any_model_set(*a, nil=True, **kw):
             contenttype_fk(nil=nil),
             pos_int(nil=nil)
         )
+
+
+float = float_
 
 auto_small = small_auto
 auto_big = big_auto

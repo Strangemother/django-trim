@@ -1,4 +1,4 @@
-from django.trimcuts import render
+from django.shortcuts import render
 from .custom404 import *
 
 def handler404(request, exception):

@@ -3,7 +3,7 @@ import inspect
 from pathlib import Path
 
 from django.apps import apps
-from django.trimcuts import render
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
