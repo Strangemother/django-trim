@@ -51,6 +51,21 @@ from trim.names import *
 from . import names as trim_names
 
 
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
+
+def favicon_path(ingress_path='favicon.ico', static_path='images/{ingress_path}'):
+    static_path = static_path.format(ingress_path=ingress_path)
+    return static_redirect_path(ingress_path, static_path)
+
+def static_redirect_path(ingress_path, static_path):
+    return path(ingress_path,
+            RedirectView.as_view(
+                url=staticfiles_storage.url(static_path)
+                )
+            )
+
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
 ]
