@@ -33,6 +33,25 @@ class JSONResponseMixin(object):
         return context
 
 
+class JsonView(JSONResponseMixin, TemplateView):
+    prop = 'object'
+
+    def get_serialiser(self):
+        serial_data = JsonSerializer()
+        # serial_data.get_dump_object = self.get_dump_object
+        return serial_data
+
+    def get(self, request, *args, **kwargs):
+        # serial = self.get_serialiser()
+        result = self.get_data()
+        # r = serial.serialize([result])
+        data = {
+            self.prop:result
+        } if self.prop is not None else result
+
+        return self.render_to_json_response(data, **kwargs)
+
+
 class JsonListView(JSONResponseMixin, DetailView):
     fields = None
     model = None
@@ -60,6 +79,7 @@ class JsonListView(JSONResponseMixin, DetailView):
         serial = self.get_serialiser()
         result = self.get_results()
         r = serial.serialize(result)
+
         data = {
             self.prop:r
         }

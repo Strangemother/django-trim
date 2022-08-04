@@ -43,3 +43,10 @@ def grab_models(_models, ignore=None):
         if is_model(name, unit):
             items += (unit, )
     return items
+
+
+from django.apps import apps
+
+
+def get_model(*a, **kw):
+    return apps.get_model(*a, **kw)
