@@ -10,33 +10,7 @@ from django.apps import apps
 sys_bool = bool
 sys_int = int
 
-
-def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
-
-    if nil_sub:
-        # nil subtract, or substitution
-        #  Nil. being blank+null - where nil=True
-        if ('nil' in kw) or ('nil' in params):
-            val = kw.get('nil', None) or params.get('nil', None)
-
-            if isinstance(val, sys_bool):
-                # if the given value is a single bool,
-                # unpack and multiply into the count of
-                # args for the blank_null func,
-                val = [val] * 2
-                kw.update(**blank_null(*val))
-
-    for k,v in kw.items():
-        if k == nil_key:
-            continue
-        params.setdefault(k, v)
-    params.pop('nil', None)
-    return params
-
-
-def blank_null(b=True, n=True):
-    return {'blank':b, 'null': n}
-
+from .base import *
 
 def url(*a, **kw):
     """A django `models.URLField` passing any arguments and keyword arguments

@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import widgets
+from . import widgets
 
 
 def boolean(*a, **kw):

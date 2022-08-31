@@ -23,13 +23,18 @@ def cache_known(*_models):
 def grab_models(_models, ignore=None):
     ignore = ignore or ()
     if isinstance(ignore, str):
-        if ignore.endswith('.admin'):
+        ignore = (ignore,)
+
+    igs = ()
+    for ig in ignore:
+        if ig.endswith('.admin'):
             # filter for any cached model, starting with the
             # same key
-            a = ignore.split('.')[0]
+            a = ig.split('.')[0]
             a_dot = f'{a}.'
             keep = {y for x,y in MODEL_CACHE.items() if x.startswith(a_dot)}
-            ignore = tuple(keep)
+            igs += tuple(keep)
+    ignore += igs
 
     items = ()
 
