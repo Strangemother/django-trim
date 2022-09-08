@@ -1,58 +1,208 @@
-# Django Short Shorts
+# Django Trim
 
-> short shortcuts to standard implementation.
+> Django Trim shortcuts all the boilerplate for some of those daily django parts. Reduce the amount of written text and trim your code for easier reading, faster prototyping, and less typing.
 
-Django Short Shorts reduces the amount of text, imports and general congantive overload of microtasks when plugging together a django app in it's initial stages.
+Django Trim reduces the amount of text, imports and general congantive overload of microtasks when plugging together a django app in it's initial stages.
+
++ Less typed text, same functionality
++ clear, predicable functional naming
++ Leverage conventions for faster prototyping
++ 100% compatible with existing django components.
+
+## Trim Examples
+
+Some quick examples to quickly trim your code.
+
+### Models
+
+Reduce typing on models! Import ready-to-use fields for your models. All
+fields shadow the existing django field:
+
+_models.py_
+```py
+from django.db import models
+from trim.models import fields
+
+class ContactMessage(models.Model):
+    user = fields.user_fk(nil=True)
+    sender = fields.email(nil=True)
+    cc_myself = fields.bool_false()
+    subject = fields.chars(max_length=255, nil=True)
+    message = fields.text(nil=False)
+    created, updated = fields.dt_cu_pair()
+```
+
+### Forms
+
+Reduce typing on forms! Use the fields to quickly flesh out your form fields.
+All django fields are interchangable. Some are convenience tools such as the `trim.forms.fields.text()` TextArea input field:
+
+_forms.py_
+```py
+from django import forms
+from trim.forms import fields
+
+class ContactForm(forms.Form):
+    sender = fields.email(required=False) # EmailField
+    cc_myself = fields.bool_false() # A boolean field if `False` prepared
+    subject = fields.chars(max_length=255, required=False) # CharField
+    message = fields.text(required=True) # A ready-to-go CharField with a TextArea widget
+```
+
 
 Drop in a few shortcuts to quickly infer (and plug-in) required parts for your apps. For example, we can generate a `CreateView`, `UpdateView`, `ListView` and `DeleteView` for all our models, with one line:
 
-_views.py_:
+
+### Views
+
+Reduce Typing on views is more interesting. Generate a _Create_, _Read_, _Update_, _Delete_ set of views for a model:
+
+_views.py_
 ```py
-from short import views as shorts
-shorts.crud_classes()
+from django.shortcuts import render
+
+from trim import views
+from . import models, forms
+
+views.crud(models.ContactMessage)
+
+# or DANGEROUSLY do **all** discovered models.
+views.crud_classes()
 ```
 
-## Naming Convention
+This writes the views as you would by hand, allowing real inheritence and imports. The `views.crud` produces five Class Based Views. Looking something similar to this:
 
-The library is called `short`, and each module with `short` replicates a standard django setup. For example, an app models: `todo.models` would be `short.models`.
-
-In your module, consider calling the imported `short` unit as `shorts` (plural):
-
+_views.py (meta class result)_
 ```py
-# urls.py
-from short import urls as shorts
-shorts.paths_dict(...)
+from trim import views
+from . import models
 
-# views.py
-from short import views as shorts
-shorts.crud_classes()
+class ContactMessageListView(views.ListView):
+    model = models.ContactMessage
 
-# models.py
-from short import models as shorts
-shorts.grab_models('todo')
+
+class ContactMessageCreateView(views.CreateView):
+    model = models.ContactMessage
+    fields = '__all__'
+
+
+class ContactMessageUpdateView(views.UpdateView):
+    model = models.ContactMessage
+    fields = '__all__'
+
+
+class ContactMessageDeleteView(views.DeleteView):
+    model = models.ContactMessage
+    success_url = reverse_lazy('products:list')
+
+
+class ContactMessageDetailView(views.DetailView):
+    model = models.ContactMessage
 ```
 
-Although not the standard pythonic way it highlights the utility _is_ django-short-shorts and not the standard `django` or _your own_ `views`/`models`/etc.
+The same appled for other view-packs; such as `history`.
 
-> The purpose of Django Short Shorts is replace it. Eventually you'll implment true code to override the `shorts`, hence **we don't want _your_ `short.shorts` to get in the way of real code...**.
+> There is no magic. Django Trim generates **real** class instances using meta classing (It's as if you wrote the code by hand!)
 
-## Where are the `shorts`?
-
-"Django Short Shorts" provides the parent `short` lib. All modules within `short` are have a standard name convention. When implementing the `shorts` (plural), you'll implement a `short` part as your usable module:
+Apply along with your existing views, to mix and match your complexity requirements:
 
 ```py
-from short import views as shorts
+from django.shortcuts import render
+
+from trim import views
+from . import models, forms
+
+views.history(models.ContactMessage, __name__, date_field='created')
+
+class ContactFormSuccessView(views.TemplateView):
+    template_name = 'contact/success.html'
+
+class ContactMessageListView(views.IsStaffMixin, views.ListView):
+    # MUST BE STAFF TO ACCESS
+    model = models.ContactMessage
+
+# django trim is aware of already existing classes
+# through the naming convention and will omit ContactMessageListView (above)
+views.crud(models.ContactMessage)
+
+class ContactMessageDetailView(views.IsStaffMixin, views.DetailView):
+    """Override the trim generated detail view to apply an 'IsStaffMixin'
+    """
+    model = models.ContactMessage
+
 ```
 
-Hence you have your "short shorts". Notably this naming convention was chosen to ensure the end-user implements `shorts` (plural) - leading to less ambigiation.
+### Admin
 
+Instantly and automatically generate admin views for incoming models.
 
+```py
+from django.contrib import admin
+from trim import admin as t_admin
 
-## Why.
+from . import models
 
-I write a lot of django code, and I'm constantly implementing the core basics, or applying a _"place holder"_ component until I need a fancy replacement. I've become constantly bored with writing _yet another quick list view_ and considered an application to help me boilerplate my work _as I'm developing_, but implement clear, short, standard methodology until I upgrade to a finished view.
-Futhermore the boilerplate tool could infer urls, admin, models etc - plugging the gaps until I implement a long-term replacement.
+t_admin.register_models(models)
+```
 
-I originally started an app called 'django boilerplate' (or something similar) to perform this task, however it acted as a transpiler and phyically wrote clean code into the python file. However this quickly became unweildly.
+Or use the model detection functions to use the standard admin site register function:
 
-This second version was born from a bunch of tiny shortcuts through many projects; finally solving the issue. As such 99% of the functionality is passive, reading the runtime and producing classes, paths, upon django wakeup and injecting into the module.
+_admin.py_
+```py
+from django.contrib import admin
+from trim.models import grab_models
+from . import models
+# Register all discovered models, ignoring any indirect imports
+admin.site.register(grab_models(models, ignore=['User']))
+```
+
+### URLs
+
+Help the readability of your `urls.py`:
+
+```py
+
+from trim import t_urls
+from trim.models import grab_models
+
+from . import views
+
+app_name = 'contact'
+
+urlpatterns = t_urls.paths_named(views,
+    success=('ContactFormSuccessView', 'thanks/',),
+    # reference trim generated views.
+    sheet=('ContactMessageListView', 'sheet/',),
+    detail=('ContactMessageDetailView', 'sheet/<str:pk>/',),
+)
+```
+
+Perform Full includes through single entries, each expand to the conventional include:
+
+```py
+from trim.urls import path_includes as includes
+
+urlpatterns += includes(
+        'account', # path('account/', include('accounts'))
+        'products',
+        'contact',
+    )
+```
+
+Maybe just a `TemplateView` or four:
+
+_urls.py (extended from above)_
+```py
+urlpatterns += t_urls.as_templates(
+    geoms=('mockup/', 'mockup/crystal-geometries.html'),
+    crystal1=('mockup/1/', 'mockup/crystal-1.html'),
+    home=('mockup/home/', 'mockup/home.html'),
+    v1_article=('mockup/article/', 'mockup/v1-article.html'),
+    advert_cell=('advert/1/', 'small_adverts.html')
+)
+
+urlpatterns += [
+    t_urls.template_view('mockup/2', 'mockup/crystal-geometries.html')
+]
+```
+
