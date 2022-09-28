@@ -1,0 +1,4 @@
+[tool.portray]
+output_dir = "documentation_website"
+modules = ["trim"]
+port = 8001

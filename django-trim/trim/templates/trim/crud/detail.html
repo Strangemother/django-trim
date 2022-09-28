@@ -1,0 +1,11 @@
+<ul>
+    {% with part=appname|add:":"|add:model_name.lower|add:"-" %}
+        <li><a href='{% url part|add:"detail" object.pk %}'>{{ object }}</a></li>
+        <li><a href='{% url part|add:"create" %}'>new</a></li>
+        <li><a href='{% url part|add:"list" %}'>list</a></li>
+        <li><a href='{% url part|add:"update" object.pk %}'>update</a></li>
+        <li><a href='{% url part|add:"delete" object.pk %}'>delete</a></li>
+    {% endwith %}
+</ul>
+
+{% include "trim/crud/object.html" %}
