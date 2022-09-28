@@ -95,6 +95,7 @@ def path_includes(*names):
 
     return paths(**r)
 
+include = path_includes
 
 def path_urls(views, path_rels):
     for url, view_call in path_rels:
@@ -273,10 +274,12 @@ def paths_tuple(views, patterns, **kw):
     return paths_dict(views, d_patt, **kw)
 
 
-def paths_dict(views, patterns, view_prefix=None,
+def paths_dict(views, patterns=None, view_prefix=None,
     ignore_missing_views=False,
     url_pattern_prefix=None,
     url_name_prefix=None,
+    safe_prefix=False,
+    **kw,
     ):
     """Given the views module and the patterns,
     generate a shjort path list.
@@ -306,16 +309,20 @@ def paths_dict(views, patterns, view_prefix=None,
     flag_class = View
     # r = ()
     d = {}
-
+    patterns = patterns or {}
     view_prefix = clean_str(view_prefix)
     url_pattern_prefix = clean_str(url_pattern_prefix)
     url_name_prefix = clean_str(url_name_prefix)
 
+    patterns.update(kw)
+
     for part_name, solution in patterns.items():
         class_name = f"{view_prefix}{part_name}"
+
         try:
             view = getattr(views, class_name)
         except AttributeError as e:
+
             if ignore_missing_views is False:
                 raise e
             continue
@@ -330,9 +337,16 @@ def paths_dict(views, patterns, view_prefix=None,
 
         furl = f'{url_pattern_prefix}{url}'
         fname = f'{url_name_prefix}{path_name}'
+        if (fname in d) or (safe_prefix is True):
+            fname = f"{part_name.lower()}-{fname}"
         d[fname] = (furl, view,) + tuple(extra)
 
-    return paths(**d)
+
+
+    r = paths(**d)
+
+    return r
+
 
 
 def template_view(url_string, html_path, name='template_view'):
@@ -353,6 +367,7 @@ def as_templates(**props):
 
     """
     return [template_view(*v, name=k) for k,v in props.items()]
+
 
 from functools import reduce
 
@@ -388,7 +403,7 @@ def paths(**path_dict):
                 if flag_class in mros:
                     view_params = {k: v for d in extra for k, v in d.items()}
                     func = unit.as_view(**view_params)
-
+        print('Makeing', url, func,name)
         p = path(url, func, name=name)
         r += (p,)
 

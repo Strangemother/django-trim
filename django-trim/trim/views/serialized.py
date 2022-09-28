@@ -26,11 +26,11 @@ class JSONResponseMixin(object):
         """
         return JsonResponse(context,)
 
-    def get_data(self, context):
+    def get_data(self):
         """
         Returns an object that will be serialized as JSON by json.dumps().
         """
-        return context
+        return {}
 
 
 class JsonView(JSONResponseMixin, TemplateView):
@@ -62,7 +62,7 @@ class JsonListView(JSONResponseMixin, DetailView):
 
         if keys == '__all__':
             r = ()
-            for field in self.model._meta.fields:
+            for field in obj._meta.fields:
                 r += (field.attname, )
             keys = r
         return { x: getattr(obj, x) for x in keys}
@@ -93,10 +93,17 @@ class JsonDetailView(JsonListView):
         return self.model.objects.get(id=self.kwargs['pk'])
 
     def get(self, request, *args, **kwargs):
+        return self.json_response(self, **kwargs)
+
+    def json_response(self, obj=None):
+        data = self.generate_response(obj)
+        return self.render_to_json_response(data)
+
+    def generate_response(self, obj=None):
         serial = self.get_serialiser()
-        result = self.get_results()
+        result = obj or self.get_results()
         r = serial.serialize([result])
         data = {
             self.prop:r[0]
         }
-        return self.render_to_json_response(data, **kwargs)
+        return data

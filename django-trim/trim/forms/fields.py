@@ -26,6 +26,12 @@ def boolean_false(*a, **kw):
     kw.setdefault('required', False)
     return boolean(*a, **kw)
 
+def boolean_true(*a, **kw):
+    """A standard `forms.BooleanField` field with the `required` as `False`
+    for a boolean with a default False value."""
+    kw.setdefault('initial', True)
+    return boolean(*a, **kw)
+
 
 def chars(*a, **kw):
     """A standard `forms.CharField` field."""
@@ -176,5 +182,6 @@ int = integer
 pwd = password
 bool = boolean
 bool_false = boolean_false
+bool_true = boolean_true
 str = char = chars
 textarea = text

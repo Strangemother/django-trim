@@ -196,6 +196,10 @@ def user_fk(*a,**kw):
     kw = defaults(a, kw, nil=True)
     return fk(get_user_model(), *a, **kw)
 
+def self_fk(*a,**kw):
+    kw = defaults(a, kw, nil=True)
+    return fk('self', *a, **kw)
+
 
 def m2m(other, *a, **kw):
     """
@@ -203,6 +207,8 @@ def m2m(other, *a, **kw):
     kw = defaults(a, kw, blank=True)
     return models.ManyToManyField(other, *a, **kw)
 
+def self_m2m(*a, **kw):
+    return m2m('self', *a, **kw)
 
 def o2o(other, *a, on_delete=None, **kw):
     kw = defaults(a, kw, on_delete=on_delete or models.CASCADE)
@@ -732,9 +738,10 @@ int_big_pos = pos_big_int
 int_ = integer
 int = integer
 
-bool_null = null_bool
-bool_true = true_bool
-bool_false = false_bool
+boolean_null = bool_null = null_bool
+boolean_true = bool_true = true_bool
+boolean_false = bool_false = false_bool
+
 bool = boolean
 
 dt_blank = blank_dt
@@ -742,6 +749,8 @@ dt = datetime
 
 o2o_user = user_o2o
 fk_user = user_fk
+fk_self = self_fk
+m2m_self = self_m2m
 
 created = dt_created
 updated = dt_updated

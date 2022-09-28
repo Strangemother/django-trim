@@ -5,20 +5,25 @@ https://docs.wagtail.org/en/stable/reference/streamfield/blocks.html
 
 try:
 
-    from wagtail.blocks import *
+    try:
+        from wagtail.blocks import *
+        from wagtail.fields import StreamField
+    except ImportError as e:
+        from wagtail.core.blocks import *
+        from wagtail.core.fields import StreamField
+
     from wagtail.embeds.blocks import EmbedBlock
     from wagtail.snippets.blocks import SnippetChooserBlock
     from wagtail.images.blocks import ImageChooserBlock
     from wagtail.documents.blocks import DocumentChooserBlock
-    from wagtail.fields import StreamField
     # StreamField
     PREPARED = True
 except ImportError as e:
     PREPARED = False
     raise e
 
-if PREPARED:
-    streamfield = stream_field = wagtail.fields.StreamField
+if PREPARED is True:
+    streamfield = stream_field = StreamField
 
 
 def chars(*a, **kw):
@@ -136,4 +141,4 @@ page_chooser = pagechooser
 document_chooser = documentchooser
 image_chooser = imagechooser
 snippet_chooser = snippetchooser
-stream_block = block
+stream_block = stream
