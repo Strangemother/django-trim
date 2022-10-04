@@ -11,4 +11,10 @@ setup(name='django-trim',
       classifiers=[
         'Programming Language :: Python :: 3',
       ],
-      zip_safe=True)
+      zip_safe=True,
+      entry_points = {
+            'console_scripts': [
+                  'trim=trim.cli.primary:main'
+            ],
+      }
+)
