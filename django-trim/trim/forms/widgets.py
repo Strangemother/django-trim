@@ -118,7 +118,7 @@ def split_date_time(*a, **kw):
     return widgets.SplitDateTimeWidget(*a, **kw)
 
 
-def split_hidden_date_timet(*a, **kw):
+def split_hidden_date_time(*a, **kw):
     """SplitHiddenDateTimeWidget"""
     return widgets.SplitHiddenDateTimeWidget(*a, **kw)
 
