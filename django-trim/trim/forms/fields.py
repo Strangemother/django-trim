@@ -38,6 +38,11 @@ def chars(*a, **kw):
     return forms.CharField(*a,**kw)
 
 
+def hidden_chars(*a, **kw):
+    kw.setdefault('widget', widgets.hidden())
+    return chars(*a, **kw)
+
+
 def password(*a, **kw):
     """A standard `forms.CharField` field. with a password input widget"""
     widget = widgets.password()
@@ -78,9 +83,35 @@ def duration(*a, **kw):
     return forms.DurationField(*a,**kw)
 
 
+# def email(*a, **kw):
+#     """A standard `forms.EmailField` field."""
+#     attrs = _pop('attrs', kw)
+#     res = forms.EmailField(*a,**kw)
+#     _push(attrs, res.widget.attrs.update)
+#     return res
+
 def email(*a, **kw):
     """A standard `forms.EmailField` field."""
-    return forms.EmailField(*a,**kw)
+    widget_update = lambda field, data: field.widget.attrs.update(data)
+    res = _pop_push('attrs', widget_update,
+                    forms.EmailField, *a,**kw)
+    return res
+
+def _pop_push(field, pushed, callable_unit, *a, **kw):
+    """Pop and push back the field onto the callable unit
+            _pop_push('attrs', res.widget.attrs.update,
+                        forms.EmailField, *a,**kw)
+    """
+    attrs = _pop(field, kw)
+    res = callable_unit(*a,**kw)
+    _push(attrs, pushed, res)
+    return res
+
+def _pop(key, kw):
+    return kw.pop(key) if key in kw else None
+
+def _push(data, lam, *a):
+    return lam(*a, data) if data is not None else None
 
 
 def file(*a, **kw):
@@ -175,7 +206,24 @@ def split_datetime(*a, **kw):
     """A standard `forms.SplitDateTimeField` field."""
     return forms.SplitDateTimeField(*a,**kw)
 
+def hidden(field=None, **kwargs):
+    """Wrap a callable or field instance with `hidden()` to automatically
+    apply a _hidden_ widget.
 
+    If the given field is callable, the function is called before applying
+    the `widgets.hidden` to the field instance.
+
+        class StockNotifyForm(forms.Form):
+            product_id = fields.hidden(fields.chars)
+            email = fields.email()
+
+    """
+    if field is None:
+        return hidden_chars(**kwargs)
+    if callable(field):
+        field = field()
+    field.widget = widgets.hidden(**kwargs)
+    return field
 
 img = image
 int = integer
@@ -184,4 +232,6 @@ bool = boolean
 bool_false = boolean_false
 bool_true = boolean_true
 str = char = chars
+chars_hidden = chars
+hide = hidden
 textarea = text
