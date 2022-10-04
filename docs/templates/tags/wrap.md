@@ -10,6 +10,30 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 {% endwrap %}
 ```
 
+## Usage
+
+The `wrap` tag accepts _with_ statement keyword arguments.
+
+```html
+{% load trim %}
+
+{% quickform "products:stock-notify-form" as stock_form %}
+{% wrap "fragments/form.html" with form=stock_form %}{% endwrap %}
+```
+
+You can test for empty content using standard template tags.
+
+```html
+<ul class="crud-form {% if wrap.content %}has-wrap-content{% else %}no-wrap-content{% endif %}">
+    {% if wrap.content %}
+        {{ wrap.content }}
+    {% else %}
+        {{ form.as_ul }}
+    {% endif %}
+</ul>
+```
+
+
 ## Example
 
 For this example the `wrap_form.html` accepts some some HTML in place of a _form_:
@@ -40,3 +64,4 @@ The template `stocks/wrap_forms.html` should refer to the `wrap.content` and any
 ```
 
 It's similar to an `include` tag with some extra body.
+
