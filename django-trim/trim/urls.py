@@ -41,7 +41,7 @@ Short URL to help lighten the load for dev urls
 
 """
 from django.contrib import admin
-from django.urls import path, include as django_include
+from django.urls import path, include as django_include, reverse
 from  django.views.generic import View, TemplateView
 
 import inspect
@@ -53,6 +53,22 @@ from . import names as trim_names
 
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
+
+
+
+def absolute_reverse(request, name, *args):
+    fa_url = reverse(name, args=args)
+    return absolutify(request, fa_url)
+
+
+def absolutify(request, path):
+    base_url =  "{0}://{1}{2}".format(
+            request.scheme,
+            request.get_host(),
+            path,
+            )
+    return base_url
+
 
 def favicon_path(ingress_path='favicon.ico', static_path='images/{ingress_path}'):
     static_path = static_path.format(ingress_path=ingress_path)
@@ -90,7 +106,7 @@ def path_includes(*names):
         flat_names += name
 
     for fln in flat_names:
-        print('Making', fln)
+        # print('Making', fln)
         r[fln] = f'{fln}/', django_include(f'{fln}.urls')
 
     return paths(**r)
