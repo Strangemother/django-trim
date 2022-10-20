@@ -1,5 +1,6 @@
 
 from django.db.models import Model
+from .models.auto import hook_init_model_mixins
 
 
 def str_printer(self, alts=None):
@@ -49,8 +50,10 @@ def repr_printer(self):
 
 
 def model_pre_init(sender, args, kwargs, **kw):
+    hook_init_model_mixins(sender)
+
     if hasattr(sender, '_trim_string') or hasattr(sender, '_trim_props'):
-        print('model_pre_init', sender, kw)
+        # print('model_pre_init', sender, kw)
         if sender.__str__ == Model.__str__:
             sender.__str__ = str_printer
 
