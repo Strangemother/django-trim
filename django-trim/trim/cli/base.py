@@ -188,6 +188,7 @@ class AppArgument(AppFunction):
 class NoPosition(Exception):
     pass
 
+import argparse
 
 class AppActions(ConfigMixin):
     prog_name = 'PROG'
@@ -264,6 +265,7 @@ class AppActions(ConfigMixin):
             # parser.add_argument('--foo', action='store_true', help='foo help')
             parser.set_defaults(func=self.default_caller)
             self.parser = parser
+
         return self.parser
 
     def get_parser(self, name=None):
@@ -276,10 +278,15 @@ class AppActions(ConfigMixin):
             raise NoPosition(s)
 
     def parse_args(self, args=None):
-        self.args = args_unit = self.parser.parse_args(args)
+        aa, uu = self.parser.parse_known_args(args)
+        print(uu)
+        aa.unknown_args = uu
+        self.args = args_unit = aa
+
         return args_unit
 
     def get_parsed_args(self, args=None):
+
         if self.args is None:
             return self.parse_args(args)
         return self.args
