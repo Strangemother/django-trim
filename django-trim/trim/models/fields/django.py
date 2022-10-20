@@ -9,6 +9,7 @@ from django.apps import apps
 
 sys_bool = bool
 sys_int = int
+sys_str = str
 
 from .base import *
 
@@ -614,7 +615,7 @@ def get_cached(name):
 def contenttype_fk(content_type=None, *a, **kw):
 
     # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    is_str = isinstance(content_type, str)
+    is_str = isinstance(content_type, sys_str)
     ContentType = get_cached('ContentType')
     content_type = apps.get_model(content_type) if is_str else content_type
     content_type = ContentType if content_type is None else content_type
@@ -738,6 +739,8 @@ int_big_pos = pos_big_int
 int_ = integer
 int = integer
 
+str = string = chars
+
 boolean_null = bool_null = null_bool
 boolean_true = bool_true = true_bool
 boolean_false = bool_false = false_bool
@@ -746,6 +749,8 @@ bool = boolean
 
 dt_blank = blank_dt
 dt = datetime
+
+any_model = any
 
 o2o_user = user_o2o
 fk_user = user_fk

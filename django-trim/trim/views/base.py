@@ -13,6 +13,7 @@ from django.views.generic import (
     DeleteView,
     DetailView,
     FormView,
+    View,
 )
 
 from django.views.generic.dates import (

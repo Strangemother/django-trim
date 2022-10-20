@@ -1,6 +1,7 @@
 from django.apps import AppConfig
-
+from .models.auto import hook_waiting_model_mixins
 from django.db.models.signals import pre_init
+
 
 class ShortConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -9,6 +10,7 @@ class ShortConfig(AppConfig):
     def ready(self):
         # Implicitly connect a signal handlers decorated with @receiver.
         from . import signals
+        hook_waiting_model_mixins()
         # Explicitly connect a signal handler.
         pre_init.connect(signals.model_pre_init)
 
