@@ -1,13 +1,17 @@
 from django.template import Context
 from django import template
 from django.template.base import token_kwargs
+from . import quickforms
+
 
 def inject_node(parser):
     T=parser.tokens[0].__class__
     tr = "{{ slotplot }}"
     parser.prepend_token( T(parser.tokens[0].token_type, tr))
 
+
 register = template.Library()
+
 
 def parse_until(parser, token, ends):
     nodelist = parser.parse(ends)
