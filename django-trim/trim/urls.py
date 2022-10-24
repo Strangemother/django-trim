@@ -298,7 +298,7 @@ def paths_dict(views, patterns=None, view_prefix=None,
     **kw,
     ):
     """Given the views module and the patterns,
-    generate a shjort path list.
+    generate a short path list.
 
         trim_patterns = {
             'ProductListView': '',
