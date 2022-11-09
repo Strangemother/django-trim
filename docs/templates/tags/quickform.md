@@ -6,14 +6,35 @@ This allows you to create a standard formview, and address it within another pag
 
 ## Usage
 
-Want to apply a _form_ to any page - such as a "notify me" form for a product page:
+Apply a _form_ to any page - such as a "notify me" form for a product page:
 
-    {% load trim %}
+```html
+{% load trim %}
 
-    <form method='post' action='{% url "products:stock-notify-form" %}''>
-        {% quickform "products:stock-notify-form" %}
-        {% csrf_token %}
-    </form>
+<form method='post' action='{% url "products:stock-notify-form" %}''>
+    {% quickform "products:stock-notify-form" %}
+    {% csrf_token %}
+</form>
+```
+
+This produces a _real_ form, with an extra `action_url` attribute:
+
+```html
+{% load trim %}
+
+{% quickform "products:stock-notify-form" as myform %}
+<form method='post' action='{{ myform.action_url }}'>
+    {{ myform.as_ul }}
+    {% csrf_token %}
+</form>
+```
+
+This can be mixed with the initial arguments and `action_url` override
+
+    {% quickform "products:stock-notify-form" action_url='/foo/bar/' initial=object as form %}
+
+
+## Example
 
 We can make it cleaner later, but first let's build the flow. First we need a form and form view.
 
@@ -47,7 +68,11 @@ class StockNotifyFormView(views.FormView):
         """Store a record against the email or user,
         return a response.
         """
+        return self.view_specific_handler(form)
+
+    def view_specific_handler(form):
         ...
+        return form
 ```
 
 As this is a _real view_ with acceptors so we can process the form as we need.
@@ -75,9 +100,9 @@ urlpatterns += shorts.paths_dict(views, dict(
 
 ### Implement
 
-Phew - we've just built a ready to go form view; how is that useful for `{% quickform %}`?
+Now we have a ready-to-go form view; we can use `{% quickform %}` to integrate it on any page without prior setup.
 
-At this point you can put the `StockNotifyForm` on any other page - using the url pattern as the target:
+Apply the `StockNotifyForm` on any other page - using the url pattern as the target:
 
     {% load trim %}
     <form>
@@ -86,7 +111,7 @@ At this point you can put the `StockNotifyForm` on any other page - using the ur
     </form>
 
 
-But wait! `quickform` returns an unbound form - allowing the normal djangoy routines...
+`quickform` returns an unbound form - allowing the normal djangoy routines:
 
     {% quickform "products:stock-notify-form" as stock_form %}
     {% include "baskets/sub/site_include.html" with form=stock_form %}
@@ -102,6 +127,7 @@ The tag accepts arbitrary keyword arguments as `form.initial` data:
     {% include "baskets/sub/site_include.html" with form=stock_form %}
 
 This applies the `product_id` and `email` as initial data.
+
 
 Alternatively you may provide an object as all data through the `initial` keyword argument:
 

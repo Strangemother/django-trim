@@ -4,9 +4,9 @@ classes = defaultdict(tuple)
 
 def hook_model_mixin_class(cls):
     """Given an autoloaded AutoModelMixin, stash the model against the target
-    parent model. These mixinf are applied at loadout.
+    parent model. These mixings are applied at loadout.
     """
-    print('Register', cls)
+    # print('Register', cls)
     model_name = cls.Meta.model_name
     classes[model_name] += (cls, )
 
