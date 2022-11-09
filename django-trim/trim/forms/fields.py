@@ -206,6 +206,12 @@ def split_datetime(*a, **kw):
     """A standard `forms.SplitDateTimeField` field."""
     return forms.SplitDateTimeField(*a,**kw)
 
+
+def modelchoice(*a, **kw):
+    """A standard `forms.SplitDateTimeField` field."""
+    return forms.ModelChoiceField(*a,**kw)
+
+
 def hidden(field=None, **kwargs):
     """Wrap a callable or field instance with `hidden()` to automatically
     apply a _hidden_ widget.
@@ -229,8 +235,8 @@ img = image
 int = integer
 pwd = password
 bool = boolean
-bool_false = boolean_false
-bool_true = boolean_true
+false_bool = bool_false = boolean_false
+true_bool = bool_true = boolean_true
 str = char = chars
 chars_hidden = chars
 hide = hidden
