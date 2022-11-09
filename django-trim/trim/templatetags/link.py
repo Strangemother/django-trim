@@ -26,7 +26,7 @@ def new_link(link, *targs, **kwargs):
     return gen_link(link, *targs, **kwargs)
 
 
-@register.inclusion_tag('trim/css_link.html', name='js', takes_context=False)
+@register.inclusion_tag('trim/js_link.html', name='js', takes_context=False)
 def script_link(link, *targs, **kwargs):
     kwargs.setdefault('type', 'text/javascript')
     return {
