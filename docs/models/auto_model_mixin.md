@@ -1,6 +1,6 @@
 # Auto Model Mixin
 
-As the name describes, the _automatic_ model mixin applies methods and non-prive attributes to a target model. Use this to apply functions aross apps, without polluting the _other_ apps with feature functions.
+As the name describes, the _automatic_ model mixin applies methods and non-private attributes to a target model. Use this to apply functions across apps without polluting the _other_ apps with feature functions.
 
 ## Usage
 
@@ -31,6 +31,24 @@ The `otherapp.Person` now has a `wave()` function. the `self` refers to the targ
 
 Therefore many apps may bind functions to a target model (`otherapp.Person`) without editing the target.
 
+## Example
+
+As an example, we have a `products.GenericProduct` of which has a _stock_ count.
+
+_product/models.py_
+
+```py
+from trim.models import fields
+from django.db import models
+
+class GenericProduct(models.Model):
+    ...
+    product_id = fields.str(50)
+```
+
+We _could_ apply a bunch of stock count methods to this model, however this forces us to closely couple the `products` models to stock models.
+
+To correct this, create a `StockAutoMixin` extending the `AutoModelMixin`.
 
 _stock/models.py_
 ```py
@@ -38,21 +56,21 @@ _stock/models.py_
 from trim.models import AutoModelMixin
 from . import models # stock.models
 
-class StockMixin(AutoModelMixin):
+class StockAutoMixin(AutoModelMixin):
 
-    def in_stock(self, product):
-        return models.StockCount.stock_count(product=product) > 0
+    def in_stock(self):
+        return models.StockCount.stock_count(product=self) > 0
 
     class Meta:
-        model_name = 'baskets.Cart'
+        model_name = 'products.GenericProduct'
 ```
 
-With the app you can use your `in_stock` method on the `Cart`
+With the app you can use your `in_stock` method on the `GenericProduct`
 
 ```py
->>> from baskets.models import Cart
->>> cart = Cart.objects.first()
->>> cart.in_stock(cart.items.first())
+>>> from products.models import GenericProduct
+>>> product = GenericProduct.objects.first()
+>>> product.in_stock()
 True
 ```
 

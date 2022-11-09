@@ -23,6 +23,17 @@ class Custom404TemplateView(TemplateView):
 class Custom404(object):
     """A View mixin to capture disptach 404 and respond with a redirect
     or alternative view
+
+        from trim import views
+
+        class ProductBrandDetailView(views.errors.Custom404, views.DetailView):
+            custom_404_redirect_url = 'appname:view'
+            custom_404_redirect = True if redirect_url else False
+            custom_404_template_name = 'appname/errors/special.html'
+
+            model = models.ProductBrand
+            ...
+
     """
     custom_404_redirect_url = None
     custom_404_redirect = None

@@ -27,6 +27,9 @@ from django.views.generic.dates import (
 )
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
+Permissioned = PermissionRequiredMixin
 
 
 from trim import names as trim_names

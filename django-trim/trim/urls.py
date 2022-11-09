@@ -298,7 +298,7 @@ def paths_dict(views, patterns=None, view_prefix=None,
     **kw,
     ):
     """Given the views module and the patterns,
-    generate a shjort path list.
+    generate a short path list.
 
         trim_patterns = {
             'ProductListView': '',
@@ -324,14 +324,15 @@ def paths_dict(views, patterns=None, view_prefix=None,
     """
     flag_class = View
     # r = ()
-    d = {}
+    # d = {}
+    d = ()
     patterns = patterns or {}
     view_prefix = clean_str(view_prefix)
     url_pattern_prefix = clean_str(url_pattern_prefix)
     url_name_prefix = clean_str(url_name_prefix)
 
     patterns.update(kw)
-
+    print(f' Building {len(patterns)} patterns for {views}')
     for part_name, solution in patterns.items():
         class_name = f"{view_prefix}{part_name}"
 
@@ -350,16 +351,24 @@ def paths_dict(views, patterns=None, view_prefix=None,
             solution = (app_name, solution,)
 
         path_name, url, *extra = solution
+        _urls = url
+        if isinstance(url, (tuple, list,)) is False:
+            _urls = (url,)
 
-        furl = f'{url_pattern_prefix}{url}'
-        fname = f'{url_name_prefix}{path_name}'
-        if (fname in d) or (safe_prefix is True):
-            fname = f"{part_name.lower()}-{fname}"
-        d[fname] = (furl, view,) + tuple(extra)
+        print('  > ', f'{path_name: <30}', _urls)
+        for _url in _urls:
+            """Unpack 1 or more URLS to produce a unique function name
+            for each url.
+            """
+            furl = f'{url_pattern_prefix}{_url}'
+            fname = f'{url_name_prefix}{path_name}'
+            if (fname in d) or (safe_prefix is True):
+                fname = f"{part_name.lower()}-{fname}"
+            entry = (furl, view,) + tuple(extra)
+            # d[fname] = entry
+            d += ((fname, entry),)
 
-
-
-    r = paths(**d)
+    r = paths(d)
 
     return r
 
@@ -388,7 +397,7 @@ def as_templates(**props):
 from functools import reduce
 
 
-def paths(**path_dict):
+def paths(path_dict):
     """
         urlpatterns = trims.paths(
             list=('', views.ProductListView,),
@@ -409,7 +418,7 @@ def paths(**path_dict):
     """
     flag_class = View
     r = ()
-    for name, params in dict(path_dict).items():
+    for name, params in path_dict: # dict(path_dict).items():
         (url, unit, *extra) = params
         func = unit
         if isinstance(func, tuple) is False:
@@ -419,7 +428,7 @@ def paths(**path_dict):
                 if flag_class in mros:
                     view_params = {k: v for d in extra for k, v in d.items()}
                     func = unit.as_view(**view_params)
-        print('Makeing', url, func,name)
+        print('Paths Making', url,name)
         p = path(url, func, name=name)
         r += (p,)
 
