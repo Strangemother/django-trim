@@ -2,6 +2,7 @@
 
 A fragment
 
+```html
     <div class="content">
         <div class="left">
             {{ wrap.content }}
@@ -10,6 +11,7 @@ A fragment
             not accessible
         </div>
     </div>
+```
 
 A wrap
 

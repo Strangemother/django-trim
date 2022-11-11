@@ -13,7 +13,6 @@ Quickly integrate Admin, staff, and user permissioned views using `trim.Permissi
 from trim import views
 
 class EditIndexView(views.Permissioned, views.TemplateView):
-    # only admin may enter
     permission_required = 'pages.change_MyModel'
 ```
 
