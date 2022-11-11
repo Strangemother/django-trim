@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static link %}
+{% block body_class %}page{% endblock %}
+{% block title %}products{% endblock title %}
+
+{% block body %}
+
+    {% include "products/sub/header.html" %}
+
+    {% block hero_header %}
+    <div class="hero-header">
+        <h1>{% block header_title %}{{ title }}{% endblock header_title %}</h1>
+    </div>
+    {% endblock hero_header %}
+
+    {% block before_content %}{% endblock before_content %}
+
+    {% block content %}
+        <div class="v1 content-container">
+            <div class="margin-left-10vw margin-right-10vw margin-top-5vh flex-down">
+                {% block before_deep_content %}{% endblock before_deep_content %}
+                {% block deep_content %}{% endblock %}
+                {% block after_deep_content %}{% endblock after_deep_content %}
+            </div>
+        </div>
+    {% endblock content %}
+
+    {% include "products/sub/footer.html" %}
+{% endblock body %}
+
+
+{% block extra_css %}
+    {% include "base/fonts.html" %}
+
+    {% css 'css/site_4-1.css' %}
+    {% css 'short/css/crud-form.css' %}
+    {% css 'css/theme-1.css' %}
+{% endblock %}
+

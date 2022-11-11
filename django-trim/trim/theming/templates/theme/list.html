@@ -1,0 +1,41 @@
+{% theme "page" %}
+{% comment "What" %}
+    The list page presents an object_list, extending the theme "page".
+
+    Assign the _url_ for a list item through `view.list_item_link`.
+
+        class ProductStashListView(views.ListView):
+            # template_name = 'products/generic-form-page.html'
+            model = models.ProductStash
+            list_item_link ='products:productstash-detail'
+            list_item_link_attr = 'uuid'
+
+{% endcomment %}
+
+{# extends "theme/page.html" #}
+{% load link %}
+
+{% block body_class %}list page{% endblock %}
+{% block title %}list{% endblock title %}
+{% block template_name %}list_page{% endblock template_name %}
+
+{% block deep_content %}
+
+<div class="flex-across">
+    <div class="flex-down flex-shrink-1">
+    {% block left_deep_content %}{% endblock left_deep_content %}
+    </div>
+
+    {% firstof list_item_link view.list_item_link "baskets:shippingaccount_detail" as generic_view_name %}
+
+    <div class="flex-down flex-grow-1 min-width-40per">
+        {% block list_display %}
+        {% include "theme/list/object_list.html" with generic_view_name=generic_view_name %}
+        {% endblock list_display %}
+    </div>
+    <div class="flex-down flex-shrink-1">
+    {% block right_deep_content %}{% endblock right_deep_content %}
+    </div>
+</div>
+
+{% endblock deep_content %}

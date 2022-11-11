@@ -1,0 +1,29 @@
+{% theme "detail" %}
+
+{# extends theme.detail #}
+{# extends "theme/detail-double-header.html" #}
+
+{% block body_class %}form page{% endblock %}
+
+{% block secondary_title %}Form{% endblock secondary_title %}
+{% block header_title %}Edit{% endblock header_title %}
+
+{% block deep_content %}
+    {% block above_deep_content %}{% endblock above_deep_content %}
+    <div class="flex-across gap-1">
+        <div class="flex-down flex-grow-1">
+            {% block form_area %}
+            {% include "theme/form.html" %}
+            {% endblock form_area %}
+        </div>
+
+        <div class="flex-down flex-basis-50per">
+            {% comment "what" %}
+                The info area defines an extra slot for form information.
+            {% endcomment %}
+            {% block info_area %}
+                {% block right_content %}{% endblock right_content %}
+            {% endblock info_area %}
+        </div>
+    </div>
+{% endblock deep_content %}
