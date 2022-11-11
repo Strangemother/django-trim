@@ -17,6 +17,8 @@ class ShortConfig(AppConfig):
 
 from django import apps
 import importlib
+from django.conf import settings
+
 
 def live_import(module_name):
     """Perform late imports of the target module name within each app
@@ -43,14 +45,21 @@ def live_import(module_name):
         # name == 'admin'
         # __name__ == 'django.contrib.admin'
         package_name = conf.module.__name__
-        n = f'{package_name}.{module_name}'
-        try:
-            # print('  Looking for', n)
-            vv = importlib.import_module(n)
-            print(' -! Imported', vv)
-        except ModuleNotFoundError as err:
-            if err.name != n:
-                # module name mismatch, the failed import is not the
-                # one we requested.
-                raise err
+        silent_import_package_module(package_name, module_name)
+
+    ## Import the root app (it's not one of the installed apps.)
+    a = settings.ROOT_URLCONF.split('.')[0]
+    silent_import_package_module(a, module_name)
+
+def silent_import_package_module(package_name, module_name):
+    n = f'{package_name}.{module_name}'
+    try:
+        # print('  Looking for', n)
+        vv = importlib.import_module(n)
+        # print(' -! Imported', vv)
+    except ModuleNotFoundError as err:
+        if err.name != n:
+            # module name mismatch, the failed import is not the
+            # one we requested.
+            raise err
 
