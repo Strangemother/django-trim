@@ -2,3 +2,26 @@
 output_dir = "documentation_website"
 modules = ["trim"]
 port = 8001
+
+[project]
+name = "django-trim"
+version = "0.1a"
+authors = [
+  { name="Just Jay", email="django-trim@strangemother.com" },
+]
+description = "A small example package"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+"Homepage" = "http://github.com/strangemother/django-short-shorts"
+"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"

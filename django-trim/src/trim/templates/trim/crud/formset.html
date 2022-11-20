@@ -1,0 +1,21 @@
+{% load static %}
+
+<form method="post">
+    <ul class="crud-form">
+            <li class="mform">
+                {{ formset.management_form }}
+            </li>
+
+            {% for iform in formset %}
+                {{ iform.as_ul }}
+            {% endfor %}
+
+        {{ formset }}
+    </ul>
+    <div class="actions">
+        <input class='btn' type="submit" value="Confirm">
+    </div>
+    {% csrf_token %}
+</form>
+
+

@@ -1,0 +1,32 @@
+{% theme "page" %}
+{# extends "theme/page.html" #}
+
+{% block title %}Template Detail{% endblock title %}
+{% block template_name %}productcategory_detail{% endblock template_name %}
+
+
+{% block hero_header %}
+
+<div class="v1 v1p5 hero-header secondary">
+    <div class="content flex-reverse flex-down">
+        <h1 class="margin-left-10vw">
+            {% block secondary_title %}Form{% endblock secondary_title %}
+        </h1>
+        <hr class="grow">
+        <h2 class="margin-left-10vw">
+            {% block header_title %}{% firstof header_title title "Edit" %}{% endblock header_title %}
+        </h2>
+    </div>
+</div>
+
+{% endblock hero_header %}
+
+    {# include "v1/secondary-header.html" with primary="Template Detail" secondary=object.name #}
+
+{% block content %}
+    {{ block.super }}
+{% endblock content %}
+
+{% block deep_content %}
+    {{ object }}
+{% endblock deep_content %}

@@ -1,0 +1,1 @@
+{% load static %}<link {% for key, val in kwargs.items %}{{ key }}="{{ val }}" {% endfor %} href="{% static static_name %}"><!-- css_link: {{ static_name }} -->

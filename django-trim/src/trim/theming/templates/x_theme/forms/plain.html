@@ -1,0 +1,11 @@
+<form method="post" enctype='multipart/form-data' >
+    <ul class="plain form crud-form ul-table theme-form">
+        {{ form.as_ul }}
+    </ul>
+
+    <div class="actions">
+        <input class='btn' type="submit" value="{% firstof button 'Confirm' %}">
+    </div>
+    {% csrf_token %}
+</form>
+

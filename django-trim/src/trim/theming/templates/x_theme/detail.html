@@ -1,0 +1,24 @@
+{% extends "theme/page.html" %}
+{% comment "how" %}
+
+    {% block title %}{% endblock title %}
+    {% block hero_header %}
+        {% block secondary_title %}Form{% endblock secondary_title %}
+        {% block header_title %}Edit{% endblock header_title %}
+    {% endblock hero_header %}
+
+    {% block content %}{% endblock content %}
+    {% block deep_content %}{% endblock deep_content %}
+
+{% endcomment %}
+
+{% block title %}Template Detail{% endblock title %}
+
+{% block content %}
+    {% include "v1/secondary-header.html" with primary="Template Detail" secondary=object.name %}
+    {{ block.super }}
+{% endblock content %}
+
+{% block deep_content %}
+    {{ object }}
+{% endblock deep_content %}

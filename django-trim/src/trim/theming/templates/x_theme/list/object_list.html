@@ -1,0 +1,16 @@
+{% load link theming %}
+<ul>
+    {% for item in object_list %}
+        <li>
+            {% if generic_view_name %}
+                {% firstof list_item_link_attr view.list_item_link_attr "pk" as iattr%}
+                {% link generic_view_name item|attr:iattr item %}
+
+            {% else %}
+            {{ item }}
+
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+

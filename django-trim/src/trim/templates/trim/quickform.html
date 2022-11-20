@@ -1,0 +1,11 @@
+<form method='{% firstof trim_quickform_form.method trim_form.method 'post' %}' action='{{ trim_quickform_form.action_url }}' {% for k,v in opts.items %}{{k}}={{v}} {% endfor %}>
+    <ul>
+        {{ trim_quickform_form.as_ul }}
+    </ul>
+
+    {% csrf_token %}
+
+    {% if trim_form.form_submit_button is not False %}
+        <button type='submit'>{% firstof trim_form.form_submit_label 'Submit' %}</button>
+    {% endif %}
+</form>

@@ -1,0 +1,13 @@
+{% load static %}
+
+<form method="post">
+    <ul class="crud-form">
+        {{ form.as_ul }}
+    </ul>
+    <div class="actions">
+        <input class='btn' type="submit" value="Confirm">
+    </div>
+    {% csrf_token %}
+</form>
+
+
