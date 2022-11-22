@@ -7,6 +7,7 @@ Django Short Shorts reduces the amount of text, imports and general congantive o
 Drop in a few shortcuts to quickly infer (and plug-in) required parts for your apps. For example, we can generate a `CreateView`, `UpdateView`, `ListView` and `DeleteView` for all our models, with one line:
 
 _views.py_:
+
 ```py
 from short import views as shorts
 shorts.crud_classes()
@@ -45,8 +46,6 @@ from short import views as shorts
 ```
 
 Hence you have your "short shorts". Notably this naming convention was chosen to ensure the end-user implements `shorts` (plural) - leading to less ambigiation.
-
-
 
 ## Why.
 

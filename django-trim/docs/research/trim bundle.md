@@ -25,7 +25,6 @@ For the end-user (developer) they may define all the components to successfully 
 
 The end-user (business) can utilise the definition to quickly implement and deploy their micro-product.
 
-
 # Overview
 
 A trim bundle should be applicable for a range of frameworks or user deployments. the core features isolate general packaging tasks, wrapping a developer preferred product. It shouldn't replace the existing infrastructure but rather leverage their correct steps, and document those step.
@@ -36,7 +35,6 @@ A trim bundle should be applicable for a range of frameworks or user deployments
 + developer specific steps
 
 A trim bundle should be manually unpackable in the event an end-user developer cannot integrate a trim packaging. If a package fails to install the root assets may unzipped and installed by hand.
-
 
 ## Core tools
 
@@ -89,7 +87,6 @@ The use-case of a trim-bundle:
 + Deploying a marketplace: (a ui for end users to access bundles)
 + end-user integration: (a customer of bundles using their wrapped functionality)
 
-
 ## primary developer
 
 The primary developer builds and deploys the initial application, complete with the 'trim bundle' hooks and deploys the app with a sibling marketplace interface, so users may extend upon the primary exposed bundle protocol.
@@ -106,21 +103,17 @@ The customer developer are the community of users _accepting_ the primary develo
 
 The customer dev will work with the primary application through the exposed API given by the primary developer, through manifest definitions and the marketplace integration steps. Once a customer developer submits an asset to a marketplace, it can be shared through the primary developer definition (e.g. a shared ecosystem built by the primary).
 
-
 + deploy clones of the primary framework: (or has a single site host) aka: A "Secondary"
 + digests and integrates bundles
 + creates and submits bundles to the marketplace
 
-
 ## The end-user (Developer)
-
 
 ## The end-user (Business)
 
 A end-user may be considered the 'business target' or the user to _digest_ and work with the marketplace products, and the eco-system defined by the primary developer.
 
 In the common case, they don't work with the packaging system, except for integrating complete bundles.
-
 
 ## A Client
 
@@ -131,8 +124,6 @@ The end-user has implemented bundles to serve a client with features - such as a
 In this case a client is the _person in the shop_ purchasing a t-shirt, and have no concern about the running of the shop.
 
 + Silently utilises the end-user experience
-
-
 
 # Plug Packages
 
@@ -151,7 +142,6 @@ In this case we're building django apps - with a pip, install, module, and exit 
 
 The functionality exists here but the 'manifest' should expost a neater view for a non-coder. A 'package deploy' utility may use setup.py to build a final installable.
 
-
 ## package
 
 The term 'package' and 'bundle' are interchangable. For all internal definitions a 'bundle' defines the Trim unit, a package refers to the common nomanclature used with python apps.
@@ -163,7 +153,6 @@ A trim bundle top level:
         content/
         assets/
         ...
-
 
 The package contains a manifest to assign downloads and installations for the
 package, appended to the pip and django installation systems.
@@ -187,7 +176,6 @@ The manifest defines the important parts.
     installed_apps:
         - trim
     ...
-
 
 ### requirements
 
@@ -219,7 +207,6 @@ An 'identity' refers to the pointer unit such as a filename or package-name
 + http+intranet.foo.bar/generic.txt
 + stream:stdin
 
-
 ## Install
 
 A package command manages a clean install of the unit. Generally this is a
@@ -228,7 +215,6 @@ A package command manages a clean install of the unit. Generally this is a
 + any requirements
 + Migrations
 
-
 Much of the functionality exists as a single module and can be mapped into a global
 space with an 'enabled'
 
@@ -236,17 +222,13 @@ space with an 'enabled'
 
 For django a primary install routine is add to INSTALLED_APPS. This should occur be default with an 'enabled' switch for the package.
 
-
 ## Verifying
 
 The package 'state' is verified with crc and can be verified with a CRC check or tested for new changes.
 
-
 ## Versioning
 
 All trim packages should have a version. Usually the _latest_ is applied as per config of the marketplace developer.
-
-
 
 # Primary Integration
 
@@ -259,10 +241,10 @@ The trim package should be implemented into the primary platform before the bund
 The trim hooks specific to this api should be applied to the primary platform source:
 
 settings.py
+
 ```py
 INSTALLED_APPS += trim.packages()
 ```
-
 
 # User Integration
 
@@ -277,4 +259,3 @@ In both cases the deployed application (bundle digestor) may need to restart and
     Go to the marketplace and then install with "company-bundler install APP-NAME ..."
 
 The end-user will leverage many `company-bundler install`, collecting developer sanctioned bundles, configured to _plug into_ a developers primary application
-

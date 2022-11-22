@@ -1,7 +1,4 @@
-
-
 ## Short String
-
 
 Easy integrate `__str__` and `__repr__` with the `_short_string` trick:
 
@@ -34,8 +31,6 @@ class Product(models.Model):
 >>> print(p)
 "example name" x4
 ```
-
-
 
 ## Fields
 

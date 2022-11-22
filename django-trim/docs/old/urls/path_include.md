@@ -35,7 +35,6 @@ urlpatterns += [
 
 Use the _single caller_ variant:
 
-
 before:
 
 ```py
@@ -63,5 +62,4 @@ urlpatterns += [
 ] + path_include('account/')
   + path_include('products/')
   + path_include('baskets/')
-
 ```

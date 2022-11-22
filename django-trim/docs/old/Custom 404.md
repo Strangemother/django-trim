@@ -28,7 +28,6 @@ class ProductDetailView(Custom404, shorts.DetailView):
 
 If an 404 occurs the user is redirected with the same arguments given for the view:
 
-
 ```py
 # What happends when resolving this URL
 #
@@ -45,7 +44,6 @@ class Custom404(object):
 ## Template
 
 Replace the template, returning a custom 404 page:
-
 
 ```py
 # Same imports as the first example
