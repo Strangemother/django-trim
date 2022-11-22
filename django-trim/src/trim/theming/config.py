@@ -103,6 +103,6 @@ def install(*maps, **kw):
     for md in maps:
         scope.update(md)
     set_ready_map(scope)
-    print('trim.theming.config.install', ready_map)
+    # print('trim.theming.config.install', ready_map)
     return scope
 
