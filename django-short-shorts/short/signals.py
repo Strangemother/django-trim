@@ -50,7 +50,7 @@ def repr_printer(self):
 
 def model_pre_init(sender, args, kwargs, **kw):
     if hasattr(sender, '_short_string') or hasattr(sender, '_short_props'):
-        print('model_pre_init', sender, kw)
+        # print('model_pre_init', sender, kw)
         if sender.__str__ == Model.__str__:
             sender.__str__ = str_printer
 

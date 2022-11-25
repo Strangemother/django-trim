@@ -1,11 +1,15 @@
 {% load static %}
 
-<form method="post">
+<form method="post" enctype="multipart/form-data".>
     <ul class="crud-form">
         {{ form.as_ul }}
     </ul>
+    <div class="media">
+
+    {{ form.media }}
+    </div>
     <div class="actions">
-        <input class='btn' type="submit" value="Confirm">
+        <input class='btn' type="submit" value="{% firstof button_text 'Confirm' %} ">
     </div>
     {% csrf_token %}
 </form>
