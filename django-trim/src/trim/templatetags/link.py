@@ -83,6 +83,22 @@ def new_url_link(link, *targs, **kwargs):
     return gen_link(link, *targs, **kwargs)
 
 
+@register.inclusion_tag('trim/link.html', takes_context=False)
+def url_link(link, *targs, **kwargs):
+    """Provide a _real_ URL, rather than a reversable name:
+
+        {% load link %}
+        {% for pay_url in flow.cart.receipt_links %}
+            {% url_link pay_url "Receipt" %}
+        {% endfor %}
+
+    """
+    # kwargs.setdefault('target', '_blank')
+    # kwargs.setdefault('rel', 'noreferrer noopener')
+    kwargs.setdefault('url', link)
+    return gen_link(link, *targs, **kwargs)
+
+
 class ShadowDict(dict):
     pass
 
