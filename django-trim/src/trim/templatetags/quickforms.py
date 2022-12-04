@@ -57,13 +57,11 @@ def quickform(context, view_name, **kwargs):
     initkwargs = resolve_match.func.view_initkwargs
     view.view_initkwargs = initkwargs
 
-
     instance = view(**initkwargs)
     instance.setup(request, *args, **kwargs)
 
     form = instance.get_form()
     form.action_url = rev
-    form.initial = kwargs.get('initial', None) or kwargs
-
+    # form.initial = kwargs.get('initial', None) or kwargs
 
     return form
