@@ -6,7 +6,9 @@ from pathlib import Path
 
 import appdirs
 
-register = { 'functions': ()}
+from collections import defaultdict
+
+register = { 'functions': defaultdict(tuple)}
 # # create the parser for the "a" command
 # parser_a = subparsers.add_parser('add', help='a help', aliases=['a'])
 # parser_a.add_argument('bar', type=int, help='bar help')
@@ -16,6 +18,30 @@ class Help:
     scripts = 'Work with the loaded trim scripts'
     add = 'Add a script to the loadout'
     add_filename = 'Provide the file for loading.'
+
+
+
+class SubHelpFormatter(argparse.HelpFormatter):
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        self._indent_increment = 2
+        self._level += 2
+
+def print_help(parser):
+
+    # retrieve subparsers from parser
+    subparsers_actions = [
+        action for action in parser._actions
+        if isinstance(action, argparse._SubParsersAction)]
+    # there will probably only be one subparser_action,
+    # but better safe than sorry
+    for subparsers_action in subparsers_actions:
+        # get all subparsers and print help
+
+        for choice, subparser in subparsers_action.choices.items():
+            print("--- Subparser '{}'".format(choice))
+            subparser.formatter_class = SubHelpFormatter
+            print(subparser.format_help())
 
 
 class ConfigMixin(object):
@@ -122,12 +148,13 @@ class AppFunction(ConfigMixin):
     help = None
     arguments = None
     auto_register = True
+    register_name = 'default'
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         # print('Register', cls)
         if cls.auto_register is True:
-            register['functions'] += (cls, )
+            register['functions'][cls.register_name] += (cls, )
 
     def prep(self, app):
         """Prepare the tool with the pre-baked loadouts such as the help and
@@ -172,6 +199,7 @@ class AppArgument(AppFunction):
     """
     target = None
     # auto_register = False
+    register_name = 'default'
 
     def hook_parser(self, app):
         parser = self.get_parser(app, self.target)
@@ -193,6 +221,7 @@ import argparse
 class AppActions(ConfigMixin):
     prog_name = 'PROG'
     primary_name = 'primary'
+    register_name = 'default'
 
     def __init__(self):
         self._subparsers = {}
@@ -205,15 +234,18 @@ class AppActions(ConfigMixin):
     def setup(self):
         pass
 
-    def prep(self):
+    def prep(self, app=None):
         """Prepare the tool with the pre-baked loadouts such as the help and
         scripts.
         """
         # scripts_name = 'scripts'
         # self.add_sub(self.scripts_func, scripts_name, help=Help.scripts)
-        reg = register['functions']
+        reg = self.get_register_function()
         for AppFuncClass in self.app_functions + reg:
             AppFuncClass().prep(self)
+
+    def get_register_function(self):
+        return register['functions'][self.register_name]
 
     def get_subparser(self, parser=None):
         """Return the 'subparser' of a given parent parser;
@@ -255,6 +287,10 @@ class AppActions(ConfigMixin):
         """
         return self.add_sub(func, name, self.positions[position_name], **kwargs)
 
+    def default_caller(self, args):
+        print_help(self.get_primary_parser())
+        return 'res from default_caller'
+
     def get_primary_parser(self):
         """Return the primary parser for the program. If the internal self.parser
         is undefined, create a new 'primary' and return it.
@@ -278,7 +314,7 @@ class AppActions(ConfigMixin):
             raise NoPosition(s)
 
     def parse_args(self, args=None):
-        aa, uu = self.parser.parse_known_args(args)
+        aa, uu = self.get_parser().parse_known_args(args)
         print(uu)
         aa.unknown_args = uu
         self.args = args_unit = aa
