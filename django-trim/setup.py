@@ -15,7 +15,8 @@ setup(name='django-trim',
       zip_safe=True,
       entry_points = {
             'console_scripts': [
-                  'trim=trim.cli.primary:main'
+                  'trim=trim.cli.primary:main',
+                  'trim-admin=trim.cli.primary:main_admin',
             ],
       }
 )
