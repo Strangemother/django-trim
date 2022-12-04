@@ -1,4 +1,4 @@
-from .base import AppActions, Help, AppFunction, AppArgument, ConfigMixin
+from .base import AppActions, Help, AppFunction, AppArgument, ConfigMixin, print_help, SubHelpFormatter
 from pathlib import Path
 from functools import partial
 import shlex
@@ -7,28 +7,21 @@ from trim import execute
 import argparse
 
 
-class SubHelpFormatter(argparse.HelpFormatter):
-    def __init__(self, *a, **kw):
-        super().__init__(*a, **kw)
-        self._indent_increment = 2
-        self._level += 2
+# def print_help(parser):
 
+#     # retrieve subparsers from parser
+#     subparsers_actions = [
+#         action for action in parser._actions
+#         if isinstance(action, argparse._SubParsersAction)]
+#     # there will probably only be one subparser_action,
+#     # but better safe than sorry
+#     for subparsers_action in subparsers_actions:
+#         # get all subparsers and print help
 
-def print_help(parser):
-
-    # retrieve subparsers from parser
-    subparsers_actions = [
-        action for action in parser._actions
-        if isinstance(action, argparse._SubParsersAction)]
-    # there will probably only be one subparser_action,
-    # but better safe than sorry
-    for subparsers_action in subparsers_actions:
-        # get all subparsers and print help
-
-        for choice, subparser in subparsers_action.choices.items():
-            print("--- Subparser '{}'".format(choice))
-            subparser.formatter_class = SubHelpFormatter
-            print(subparser.format_help())
+#         for choice, subparser in subparsers_action.choices.items():
+#             print("--- Subparser '{}'".format(choice))
+#             subparser.formatter_class = SubHelpFormatter
+#             print(subparser.format_help())
 
 
 class GraphApps(object):
@@ -85,6 +78,7 @@ class GraphApps(object):
 
 
 class StepExecute(object):
+
     def execute_step(self, i, k, d):
         # Shell true, because the user is building the scripts.
         command = shlex.split(d)
@@ -117,6 +111,10 @@ class TrimApp(AppActions, StepExecute, GraphApps):
 
     def add(self, *app_function):
         self.app_functions += app_function
+
+
+class TrimAdminApp(TrimApp):
+    register_name = 'admin'
 
 
 class VerboseSwitch(AppArgument):
@@ -201,6 +199,8 @@ class ScriptsAdd(AppFunction):
     parent_name = 'scripts'
     name = 'add'
     help = Help.add
+    register_name ='admin'
+
     arguments = (ScriptsAddFilenameArg,)
 
     def hook(self, parsed, *args, **kwargs):
@@ -214,7 +214,16 @@ actions = TrimApp()
 # actions.add(VerboseSwitch, VersionSwitch, Scripts, ScriptsAdd, ScriptsAddFilenameArg)
 actions.prep()
 
+admin_actions = TrimAdminApp()
+admin_actions.add(AppActions, Scripts)
+# admin_actions.add(VerboseSwitch, VersionSwitch, Scripts, ScriptsAdd, ScriptsAddFilenameArg)
+admin_actions.prep()
+
 
 def main():
     print('Entry from main')
     actions.run_hook()
+
+def main_admin():
+    print('Admin entry from main')
+    admin_actions.run_hook()
