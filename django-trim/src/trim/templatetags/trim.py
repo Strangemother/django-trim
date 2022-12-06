@@ -13,9 +13,10 @@ def inject_node(parser):
 register = template.Library()
 
 
-def parse_until(parser, token, ends):
+def parse_until(parser, token, ends, delete_first=True):
     nodelist = parser.parse(ends)
-    parser.delete_first_token()
+    if delete_first:
+        parser.delete_first_token()
     # inject_node(parser)
     splits = token.split_contents()[1:]
     extra = {}
