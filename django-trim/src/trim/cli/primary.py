@@ -30,19 +30,32 @@ class GraphApps(object):
     def build_graph_parsers(self, top, parser=None, depth=0, position=None):
         """Given a nested tree of parsers build sub apps into the argparser
 
-            graph {
-                keys [ subkey ]
-                subkey: {
-                    depth 0
-                    keys [ nestkey ]
-                    nestkey {
-                        depth 1
-                        items [
-                            "other_nginx_access"
-                        ]
+            {
+                "graph": {
+                    "keys": [
+                        "download",
+                    ],
+                    "download": {
+                        "depth": 0,
+                        "keys": ["db"],
+                        "position": ["db"],
+                        "items": [
+                            "download"
+                        ],
+                        "db": {
+                            "depth": 1,
+                            "keys": [],
+                            "position": [],
+                            "items": [
+                                "db"
+                            ]
+                        }
                     }
-                }
+                },
+                "db": "py scripts/download_remote.py"
             }
+
+            trim download db
         """
         for key in top.get('keys', ()):
             data = top[key]
@@ -141,7 +154,7 @@ class Scripts(AppFunction):
 
 
 class ScriptsAddFilenameArg(AppArgument):
-    """The 'filename' argument for the `scrpits add` function.
+    """The 'filename' argument for the `scripts add` function.
 
     This is applied through the `arguments` of ScriptsAdd.
 
@@ -196,6 +209,9 @@ class ScriptInstall(ConfigMixin):
 
 
 class ScriptsAdd(AppFunction):
+    """The "scripts add [filename]" command for installing a command into
+    the persistent store.
+    """
     parent_name = 'scripts'
     name = 'add'
     help = Help.add
@@ -223,6 +239,7 @@ admin_actions.prep()
 def main():
     print('Entry from main')
     actions.run_hook()
+
 
 def main_admin():
     print('Admin entry from main')
