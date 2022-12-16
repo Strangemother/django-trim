@@ -2,7 +2,6 @@
 
 Django Short Shorts provides a range of url `path` setup functions for setting up your `urls.py` with less typing.
 
-
 ## Quick start
 
 My personal favourite is the quickest:
@@ -18,7 +17,6 @@ urlpatterns = shorts.paths(
 ```
 
 Functionally identical to this:
-
 
 ```py
 urlpatterns = [
@@ -44,6 +42,7 @@ urlpatterns = [
     #...
 ]
 ```
+
 ## Integration Methods
 
 Firstly lets look at a few `path` urls using the standard method:

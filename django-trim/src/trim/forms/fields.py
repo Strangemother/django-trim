@@ -120,6 +120,12 @@ def file(*a, **kw):
     return forms.FileField(*a,**kw)
 
 
+def files(*a, **kw):
+    """A _muliple_ Standard form file field, with a clearable input.
+    """
+    return file(widget=widgets.clearable_file_input(attrs={'multiple': True}))
+
+
 def file_path(*a, **kw):
     """A standard `forms.FilePathField` field."""
     return forms.FilePathField(*a,**kw)
@@ -232,6 +238,7 @@ def hidden(field=None, **kwargs):
     field.widget = widgets.hidden(**kwargs)
     return field
 
+
 img = image
 int = integer
 pwd = password
@@ -242,3 +249,4 @@ str = char = chars
 chars_hidden = chars
 hide = hidden
 textarea = text
+file_multi = multi_file = files

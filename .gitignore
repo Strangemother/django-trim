@@ -129,3 +129,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+local.md
+django-trim/.pypirc

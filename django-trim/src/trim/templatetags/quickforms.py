@@ -7,7 +7,7 @@ register = template.Library()
 quickform_kwargs = ('form_submit_label', 'form_submit_button', )
 
 @register.inclusion_tag('trim/quickform.html', takes_context=True, name='quickform.form')
-def quickform_template(context, view_name, **kwargs):
+def quickform_template(context, view_name, *args, **kwargs):
     """Apply a quickform within a form template, utilising the quickform as
     the thing to render.
 
@@ -19,7 +19,7 @@ def quickform_template(context, view_name, **kwargs):
 
     any option not in `quickform_kwargs` is applied to the form a node parameter.
     """
-    form = quickform(context, view_name, **kwargs)
+    form = quickform(context, view_name, *args, **kwargs)
     extra = { 'opts': {}, 'trim_form': {}}
 
     for x,v in kwargs.items():
@@ -34,7 +34,7 @@ def quickform_template(context, view_name, **kwargs):
 
 
 @register.simple_tag(takes_context=True, name='quickform')
-def quickform(context, view_name, **kwargs):
+def quickform(context, view_name, *url_args, **kwargs):
     """Build a form given the view_name and any `view_arguments`
 
         {% quickform 'associations:grouping-search-form' as grouping_search_form %}
@@ -47,11 +47,22 @@ def quickform(context, view_name, **kwargs):
         </form>
 
     """
-    args = kwargs.get('view_args', ())
-    rev = reverse(view_name, args=args)
-    vv = resolve(rev)
-    form = vv.func.view_class(request=context.get('request')).get_form()
-    form.action_url = rev
-    form.initial = kwargs.get('initial', None) or kwargs
+    request = context.get('request')
+    args = kwargs.get('view_args', ()) if len(url_args) == 0 else url_args
 
+
+    rev = reverse(view_name, args=args)
+    resolve_match = resolve(rev)
+
+    view = resolve_match.func.view_class
+    initkwargs = resolve_match.func.view_initkwargs
+    view.view_initkwargs = initkwargs
+
+    instance = view(**initkwargs)
+    instance.setup(request, *args, **kwargs)
+
+    form = instance.get_form()
+    form.action_url = rev
+    initial = kwargs.get('initial', None) or kwargs
+    form.initial.update(initial)
     return form

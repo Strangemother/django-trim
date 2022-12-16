@@ -1,12 +1,10 @@
-
 Future notes
 
 prep the first commands for a new project
 
-
     py -m venv env
     env\Scripts\activate
-
+    
     pip install portray
 
 With a command line:

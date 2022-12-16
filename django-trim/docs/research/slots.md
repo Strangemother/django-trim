@@ -32,7 +32,6 @@ The result
 
 ## slots
 
-
 A fragment
 
     <div class="content">
@@ -57,7 +56,6 @@ Usage
 
 or
 
-
     {% wrap "fragment.html" %}
         {% slot %}
             <p>content</p>
@@ -70,7 +68,6 @@ or
 ### Defaults
 
 No slots automatically uses the default.
-
 
     {% wrap "fragment.html" %}
         <p>content</p>
@@ -94,7 +91,6 @@ Or even
 
 But is always:
 
-
     {% wrap "fragment.html" %}
         <p>content</p>
     {% endwrap %}
@@ -103,24 +99,23 @@ But is always:
 
 + Anything outside a slot definition is applied to the default slot
 
-
     {% wrap "fragment.html" %}
         {% slot "right" %}<p>right content</p>{% endslot %}
         <p>will become left</p>
     {% endwrap %}
 
 + Content outside a slot when the default slot is defined, is lost
-
-    {% wrap "fragment.html" %}
-        {% slot "right" %}<p>right content</p>{% endslot %}
-        {% slot default %}<p>left content</p>{% endslot %}
+  
+      {% wrap "fragment.html" %}
+      {% slot "right" %}<p>right content</p>{% endslot %}
+      {% slot default %}<p>left content</p>{% endslot %}
         <p>will not be rendered</p>
-    {% endwrap %}
+      {% endwrap %}
 
 + Apply a _lost_ slot to capture anything unexpected
-
+  
     frangement:
-
+  
         {% wrap "fragment.html" %}
             {% slot %}
                 <p>content</p>
@@ -128,14 +123,14 @@ But is always:
             {% slot "right" %}
                 <p>more content</p>
             {% endslot %}
-
+      
             {% slot lost %}
                 <p>more content</p>
             {% endslot %}
         {% endwrap %}
-
+  
     wrap:
-
+  
         {% wrap "fragment.html" %}
             {% slot "right" %}<p>right content</p>{% endslot %}
             {% slot default %}<p>left content</p>{% endslot %}

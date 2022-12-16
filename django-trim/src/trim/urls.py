@@ -98,7 +98,7 @@ def clean_str(variant):
 def path_includes(*names):
 
     flat_names = ()
-    r = {}
+    r = ()
 
     for name in names:
         if isinstance(name, (list,tuple)) is False:
@@ -106,10 +106,11 @@ def path_includes(*names):
         flat_names += name
 
     for fln in flat_names:
-        # print('Making', fln)
-        r[fln] = f'{fln}/', django_include(f'{fln}.urls')
+        # # print('Making', fln)
+        d = (fln, (f'{fln}/', django_include(f'{fln}.urls'),))
+        r += (d,)
 
-    return paths(**r)
+    return paths(r)
 
 include = path_includes
 
@@ -144,7 +145,7 @@ def path_include(url_name, url_module=None, path_name=None):
 
         error_handlers(__name__)
     """
-    r = {}
+    r = ()
     url = url_name
     if not url.endswith('/'):
         url = f'{url}/'
@@ -154,9 +155,11 @@ def path_include(url_name, url_module=None, path_name=None):
         name = name[1:]
 
     urlm = url_module or f'{name}.urls'
-    r[name] = (url, django_include(urlm), )
+    item = (name, (url, django_include(urlm), ))
+    r += (item,)
 
-    return paths(**r)
+
+    return paths(r)
 
 
 def paths_default(views_module, model_list, ignore_missing_views=True, views=None, **options):
@@ -332,7 +335,7 @@ def paths_dict(views, patterns=None, view_prefix=None,
     url_name_prefix = clean_str(url_name_prefix)
 
     patterns.update(kw)
-    print(f' Building {len(patterns)} patterns for {views}')
+    # print(f' Building {len(patterns)} patterns for {views}')
     for part_name, solution in patterns.items():
         class_name = f"{view_prefix}{part_name}"
 
@@ -355,7 +358,7 @@ def paths_dict(views, patterns=None, view_prefix=None,
         if isinstance(url, (tuple, list,)) is False:
             _urls = (url,)
 
-        print('  > ', f'{path_name: <30}', _urls)
+        # print('  > ', f'{path_name: <30}', _urls)
         for _url in _urls:
             """Unpack 1 or more URLS to produce a unique function name
             for each url.
@@ -424,11 +427,14 @@ def paths(path_dict):
         if isinstance(func, tuple) is False:
             if inspect.isfunction(func) is False:
 
-                mros = inspect.getmro(unit)
+                try:
+                    mros = inspect.getmro(unit)
+                except Exception as exc:
+                    import pdb; pdb.set_trace()  # breakpoint 2d6a262ax //
                 if flag_class in mros:
                     view_params = {k: v for d in extra for k, v in d.items()}
                     func = unit.as_view(**view_params)
-        print('Paths Making', url,name)
+        # print('Paths Making', url,name)
         p = path(url, func, name=name)
         r += (p,)
 

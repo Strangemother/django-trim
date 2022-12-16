@@ -19,4 +19,3 @@ urlpatterns += shorts.as_templates(
 ```
 
 In this case each path presents the HTML through the django templating library. This is exactly the same as implementing a `TemplateView` for each view.
-

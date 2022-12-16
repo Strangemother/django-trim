@@ -2,7 +2,7 @@
 
 The `{% wrap %}` template tag allows you to wrap some content with another common template:
 
-```html
+```jin
 {% load trim %}
 
 {% wrap "fragments/other.html" with custom="attributes" %}
@@ -14,7 +14,7 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 
 The `wrap` tag accepts _with_ statement keyword arguments.
 
-```html
+```jinja2
 {% load trim %}
 
 {% quickform "products:stock-notify-form" as stock_form %}
@@ -23,7 +23,7 @@ The `wrap` tag accepts _with_ statement keyword arguments.
 
 You can test for empty content using standard template tags.
 
-```html
+```jinja2
 <ul class="crud-form {% if wrap.content %}has-wrap-content{% else %}no-wrap-content{% endif %}">
     {% if wrap.content %}
         {{ wrap.content }}
@@ -33,12 +33,11 @@ You can test for empty content using standard template tags.
 </ul>
 ```
 
-
 ## Example
 
 For this example the `wrap_form.html` accepts some some HTML in place of a _form_:
 
-```html
+```jinja2
 {% wrap "stocks/wrap_form.html" with button_text="Next"  action="/foo/bar" %}
     <ul>
     {% for row in form %}
@@ -50,7 +49,7 @@ For this example the `wrap_form.html` accepts some some HTML in place of a _form
 
 The template `stocks/wrap_forms.html` should refer to the `wrap.content` and any other variables from the `with` or parent contexts.
 
-```
+```jinja2
 <form method="post"
   enctype="multipart/form-data"
   {% if action %}action="{{action}}"{% endif %}>
@@ -64,4 +63,3 @@ The template `stocks/wrap_forms.html` should refer to the `wrap.content` and any
 ```
 
 It's similar to an `include` tag with some extra body.
-
