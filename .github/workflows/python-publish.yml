@@ -39,9 +39,9 @@ jobs:
     - name: Publish package
 #       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       uses: pypa/gh-action-pypi-publish@release/v1
-      working-directory: ./django-trim
       with:
         password: ${{ secrets.TEST_PYPI_API_TOKEN }}
         repository_url: https://test.pypi.org/legacy/
         user: __token__
+        working-directory: ./django-trim
 #         password: ${{ secrets.PYPI_API_TOKEN }}
