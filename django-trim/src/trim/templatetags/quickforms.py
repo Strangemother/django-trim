@@ -64,5 +64,6 @@ def quickform(context, view_name, *url_args, **kwargs):
     form = instance.get_form()
     form.action_url = rev
     initial = kwargs.get('initial', None) or kwargs
-    form.initial.update(initial)
+    if hasattr(form, 'initial') and (len(initial) > 0):
+        form.initial.update(initial)
     return form
