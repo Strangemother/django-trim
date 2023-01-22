@@ -129,6 +129,9 @@ class TrimApp(AppActions, StepExecute, GraphApps):
 class TrimAdminApp(TrimApp):
     register_name = 'admin'
 
+    def get_conf(self):
+        return {}
+
 
 class VerboseSwitch(AppArgument):
 
@@ -150,7 +153,7 @@ class VersionSwitch(AppArgument):
 class Scripts(AppFunction):
     # name = 'scripts'
     help = Help.scripts
-
+    register_name ='admin'
 
 
 class ScriptsAddFilenameArg(AppArgument):
@@ -188,7 +191,6 @@ class ScriptInstall(ConfigMixin):
         if 'graph' not in data:
             data['graph'] = { 'keys': []}
         leaf = data['graph']
-
 
         for i, part in enumerate(parts):
             if part not in leaf:

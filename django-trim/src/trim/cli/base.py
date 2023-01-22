@@ -27,6 +27,8 @@ class SubHelpFormatter(argparse.HelpFormatter):
         self._indent_increment = 2
         self._level += 2
 
+import textwrap
+
 def print_help(parser):
 
     # retrieve subparsers from parser
@@ -39,9 +41,11 @@ def print_help(parser):
         # get all subparsers and print help
 
         for choice, subparser in subparsers_action.choices.items():
-            print("--- Subparser '{}'".format(choice))
+            print("- {}".format(choice))
             subparser.formatter_class = SubHelpFormatter
-            print(subparser.format_help())
+            vv = subparser.format_help()
+            vv = textwrap.indent(vv, '  ')
+            print(vv)
 
 
 class ConfigMixin(object):
