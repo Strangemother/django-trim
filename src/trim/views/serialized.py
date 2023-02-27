@@ -51,14 +51,14 @@ class JsonView(JSONResponseMixin, TemplateView):
 
         return self.render_to_json_response(data, **kwargs)
 
-
-class JsonListView(JSONResponseMixin, DetailView):
+class JSONListResponseMixin(object):
     fields = None
-    model = None
-    prop = 'object_list'
-    # Apply any extra dictionary data to append into the response dictionary
-    # _after_ serialisation.
-    response_extra = None
+
+    def render_to_json_response(self, context, **response_kwargs):
+        """
+        Returns a JSON response, transforming 'context' to make the payload.
+        """
+        return JsonResponse(context,)
 
     def get_dump_object(self, obj):
         keys = self.fields or '__all__'
@@ -69,9 +69,6 @@ class JsonListView(JSONResponseMixin, DetailView):
                 r += (field.attname, )
             keys = r
         return { x: getattr(obj, x) for x in keys}
-
-    def get_results(self):
-        return self.model.objects.all()
 
     def get_serialiser(self):
         serial_data = JsonSerializer()
@@ -90,6 +87,17 @@ class JsonListView(JSONResponseMixin, DetailView):
         """
         serial = self.get_serialiser()
         return serial.serialize(result)
+
+
+class JsonListView(JSONResponseMixin, JSONListResponseMixin, DetailView):
+    model = None
+    prop = 'object_list'
+    # Apply any extra dictionary data to append into the response dictionary
+    # _after_ serialisation.
+    response_extra = None
+
+    def get_results(self):
+        return self.model.objects.all()
 
     def get_response_extra(self, result):
         return { 'count': len(result), **(self.response_extra or {})}

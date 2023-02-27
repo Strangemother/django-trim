@@ -7,6 +7,8 @@ from pathlib import Path
 import appdirs
 
 from collections import defaultdict
+import textwrap
+
 
 register = { 'functions': defaultdict(tuple)}
 # # create the parser for the "a" command
@@ -27,21 +29,52 @@ class SubHelpFormatter(argparse.HelpFormatter):
         self._indent_increment = 2
         self._level += 2
 
-def print_help(parser):
 
+
+def get_subactions(parser):
+    return [
+            action for action in parser._actions if isinstance(action, argparse._SubParsersAction)
+        ]
+
+
+def print_help(parser, less=False):
     # retrieve subparsers from parser
-    subparsers_actions = [
-        action for action in parser._actions
-        if isinstance(action, argparse._SubParsersAction)]
+    subparsers_actions = get_subactions(parser)
     # there will probably only be one subparser_action,
     # but better safe than sorry
     for subparsers_action in subparsers_actions:
         # get all subparsers and print help
-
         for choice, subparser in subparsers_action.choices.items():
-            print("--- Subparser '{}'".format(choice))
-            subparser.formatter_class = SubHelpFormatter
-            print(subparser.format_help())
+            print_sub_help((choice,), subparser, less=less)
+
+DEFAULT_PREFIX ='-'
+
+def print_sub_help(choices, subparser, depth=0, add_spaces=0, prefix=None, less=False):
+    d = 1
+    dashes = (DEFAULT_PREFIX if prefix is None else prefix) * (depth + d)
+    spaces = ' ' * (depth + add_spaces)
+
+
+    print("{}{} $ APP {}".format(spaces, dashes, ' '.join(choices)))
+
+    subparser.formatter_class = SubHelpFormatter
+
+    if less is False:
+        vv = subparser.format_help()
+        spaces = ' ' * (depth + d +3)
+        vv = textwrap.indent(vv, spaces)
+        print(vv)
+
+    subparsers_actions = get_subactions(subparser)
+
+    for subparsers_action in subparsers_actions:
+        # get all subparsers and print help
+        for choice, _subparser in subparsers_action.choices.items():
+            print_sub_help(choices + (choice,),
+                _subparser,
+                depth=depth+1 if less is False else d,
+                less=less,
+                prefix=prefix or '')
 
 
 class ConfigMixin(object):
@@ -228,6 +261,7 @@ class AppActions(ConfigMixin):
         self.args = None
         self.parser = None
         self.positions = {}
+        self.primary_init_kwargs = {}
         self.app_functions = ()
         self.setup()
 
@@ -247,12 +281,18 @@ class AppActions(ConfigMixin):
     def get_register_function(self):
         return register['functions'][self.register_name]
 
-    def get_subparser(self, parser=None):
+    def get_subparser(self, parser=None, **kwargs):
         """Return the 'subparser' of a given parent parser;
         such as "bar for "$foo bar". If the parent parser is not given, use
         the primary parser.
         """
-        parser = parser or self.get_primary_parser()
+
+        ## If add is False, the default (standard) cli printout occurs,
+        #if true, (default), the internal printout occurs.
+        ## By default it's on to allow both the default, and the optional
+        ### $ appname [nothing]
+        # kwargs.setdefault('add_help', False)
+        parser = parser or self.get_primary_parser(**kwargs)
 
         if self._subparsers.get(parser) is None:
             subparsers = parser.add_subparsers(help='sub-command help')
@@ -288,21 +328,28 @@ class AppActions(ConfigMixin):
         return self.add_sub(func, name, self.positions[position_name], **kwargs)
 
     def default_caller(self, args):
-        print_help(self.get_primary_parser())
+        print_help(self.get_primary_parser(), less=True)
         return 'res from default_caller'
 
-    def get_primary_parser(self):
+    def get_primary_parser(self, **kwargs):
         """Return the primary parser for the program. If the internal self.parser
         is undefined, create a new 'primary' and return it.
         """
         if self.parser is None:
-            parser = argparse.ArgumentParser(prog=self.prog_name)
+            # kwargs.setdefault('add_help', False)
+            kwargs = self.get_primary_init_kwargs(**kwargs)
+            parser = argparse.ArgumentParser(prog=self.prog_name, **kwargs)
             parser._name = self.primary_name
             # parser.add_argument('--foo', action='store_true', help='foo help')
             parser.set_defaults(func=self.default_caller)
             self.parser = parser
 
         return self.parser
+
+    def get_primary_init_kwargs(self, **kwargs):
+        nkw = self.primary_init_kwargs.copy()
+        nkw.update(kwargs)
+        return nkw
 
     def get_parser(self, name=None):
         if name in [None, 'primary', self.primary_name]:
