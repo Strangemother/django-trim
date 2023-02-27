@@ -55,4 +55,4 @@ urlpatterns = trims.paths_dict(views, dict(
 
 ---
 
-That's done. A clean and secure `mymodel` list, implemented in like 10 lines of code.
+That's done. A clean and secure `mymodel` list, implemented in near 10 lines of code.

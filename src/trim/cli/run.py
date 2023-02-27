@@ -79,7 +79,7 @@ def subcall_stream(cmd, fail_on_error=True):
 
     return exit_code
 
-def read_one_stream_command(command):
+def read_one_stream_command(command, show=True):
     process = subprocess.Popen(
         command,
         stdout=subprocess.PIPE,
@@ -89,7 +89,7 @@ def read_one_stream_command(command):
         ## Adding universal newlines will evoke _str_ from the `out`
         # universal_newlines=True,
     )
-
+    res = ''
     byte_count = 0
     count = 0
     while True:
@@ -102,14 +102,19 @@ def read_one_stream_command(command):
             break
 
         if len(out) > 0:
-            sys.stdout.write(clean(out, ''))
-            sys.stdout.flush()
+            t = out.decode('utf')
+            res += t
+            if show:
+                sys.stdout.write(t)
+                sys.stdout.flush()
         else:
             count += 1
             if count % 20 == 0:
                 print('blanked.')
                 break
     # process.wait()
+    return res
+
 
 def run_poll_command(command):
     process = subprocess.Popen(command, stdout=subprocess.PIPE)
@@ -118,7 +123,7 @@ def run_poll_command(command):
         if output == '' and process.poll() is not None:
             break
         if output:
-            print(clean(output.strip()))
+            print(output.strip())
     rc = process.poll()
     return rc
 
@@ -155,6 +160,7 @@ def run_command(command):
     except KeyboardInterrupt:
         # process.terminate()
         print('KeyboardInterrupt')
+
 
 def run_command2(cmd):
     popen = subprocess.Popen(cmd,
