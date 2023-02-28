@@ -108,21 +108,52 @@ decimal(*a, digits=19, places=10, **kw)
 file(*a, **kw)
 image(*a, **kw)
 filepath(*a, **kw)
-
-float = float_
-int = integer
-str = string = chars
-bool = boolean
-any_model = any
-
-auto_small = small_auto
-auto_big = big_auto
-int_small = small_int
-int_big = big_int
-int_pos = pos_int
-int_small_pos = pos_small_int
-int_big_pos = pos_big_int
-dt_blank = blank_dt
-o2o_user = user_o2o
-fk_user = user_fk
 ```
+
+
+## Function Aliases
+
+Django `trim` is designed to be _ready-to-go_ and specifically designed to remove the language barrier to "correct" method names.
+
+All `trim.models.fields` have a _flipped_ name as an alias to the original function:
+
+```py
+from trim.models import fields
+
+class MyModel(models.Model):
+    user = fields.user_fk()
+    owner = fields.fk_user()
+```
+
+This allows you to assume your preferred flavour, without _learning_ a special `trim` language.
+
+    | Field | Alternatives | ... |
+    | --- | --- | --- |
+    | float | float_ |
+    | auto_small | small_auto |
+    | auto_big | big_auto |
+    | int_small | small_int |
+    | int_big | big_int |
+    | int_pos | pos_int |
+    | int_small_pos | pos_small_int |
+    | int_big_pos | pos_big_int |
+    | int_ | integer |
+    | int | integer |
+    | --- | --- | --- |
+    | str | string | chars |
+    | --- | --- | --- |
+    | boolean_null | bool_null | null_bool |
+    | boolean_true | bool_true | true_bool |
+    | boolean_false | bool_false | false_bool |
+    | bool | boolean |
+    | --- | --- | --- |
+    | dt_blank | blank_dt |
+    | dt | datetime |
+    | created | dt_created |
+    | updated | dt_updated |
+    | --- | --- | --- |
+    | any_model | any |
+    | o2o_user | user_o2o |
+    | fk_user | user_fk |
+    | fk_self | self_fk |
+    | m2m_self | self_m2m |

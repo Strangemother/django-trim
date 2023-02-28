@@ -40,7 +40,7 @@ def url(*a, **kw):
 
 
 def text(*a, **kw):
-    """
+    """A standard `models.TextField` passing the standard arguments.
     """
     # defaults(kw, **blank_null())
     kw = defaults(a, kw, nil=True)
@@ -48,7 +48,8 @@ def text(*a, **kw):
 
 
 def chars(first_var=None, *a, **kw):
-    """
+    """A standard `models.CharField` passing the standard fields.
+    The first value may be a length `int` or `function`
     """
 
     # Rearrange the params, if the first var is callable, it's the default func,
@@ -85,19 +86,15 @@ def chars(first_var=None, *a, **kw):
 
 
 def rand_str(*a, **kw):
+    """Return a standard `CharField` with a default value of a random string
+    using `.rand.rand_str`
+    """
     kw = defaults(a, kw, default=rand.rand_str)
     return chars(*a, **kw)
 
 
-# def text(*args, **kw):
-#     """
-#     """
-#     kw = defaults(args, kw, nil=True)
-#     return models.TextField(*args, **kw)
-
-
 def null_bool(*a, **kw):
-    """A true/false field.
+    """A standard `BooleanField` with default `null=True`
 
     The default form widget for this field is NullBooleanSelect as null=True.
     The default value of BooleanField is None when Field.default isn’t defined.
@@ -107,7 +104,7 @@ def null_bool(*a, **kw):
 
 
 def true_bool(*a, **kw):
-    """A true/false field. default True
+    """A standard `BooleanField` with default `True`
 
     The default form widget for this field is CheckboxInput, or NullBooleanSelect if null=True.
     The default value of BooleanField is None when Field.default isn’t defined.
@@ -117,7 +114,7 @@ def true_bool(*a, **kw):
 
 
 def false_bool(*a, **kw):
-    """A true/false field. default False
+    """A standard `BooleanField` with default `False`
 
     The default form widget for this field is CheckboxInput, or NullBooleanSelect if null=True.
     The default value of BooleanField is None when Field.default isn’t defined.
@@ -127,7 +124,7 @@ def false_bool(*a, **kw):
 
 
 def boolean(*a, **kw):
-    """A true/false field.
+    """A standard `BooleanField` passing all arguments.
 
     The default form widget for this field is CheckboxInput, or NullBooleanSelect if null=True.
     The default value of BooleanField is None when Field.default isn’t defined.
@@ -136,34 +133,42 @@ def boolean(*a, **kw):
 
 
 def blank_dt(*a, **kw):
+    """A standard `DateTimeField` with default `null=True`
+    """
     kw = defaults(a, kw, nil=True)
     return datetime(*a, **kw)
 
 
-# def blank_date(*a, **kw):
-#     kw = defaults(a, kw, nil=True)
-#     return date(*a, **kw)
-
-
 def date(*a, **kw):
+    """A standard `DateTimeField` passing all arguments
+    """
     return models.DateField(*a, **kw)
 
 
 def dt_created(*a, **kw):
-    """
+    """A standard `DateTimeField` with default `auto_now_add=True`
     """
     kw.setdefault('auto_now_add', True)
     return datetime(*a, **kw)
 
 
 def dt_updated(*a, **kw):
-    """
+    """A standard `DateTimeField` with default `auto_now=True`
     """
     kw.setdefault('auto_now', True)
     return datetime(*a, **kw)
 
 
 def dt_cu_pair(*a, **kw):
+    """A tuple pair of `DateTimeField`, first item `created`, second `updated`.
+    `created, updated = dt_cu_pair()`
+
+        class AnyModel(models.Model):
+            name = chars()
+            age = integer()
+            created, updated = dt_cu_pair()
+
+    """
     return (
         dt_created(*a, **kw),
         dt_updated(*a, **kw),
@@ -171,12 +176,15 @@ def dt_cu_pair(*a, **kw):
 
 
 def datetime(*a, **kw):
+    """A standard `DateTimeField` passing all arguments
+    """
     kw = defaults(a, kw)
     return models.DateTimeField(*a, **kw)
 
 
 def integer(*a, **kw):
-    """
+    """A standard `IntegerField` with the first argument as the default
+    `teenager_age = integer(18)`
     """
     value = None
     if len(a) > 0:
@@ -190,28 +198,43 @@ def integer(*a, **kw):
 
 
 def get_user_model():
-    """Return the user model using the _original_ `get_user_model` function
+    """Return the user model using the original django
+    `django.contrib.auth.get_user_model` function.
     """
     return orig_get_user_model()
 
 
 def fk(other, *a, on_delete=None, **kw):
+    """A standard `ForeignKey` with the first argument as the _other_ model.
+    `on_delete=CASCADE` by default.
+
+        class EntityModel(models.Model):
+            name = chars()
+            attached = fk('other.model')
+            owner = fk(get_user_model())
+            color = fk(ColorModel)
+    """
     kw = defaults(a, kw, on_delete=on_delete or models.CASCADE)
     return models.ForeignKey(other, *a, **kw)
 
 
 def user_fk(*a,**kw):
+    """A standard `ForeignKey` with the _other_ model as the `get_user_model()`
+    result (the standard django auth user model).
+    """
     kw = defaults(a, kw, nil=True)
     return fk(get_user_model(), *a, **kw)
 
 
 def self_fk(*a,**kw):
+    """A standard `ForeignKey` with the _other_ model as the `"self"`
+    """
     kw = defaults(a, kw, nil=True)
     return fk('self', *a, **kw)
 
 
 def m2m(other, *a, **kw):
-    """A standard ManyToManyField accepting the `other` reference of string
+    """A standard `ManyToManyField` accepting the `other` reference of string
     to model type.
     """
     kw = defaults(a, kw, blank=True)
@@ -225,11 +248,16 @@ def self_m2m(*a, **kw):
 
 
 def o2o(other, *a, on_delete=None, **kw):
+    """A standard `OneToOneField` with the _other_ model as the first argument
+    """
     kw = defaults(a, kw, on_delete=on_delete or models.CASCADE)
     return models.OneToOneField(other, *a, **kw)
 
 
 def user_o2o(*a, **kw):
+    """A standard `OneToOneField` with the _other_ model as the `get_user_model()`
+    result (the standard django auth user model).
+    """
     return o2o(get_user_model(), *a, **kw)
 
 
@@ -241,14 +269,16 @@ def user_m2m(*a, **kw):
 
 
 def image(*a, **kw):
-    """
+    """A standard `ImageField` passing all arguments
     """
     kw = defaults(a, kw, blank=True)
     return models.ImageField(*a, **kw)
 
 
 def auto(*a, **kw):
-    """An IntegerField that automatically increments according to available IDs.
+    """A standard `AutoField` passing all arguments.
+
+    An IntegerField that automatically increments according to available IDs.
     You usually won’t need to use this directly;
     a primary key field will automatically be added to your model if you
     don’t specify otherwise.
@@ -284,6 +314,8 @@ def big_int(*a, **kw):
 
 
 def binary(*a, bytes=2_097_152, **kw):
+    """A standard `BinaryField` with the first argument as the target byte max
+    """
     #class BinaryField(max_length=None, **options)
     # A field to store raw binary data. It can be assigned bytes, bytearray, or memoryview.
 
@@ -294,12 +326,16 @@ def binary(*a, bytes=2_097_152, **kw):
         # The maximum length (in bytes) of the field.
         # The maximum length is enforced in Django’s validation using
         # MaxLengthValidator.
-    kw = defaults(a, kw, bytes=bytes, nil=True)
+    kw = defaults((bytes, ) + a, kw, nil=True)
     return models.BinaryField(*a, **kw)
 
 
 def decimal(*a, digits=19, places=10, **kw):
-    """A fixed-precision decimal number, represented in Python by a Decimal instance.
+    """A standard `DecimalField` with defaults `max_digits=19` and
+    `decimal_places=10`.
+
+
+    A fixed-precision decimal number, represented in Python by a Decimal instance.
     It validates the input using DecimalValidator.
 
         class DecimalField(max_digits=None, decimal_places=None, **options)
@@ -320,11 +356,14 @@ def decimal(*a, digits=19, places=10, **kw):
     models.DecimalField(..., max_digits=19, decimal_places=10)
     """
     kw = defaults(a, kw, nil=True)
-    return models.DecimalField(*a, digits=digits, places=places, **kw)
+
+    return models.DecimalField(*a, max_digits=digits, decimal_places=places, **kw)
 
 
 def duration(*a, **kw):
-    """A field for storing periods of time - modeled in Python by timedelta.
+    """A standard `DurationField`
+
+    A field for storing periods of time - modeled in Python by timedelta.
     When used on PostgreSQL, the data type used is an interval and on
     Oracle the data type is INTERVAL DAY(9) TO SECOND(6).
     Otherwise a big_int of microseconds is used.
@@ -544,7 +583,8 @@ def small_int(*a, **kw):
 
 
 def time(*a, **kw):
-    """
+    """Return a standard `TimeField`
+
     A time, represented in Python by a datetime.time instance. Accepts the same auto-population options as DateField.
 
         class TimeField(auto_now=False, auto_now_add=False, **options)
@@ -556,17 +596,36 @@ def time(*a, **kw):
 
 
 def uuid_null(*a, **kw):
+    """Return a standard `UUIDField` through `uuid()`."""
     kw = defaults(a, kw, nil=True)
     return uuid(*a, **kw)
 
 
 def pk_uuid(*a, **kw):
+    """Return a standard `UUIDField` field through `uuid()`, with the
+    `primary_key=True` and the default parameter as the function `uuid.uuid4`
+
+    Example:
+
+        class ProfileModel(models.Model):
+            pk = fields.pk_uuid()
+            user = fields.user_fk()
+
+    """
     # return models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     return uuid(primary_key=True, default=orig_uuid4, editable=False)
 
 
 def uuid(*a, **kw):
-    """A field for storing universally unique identifiers.
+    """Return a standard `UUIDField`, with editable=False and the default
+    function as `uuid.uuid4()`.
+
+    example:
+
+        class MyUUIDModel(models.Model):
+            my_uuid = trim.models.fields.uuid()
+
+    A field for storing universally unique identifiers.
     Uses Python’s UUID class.
 
     When used on PostgreSQL, this stores in a uuid datatype, otherwise in
@@ -595,6 +654,9 @@ def uuid(*a, **kw):
 
 
 def str_uuid(*a, **kw):
+    """Return a standard `CharField` through `chars()`, the default value
+    as the function `uuid.uuid4()`.
+    """
     kw  = defaults(a, kw, default=orig_uuid4)
     return chars(*a, **kw)
 
@@ -641,9 +703,24 @@ ID_FIELD = 'object_id'
 
 
 def generic_fk(content_type_field=CONTENT_TYPE_FIELD, id_field=ID_FIELD, **kw):
-    # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    # object_id = models.PositiveIntegerField()
-    # content_object = GenericForeignKey('content_type', 'object_id')
+    """Return the standard GenericForeignKey, providing a content type field and
+    an id field `generic_fk('content_type', 'object_id')`
+
+    Synonymous to:
+
+        class ExampleModel(models.Model):
+            # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+            # object_id = models.PositiveIntegerField()
+            content_object = GenericForeignKey('content_type', 'object_id')
+
+    Example:
+
+        class ExampleModel(models.Model):
+            content_type = contenttype_fk()
+            object_id = pos_int()
+            content_object = generic_fk('content_type', 'object_id')
+
+    """
     kw  = defaults(None, kw)
     GenericForeignKey = get_cached('GenericForeignKey')
 
@@ -687,7 +764,9 @@ def any(prefix, content_type_field=None, id_field=None, **kw):
 
 
 def any_model_set(*a, nil=True, **kw):
-    """
+    """Return a tuple of three fields, `generic_fk`, `contenttype_fk`, and `pos_int`
+    for a set of _content type_ associations.
+
     Apply a generic foreignkey insertion on a model using three fields:
 
         GenericForeignKey   the field to manipulate: e.g. "Product.parent_entity"
