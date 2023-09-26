@@ -142,6 +142,7 @@ def blank_dt(*a, **kw):
 def date(*a, **kw):
     """A standard `DateTimeField` passing all arguments
     """
+    kw = defaults(a, kw)
     return models.DateField(*a, **kw)
 
 
@@ -752,7 +753,6 @@ def any(prefix, content_type_field=None, id_field=None, **kw):
     after:
 
         unit, unit_content_type, unit_object_id = fields.any(prefix='unit')
-
 
     """
     prefix = prefix or ""

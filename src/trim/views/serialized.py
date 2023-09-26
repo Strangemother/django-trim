@@ -58,7 +58,7 @@ class JSONListResponseMixin(object):
         """
         Returns a JSON response, transforming 'context' to make the payload.
         """
-        return JsonResponse(context,)
+        return JsonResponse(context, **response_kwargs)
 
     def get_dump_object(self, obj):
         keys = self.fields or '__all__'
@@ -118,9 +118,9 @@ class JsonDetailView(JsonListView):
         return self.model.objects.get(id=self.kwargs['pk'])
 
     def get(self, request, *args, **kwargs):
-        return self.json_response(self, **kwargs)
+        return self.json_response(**kwargs)
 
-    def json_response(self, obj=None):
+    def json_response(self, obj=None, **kwargs):
         data = self.generate_response(obj)
         return self.render_to_json_response(data)
 
@@ -128,7 +128,7 @@ class JsonDetailView(JsonListView):
         result = obj or self.get_results()
         # serial = self.get_serialiser()
         # r = serial.serialize([result])
-        r = serialize_result([result])
+        r = self.serialize_result([result])
         data = {
             self.prop:r[0]
         }
