@@ -11,7 +11,6 @@ name: Upload Python Package
 # on:
 #   release:
 #     types: [published]
-
 on: workflow_dispatch
 
 permissions:
@@ -33,16 +32,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install build
     - name: Build package
-      run: |
-        python -m build
-      working-directory: ../django-trim
+      run: python -m build
     - name: Publish package
-#       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-      uses: pypa/gh-action-pypi-publish@release/v1
+      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
-        password: ${{ secrets.PYPI_API_TOKEN }}
-        # repository_url: https://test.pypi.org/legacy/
         user: __token__
-        packages_dir: ./django-trim/dist/
-
-#         password: ${{ secrets.PYPI_API_TOKEN }}
+        password: ${{ secrets.PYPI_API_TOKEN }}
