@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
       # name='django-trim',
-      version='0.1a1',
+      version='0.1a2',
       # description='Django Trim',
       # url='http://github.com/strangemother/django-trim',
       # author='Just Jay',

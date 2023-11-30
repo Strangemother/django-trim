@@ -8,7 +8,7 @@ port = 8001
 name = "django-trim"
 # version = "0.1a"
 authors = [
-  { name="Just Jay", email="django-trim@strangemother.com" },
+  { name="Strangemother", email="django-trim@strangemother.com" },
 ]
 description = "A small example package"
 readme = "README.md"
@@ -31,6 +31,8 @@ dynamic = ['version']
 # scripts
 # urls
 
+[tool.setuptools.package-data]
+trim = ["*.js", "*.css","*.html"]
 
 [project.scripts]
 trim = 'trim.cli.primary:main'
@@ -42,4 +44,4 @@ build-backend = "setuptools.build_meta"
 
 [project.urls]
 "Homepage" = "http://github.com/strangemother/django-trim"
-"Bug Tracker" = "https://github.com/pypa/sampleproject/issues"
+"Bug Tracker" = "http://github.com/strangemother/django-trim/issues"

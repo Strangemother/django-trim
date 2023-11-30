@@ -1,4 +1,8 @@
 
+
+DEFAULT_NIL = True
+
+
 def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
 
     if nil_sub:

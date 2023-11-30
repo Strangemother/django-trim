@@ -1,8 +1,11 @@
-from wagtail.admin.edit_handlers import StreamFieldPanel
+# from wagtail.admin.edit_handlers import StreamFieldPanel
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
-from wagtail.snippets.edit_handlers import SnippetChooserPanel
+# from wagtail.snippets.edit_handlers import SnippetChooserPanel
 
+StreamFieldPanel = FieldPanel
+SnippetChooserPanel = FieldPanel
+ImageChooserPanel = FieldPanel
 
 def image(*a, **kw):
     return ImageChooserPanel(*a, **kw)
