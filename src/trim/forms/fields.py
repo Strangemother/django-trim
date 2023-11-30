@@ -145,6 +145,7 @@ def image(*a, **kw):
     """A standard `forms.ImageField` field."""
     return forms.ImageField(*a,**kw)
 
+
 def integer(*a, **kw):
     """A standard `forms.IntegerField` field."""
     return forms.IntegerField(*a,**kw)
@@ -215,7 +216,7 @@ def split_datetime(*a, **kw):
 
 
 def modelchoice(*a, **kw):
-    """A standard `forms.SplitDateTimeField` field."""
+    """A standard `forms.ModelChoiceField` field."""
     return forms.ModelChoiceField(*a,**kw)
 
 

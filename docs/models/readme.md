@@ -1,5 +1,11 @@
 # Models
 
++ Fields
++ Auto Model Mixin
++ _Live_ Models
+
+## Fields
+
 Reduce typing on models! Import ready-to-use fields for your models.
 All fields shadow the existing django field.
 
@@ -19,10 +25,3 @@ class ContactMessage(models.Model):
     message = fields.text(nil=False)
     created, updated = fields.dt_cu_pair()
 ```
-
-All fields a shadowed with a functional caller, making them extremely predicable and short to type.
-
-|     |     |     |
-| --- | --- | --- |
-|     |     |     |
-|     |     |     |

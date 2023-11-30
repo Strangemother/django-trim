@@ -14,9 +14,14 @@ Django Trim reduces the amount of text, imports and general congantive overload 
 Some quick examples to quickly trim your code.
 
 + [Models](./models)
+    + [Auto Model Mixin](./models/auto_model_mixin.md)
+    + [Fields](./models/fields.md)
+    + [Live Models](./models/live.md)
 + [Views](./views)
 + [Forms](./forms.md)
+    + [Hidden Widget](./widgets/hidden.md)
 + [URLs](./urls.md)
 + [Admin](./admin.md)
 + [Templates](./templates)
-
++ Apps
+    + [Live Import](./apps.md)

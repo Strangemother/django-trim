@@ -35,7 +35,7 @@ def url(*a, **kw):
     """
     # kw.setdefault('max_length', 200)
     # defaults(kw, **blank_null())
-    defaults(a, kw, nil=True, max_length=200)
+    defaults(a, kw, nil=DEFAULT_NIL, max_length=200)
     return models.URLField(**kw)
 
 
@@ -43,7 +43,7 @@ def text(*a, **kw):
     """A standard `models.TextField` passing the standard arguments.
     """
     # defaults(kw, **blank_null())
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.TextField(*a, **kw)
 
 
@@ -81,7 +81,7 @@ def chars(first_var=None, *a, **kw):
     if max_length is None:
         max_length = default_max_length
 
-    kw = defaults(a, kw, max_length=max_length, nil=True)
+    kw = defaults(a, kw, max_length=max_length, nil=DEFAULT_NIL)
     return models.CharField(*a,**kw)
 
 
@@ -99,7 +99,7 @@ def null_bool(*a, **kw):
     The default form widget for this field is NullBooleanSelect as null=True.
     The default value of BooleanField is None when Field.default isn’t defined.
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return boolean(*a, **kw)
 
 
@@ -135,7 +135,7 @@ def boolean(*a, **kw):
 def blank_dt(*a, **kw):
     """A standard `DateTimeField` with default `null=True`
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return datetime(*a, **kw)
 
 
@@ -223,14 +223,14 @@ def user_fk(*a,**kw):
     """A standard `ForeignKey` with the _other_ model as the `get_user_model()`
     result (the standard django auth user model).
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return fk(get_user_model(), *a, **kw)
 
 
 def self_fk(*a,**kw):
     """A standard `ForeignKey` with the _other_ model as the `"self"`
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return fk('self', *a, **kw)
 
 
@@ -310,7 +310,7 @@ def big_int(*a, **kw):
 
     The default form widget for this field is a NumberInput.
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.BigIntegerField(*a, **kw)
 
 
@@ -327,7 +327,7 @@ def binary(*a, bytes=2_097_152, **kw):
         # The maximum length (in bytes) of the field.
         # The maximum length is enforced in Django’s validation using
         # MaxLengthValidator.
-    kw = defaults((bytes, ) + a, kw, nil=True)
+    kw = defaults((bytes, ) + a, kw, nil=DEFAULT_NIL)
     return models.BinaryField(*a, **kw)
 
 
@@ -356,7 +356,7 @@ def decimal(*a, digits=19, places=10, **kw):
     And to store numbers up to approximately one billion with a resolution of 10 decimal places:
     models.DecimalField(..., max_digits=19, decimal_places=10)
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
 
     return models.DecimalField(*a, max_digits=digits, decimal_places=places, **kw)
 
@@ -378,7 +378,7 @@ def duration(*a, **kw):
     to arithmetic on DateTimeField instances will not work as expected.
     """
 
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.DurationField(*a, **kw)
 
 
@@ -389,7 +389,7 @@ def email(*a, **kw):
         class EmailField(max_length=254, **options)
     """
 
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.EmailField(*a, **kw)
 
 
@@ -398,7 +398,7 @@ def file(*a, **kw):
 
         class FileField(upload_to=None, max_length=100, **options)
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.FileField(*a, **kw)
 
 
@@ -429,7 +429,7 @@ def filepath(*a, **kw):
         class MyModel(models.Model):
             file = models.FilePathField(path=images_path)
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.FilePathField(*a, **kw)
 
 
@@ -441,7 +441,7 @@ def float_(*a, **kw):
     False or TextInput otherwise.
 
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.FloatField(*a, **kw)
 
 
@@ -470,7 +470,7 @@ def ip_addr(*a, **kw):
     If you allow for blank values, you have to allow for null values since
     blank values are stored as null.
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.GenericIPAddressField(*a, **kw)
 
 
@@ -509,7 +509,7 @@ def json(*a, **kw):
     Providing a mutable default object like default={} or default=[]
     shares the one object between all model instances.
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.JSONField(*a, **kw)
 
 
@@ -521,7 +521,7 @@ def pos_big_int(*a, **kw):
         class PositiveBigIntegerField(**options)
     """
 
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.PositiveBigIntegerField(*a, **kw)
 
 
@@ -533,7 +533,7 @@ def pos_int(*a, **kw):
         class PositiveIntegerField(**options)
     """
 
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.PositiveIntegerField(*a, **kw)
 
 
@@ -544,7 +544,7 @@ def pos_small_int(*a, **kw):
 
         class PositiveSmallIntegerField(**options)
     """
-    kw = defaults(a, kw, max_length=50, nil=True)
+    kw = defaults(a, kw, max_length=50, nil=DEFAULT_NIL)
     return models.PositiveSmallIntegerField(*a, **kw)
 
 
@@ -555,7 +555,7 @@ def slug(*a, **kw):
 
         class SlugField(max_length=50, **options)
     """
-    kw = defaults(a, kw, max_length=50, nil=True)
+    kw = defaults(a, kw, max_length=50, nil=DEFAULT_NIL)
     return models.SlugField(*a, **kw)
 
 
@@ -567,7 +567,7 @@ def small_auto(*a, **kw):
         class SmallAutoField(**options)
     """
 
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.SmallAutoField(*a, **kw)
 
 
@@ -579,7 +579,7 @@ def small_int(*a, **kw):
         class SmallIntegerField(**options)
     """
 
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.SmallIntegerField(*a, **kw)
 
 
@@ -592,13 +592,13 @@ def time(*a, **kw):
 
     The default form widget for this field is a TimeInput. The admin adds some JavaScript trimcuts.
     """
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.TimeField(*a, **kw)
 
 
 def uuid_null(*a, **kw):
     """Return a standard `UUIDField` through `uuid()`."""
-    kw = defaults(a, kw, nil=True)
+    kw = defaults(a, kw, nil=DEFAULT_NIL)
     return uuid(*a, **kw)
 
 

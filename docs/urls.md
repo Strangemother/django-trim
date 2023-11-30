@@ -1,30 +1,87 @@
-# URLs
+# `trim.urls`
 
-Help the readability of your `urls.py`:
++ Named Paths
+    + `paths_named`
+    + `paths_dict`
++ Includes
+    + `path_includes`
 
-## Named Patterns `trim.urls.paths_named`
+
+## Named Patterns
 
 Named Patterns helps build a list of `paths()` for your `urlspatterns` using dictionary mappings.
 
 
+### Example
+
+The `trim.urls.paths_named` function reduces the typing required for `path()` URLs.
+
+The function accepts keyword arguments as the _name_ of pattern, accepting a tuple for the target _class_ within `views` and the target _url_.
+
+_urls.py_
 ```py
-
-from trim import urls as t_urls
-from trim.models import grab_models
-
+from trim import urls
 from . import views
 
-app_name = 'contact'
+app_name = 'myapp'
 
-urlpatterns = t_urls.paths_named(views,
-    success=('ContactFormSuccessView', 'thanks/',),
-    # reference trim generated views.
-    sheet=('ContactMessageListView', 'sheet/',),
-    detail=('ContactMessageDetailView', 'sheet/<str:pk>/',),
+urlpatterns = urls.paths_named(views,
+    # {% url myapp:name 'foostring' %}%
+    name=('ClassNamedView', 'my/url/<str:foo>/',),
+    ...
 )
 ```
 
+### Before
+
+Using django's standard pattern for `urls.py`, it may look something like this:
+
+```py
+from django.urls import path
+from .views import AboutView, ContactView, HomeView
+
+app_name = 'website'
+
+urlpatterns = [
+    path("about/", AboutView.as_view(), name='about'),
+    path("contact/", ContactView.as_view(), name='contact'),
+    path("/", HomeView.as_view(), name='home'),
+    path("<str:theme>/", HomeView.as_view(), name='home'),
+]
+```
+
+### After
+
+The `urls.paths_named` accepts the `views` module, and all patterns as keyword
+arguments.
+
+
+```py
+from trim import urls
+from . import views
+
+app_name = 'website'
+
+urlpatterns = urls.paths_named(views,
+    about=('AboutView', 'sheet/<str:pk>/',),
+    contact=('ContactView', 'contact/',),
+    home=('HomeView', ('/', '<str:theme>/'),),
+)
+```
+
+The tuple value contains: `("ClassName", "url")`. The `"url"` may be a tuple, for many urls to one view. As per the example for the _home_ view:
+
+```py
+    home=('HomeView', (
+                        '/',
+                        '<str:theme>/',
+                       ),
+    ), ...
+```
+
 ##  Class Based `trim.urls.paths_dict`
+
+As an alternative to the _named_ paths, we can use the class name as the key.
 
 Define the target class as the key, with a value of the name and url tuple:
 
@@ -44,10 +101,13 @@ trim_patterns = {
     'ProductDetailView': '<str:pk>/',
 }
 
-from trim import urls as t_urls
+from trim import urls
 
-urlpatterns = t_urls.paths_dict(views, trim_patterns)
+urlpatterns = urls.paths_dict(views, trim_patterns)
 ```
+
+
+### `view_prefix`
 
 The same dictionary pattern can be used for two view-stacks.
 In this case we build two sets of the same url pattern, but with the `view_prefix`
@@ -65,37 +125,107 @@ urlpatterns = trims.paths_dict(views, trim_patterns, view_prefix='Product')
 urlpatterns = trims.paths_dict(views, trim_patterns, view_prefix='People')
 ```
 
+## Templates Only
 
-## Includes `trim.urls.path_includes`
+> `trim.urls.as_templates()` for many views, `trim.urls.template_view()` for a single view.
 
-Perform Full includes through single entries, each expand to the conventional include:
+If you only need to present a template, without needing any functionality you can use the `as_templates` function.
+
+It's similar to the `trim.urls.paths_named` function and automatically generates a `TemplateView` for each given keyword argument:
+
+_urls.py_
+```py
+from trim import urls
+
+urlpatterns = urls.as_templates(
+    geoms_mockup=('mockup/', 'mockup/crystal-geometries.html'),
+    crystal_mockup=('mockup/1/', 'mockup/crystal-1.html'),
+    home=('mockup/home/', 'mockup/home.html'),
+    v1_article=('mockup/article/', 'mockup/v1-article.html'),
+    advert_cell=('advert/1/', 'small_adverts.html')
+)
+```
+
+Alternatively you can produce a single `TemplateView` using the `trim.urls.template_view` function:
+
+```py
+... # continued from above.
+
+urlpatterns += [
+    urls.template_view('mockup/2', 'mockup/crystal-geometries.html')
+]
+```
+
+## Includes
+
+> `trim.urls.path_includes`
+
+In general cases, the name of a django app can be the sub pattern url for our app. We can reduce an `include` to one entry:
 
 ```py
 from trim.urls import path_includes as includes
+
+urlpatterns = includes(
+        'account',  # path('account/', include('account'))
+        ...
+    )
+```
+
+### Usage
+
+As an example setup, the _myapp_ django site has three internal apps, each residing within a sub-url.
+
+    MyApp:
+        myapp: /
+        account: /account/
+        products: /products/
+        contact: /contact/
+
+The URL for the _contact_ app would be:
+
+    https://127.0.0.1:8000/contact/
+
+
+#### Before
+
+With `trim.urls.path_includes`, The URL patterns will look something like this:
+
+```py
+from django.urls import path, include
+from django.views.generic import TemplateView
+from .views import HomePage
+
+urlpatterns += [
+        path('account/', include('account.urls'))
+        path('products/', include('products.urls'))
+        path('contact/', include('contact.urls'))
+    ]
+
+# Other examples
+urlpatterns = [
+    path("/", HomePage.as_view(), name='home'),
+    path("about/", TemplateView.as_view(template_name="about.html")),
+]
+```
+
+#### After
+
+We can trim this down, by performing full `include` through single entries - each entry will become the conventional `path` include:
+
+```py
+from trim.urls import path_includes as includes
+from trim import urls
+from .views import HomePage
 
 urlpatterns += includes(
         'account', # path('account/', include('accounts'))
         'products',
         'contact',
     )
+
+# other examples
+urlpatterns = urls.paths_dict(views, home=('/', Homepage))
+urlpatterns += [urls.template_view('about/', 'about.html')]
 ```
 
-### Just Templates `trim.urls.as_templates`
-
-Maybe just a `TemplateView` or four:
-
-_urls.py (extended from above)_
-```py
-urlpatterns += t_urls.as_templates(
-    geoms=('mockup/', 'mockup/crystal-geometries.html'),
-    crystal1=('mockup/1/', 'mockup/crystal-1.html'),
-    home=('mockup/home/', 'mockup/home.html'),
-    v1_article=('mockup/article/', 'mockup/v1-article.html'),
-    advert_cell=('advert/1/', 'small_adverts.html')
-)
-
-urlpatterns += [
-    t_urls.template_view('mockup/2', 'mockup/crystal-geometries.html')
-]
-```
-
+This example is purposefully verbose to show we can still concatenate `paths_dict`, `lists` and `includes` without issue.
