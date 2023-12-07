@@ -32,8 +32,12 @@ urlpatterns = urls.paths_named(views,
 )
 ```
 
-### Before
-
+<table>
+<thead><tr>
+  <th align="left">Before</th>
+  <th align="left">After</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
 Using django's standard pattern for `urls.py`, it may look something like this:
 
 ```py
@@ -50,11 +54,9 @@ urlpatterns = [
 ]
 ```
 
-### After
+</td><td>
 
-The `urls.paths_named` accepts the `views` module, and all patterns as keyword
-arguments.
-
+The `urls.paths_named` accepts the `views` module, and all patterns as keyword arguments.
 
 ```py
 from trim import urls
@@ -68,6 +70,9 @@ urlpatterns = urls.paths_named(views,
     home=('HomeView', ('/', '<str:theme>/'),),
 )
 ```
+
+</td></tbody></table>
+
 
 The tuple value contains: `("ClassName", "url")`. The `"url"` may be a tuple, for many urls to one view. As per the example for the _home_ view:
 
