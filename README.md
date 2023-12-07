@@ -1,16 +1,22 @@
 # Django Trim
 
 [![Upload Python Package](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml)
+![PyPI](https://img.shields.io/pypi/v/django-trim?label=django-trim)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/django-trim)
 
 
-> Django Trim shortcuts all the boilerplate for some of those daily django parts. Reduce the amount of written text and trim your code for easier reading, faster prototyping, and less typing.
+> Effortlessly trim the boilerplate in your Django projects with `django-trim`. This convenient little library streamlines your models, views, forms, and more, - supporting core functionality for a smoother, more enjoyable day of coding.
 
-Django Trim reduces the amount of text, imports and general congantive overload of microtasks when plugging together a django app in it's initial stages.
+
+Django Trim complements Django's robust framework, offering a suite of tools that enhance and simplify the creation of URLs, forms, views, models, templates, and more.
 
 + Less typed text, same functionality
 + clear, predicable functional naming
 + Leverage conventions for faster prototyping
-+ 100% compatible with existing django components.
++ 100% compatible with existing Django components.
+
+`django-trim` respects Django's core principles, adding a layer of convenience and efficiency for developers who love Django's power but want to type lss wrds.
+
 
 ## Setup
 
@@ -40,25 +46,6 @@ INSTALLED_APPS = [
 
 You're ready to go.
 
-#### Optional Integration
-
-Later-on you may need to apply an entry to your `context_processors`.
-
-Within the your settings `TEMPLATES` entity, add `trim.context.appname` to the `OPTIONS.context_processors`:
-
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [],
-            'APP_DIRS': True,
-            'OPTIONS': {
-                'context_processors': [
-                    # ...
-                    "trim.context.appname",
-                ],
-            },
-        },
-    ]
 
 ## Trim Examples
 
@@ -73,9 +60,61 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort.
 
+
 ### Models
 
-functionally named model fields:
+At the top of the list is functional model fields. For instant and easy importing:
+
+
+<table>
+<thead><tr>
+  <th align="left">Before</th>
+  <th align="left">After</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
+
+```py
+from django.db import models
+
+
+class Musician(models.Model):
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    instrument = models.CharField(max_length=100)
+
+
+class Album(models.Model):
+    artist = models.ForeignKey(Musician, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    release_date = models.DateField()
+    num_stars = models.IntegerField()
+```
+
+</td><td>
+
+
+```py
+from django.db import models
+from trim.models import fields
+
+
+class Musician(models.Model):
+    first_name = models.chars(50)
+    last_name = models.chars(50)
+    instrument = models.chars(100)
+
+
+class Album(models.Model):
+    artist = models.fk(Musician)
+    name = models.chars(100)
+    release_date = models.dt()
+    num_stars = models.int()
+```
+
+</td></tbody></table>
+
+
+All fields exist, including complex types such as the _User_ Foreign Key, or even a `DateTime` _created_ and _updated_:
 
 ```py
 from django.db import models
@@ -89,30 +128,11 @@ class StockChange(models.Model):
     created, updated = fields.dt_cu_pair()
 ```
 
-_otherapp/models.py_
-
-```py
-from trim.models import AutoModelMixin
-
-class FooMonkeyMixin(AutoModelMixin):
-
-    def wave(self, word):
-        print(f"Hi - I'm a {self} waving {word}")
-
-    class Meta:
-        # The target app 'baskets' and its model 'Cart'
-        model_name = 'otherapp.Person'
-```
-
-```py
->>> from otherapp.models import Person
->>> Person().wave('hello')
-"Hi I'm <Person: Person object (None)> waving hello"
-```
 
 ### Forms
 
-Trim your form definitions with `trim.forms.fields`. They're exactly the same fields as the original , but with less text!
+Trim your form definitions with `trim.forms.fields`. They're exactly the same fields as the original, but with less text!
+
 
 ```py
 from django import forms
@@ -142,7 +162,52 @@ class MyModelListView(views.ListView, views.Permissioned):
 
 ### URLs
 
-Excellently easy URLS defined as reable dicts:
+Excellently easy URLS defined as readable dictionaries:
+
+
+<table>
+<thead><tr>
+  <th align="left">Before</th>
+  <th align="left">After</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
+Using django's standard pattern for `urls.py`, it may look something like this:
+
+```py
+from django.urls import path
+from .views import AboutView, ContactView, HomeView
+
+app_name = 'website'
+
+urlpatterns = [
+    path("about/", AboutView.as_view(), name='about'),
+    path("contact/", ContactView.as_view(), name='contact'),
+    path("/", HomeView.as_view(), name='home'),
+    path("<str:theme>/", HomeView.as_view(), name='home'),
+]
+```
+
+</td><td>
+
+The `urls.paths_named` accepts the `views` module, and all patterns as keyword arguments.
+
+```py
+from trim import urls
+from . import views
+
+app_name = 'website'
+
+urlpatterns = urls.paths_named(views,
+    about=('AboutView', 'sheet/<str:pk>/',),
+    contact=('ContactView', 'contact/',),
+    home=('HomeView', ('/', '<str:theme>/'),),
+)
+```
+
+</td></tbody></table>
+
+
+You can choose `name` defined patterns using `paths_named()`, or alternatively `ClassViewName` pattern using `paths_dict()`
 
 ```py
 from trim import urls
@@ -155,30 +220,51 @@ trim_patterns = dict(
 
 # No change to the loadout.
 urlpatterns = urls.paths_dict(views, trim_patterns)
-# Perform Full includes through single entries, each expand to the conventional include:
-urlpatterns += urls.path_includes(
-        'account', # path('account/', include('accounts'))
+```
+
+Perform Full includes through single entries, each expand to the conventional include:
+
+<table>
+<thead><tr>
+  <th align="left">Before</th>
+  <th align="left">After</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
+
+```py
+from django.urls import include, path
+
+urlpatterns = [
+    path("account/", include("account.urls")),
+    path("products/", include("products.urls")),
+    path("contact/", include("contact.urls")),
+    ...
+]
+```
+
+</td><td>
+
+
+```py
+urlpatterns = urls.path_includes(
+        'account',
         'products',
         'contact',
+        ...
     )
 ```
 
+</td></tbody></table>
+
+
 And so much more! All designed to trim your code for readability and us lazy fingers.
 
-## Why.
-
-I write a lot of django code for fun and business, and I'm constantly implementing the core basics, or applying a _"place holder"_ component until I need a fancy replacement.
-
-I've become constantly bored with writing _yet another quick list view_ and a few years ago I considered the idea of a "django boilerplate". To help me boilerplate my work _as I'm developing_, but implement clear, short, standard methodology until I upgrade to a finished view.
-
-Futhermore the boilerplate tool could infer urls, admin, models etc - plugging the gaps until I implement a long-term replacement.
-
-This app serves as _many tiny shortcuts_ all trimmed. As such 99% of the functionality is passive, reading the runtime and producing classes, paths, upon django wakeup and injecting into the module.
 
 ---
 
-I aim for the _Trim_ philosophy "convenient and thoughtless" - where a function or method should be quick to type, until I'm ready to replace them with the django builtins.
+## Philosophy
 
+I aim for the _Trim_ philosophy "convenient and thoughtless" - where a function or method should be quick to type, until I'm ready to replace them with the django builtins.
 
 
 ## License
