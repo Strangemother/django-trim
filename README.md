@@ -1,5 +1,8 @@
 # Django Trim
 
+[![Upload Python Package](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml)
+
+
 > Django Trim shortcuts all the boilerplate for some of those daily django parts. Reduce the amount of written text and trim your code for easier reading, faster prototyping, and less typing.
 
 Django Trim reduces the amount of text, imports and general congantive overload of microtasks when plugging together a django app in it's initial stages.
