@@ -1,5 +1,22 @@
 /* Plug and play toggle groups.
 
+    Add a _click_ event to toggle a class on a target,
+    For example a _button_ to show/hide a div.
+
+Usage:
+
+Include this JS Asset in your code:
+
+    {% static "js/toggle-links.js" %}
+
+Apply HTML assignments:
+
+    <a data-target='foo-bar'>Click to toggle</a>
+
+    <div data-name='foo-bar'>
+        toggled content.
+    </div>
+
 add the JS.
 
     1. add "data-name" to a target

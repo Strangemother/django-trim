@@ -76,3 +76,77 @@ class ProjectConfig(AppConfig):
 ```
 
 This allows the import of modules for an installed app without mandatory imports within the target app. Any app without the target file `coolapp.py`, it will silently fail.
+
+
+## Results
+
+The first question may be - where do the imports go?
+
+The `trim.live_import` fundamentally _"actives"_ the module, ensuring it's imported before your Django app wakes up. Without this, you would need to `import coolapp` somewhere within the app.
+
+
+An example of "waking up" all modules across all apps:
+
+```py
+    from trim.apps import live_import
+    loaded = live_import('coolapp')
+    # e.g. All 10 django apps are tested:
+    # blog.coolapp
+    # search.coolapp
+    # accounts.coolapp      # Found!
+    # ...
+    # contacts.coolapp
+    # stocks.coolapp
+    # string_integration.coolapp
+    # home.coolapp
+```
+
+`live_import` helps perform an _import_ on all modules named `coolapp` (or anything you prefer) within all apps within your Django site.
+
+### Example
+
+You can inspect the modules and utilise the content within, naturally integrating components will mount as per normal python modules.
+
+For example we could provide tooling to capture admin links, and reference them from all custom apps. In our `admintools.py` we apply some `LINKS`. The `trim.live_import` can reference the links:
+
+_admin_tools.py_
+```py
+from admin_tools import links
+
+ADMIN_LINKS = (
+    links.Link(
+            label='Users',
+            group='Authentication',
+            hyperlink='#'
+        ),
+)
+```
+
+When required, we can import all the modules matching `root/*/admintools.py`, and discover the `ADMIN_LINKS`:
+
+```py
+
+class IndexView(views.TemplateView):
+    template_name = 'admin_tools/index.html'
+
+    def get_context_data(self, **kwargs):
+        """Collect the admintools.py file from all sibiling apps
+        and apply them the context.
+        """
+        # load root/*/admintools.py from every app
+        loaded = live_import('admintools')
+        links = ()
+        for module in loaded:
+            links += getattr(module, 'ADMIN_LINKS', ())
+        kwargs['links'] = links
+        return kwargs
+```
+
+In our template, we can iterate the links as expected:
+
+```jinja
+{% for link in links %}
+    <a href="{{ link.hyperlink }}">{{ link.label }}</a>
+{% endfor %}
+```
+

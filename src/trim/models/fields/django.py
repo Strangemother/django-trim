@@ -18,6 +18,7 @@ sys_str = str
 
 from .base import *
 
+
 def url(*a, **kw):
     """A django `models.URLField` passing any arguments and keyword arguments
 

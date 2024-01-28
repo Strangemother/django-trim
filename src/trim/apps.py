@@ -38,18 +38,21 @@ def live_import(module_name):
     """
 
     _apps = apps.registry.apps
-
+    res = ()
     for conf in _apps.get_app_configs():
         name = conf.label
         # print(' -- App', name)
         # name == 'admin'
         # __name__ == 'django.contrib.admin'
         package_name = conf.module.__name__
-        silent_import_package_module(package_name, module_name)
-
+        mod = silent_import_package_module(package_name, module_name)
+        if mod is not None:
+            res += (mod, )
     ## Import the root app (it's not one of the installed apps.)
     a = settings.ROOT_URLCONF.split('.')[0]
     silent_import_package_module(a, module_name)
+
+    return res
 
 def silent_import_package_module(package_name, module_name):
     n = f'{package_name}.{module_name}'
@@ -57,6 +60,7 @@ def silent_import_package_module(package_name, module_name):
         # print('  Looking for', n)
         vv = importlib.import_module(n)
         # print(' -! Imported', vv)
+        return vv
     except ModuleNotFoundError as err:
         if err.name != n:
             # module name mismatch, the failed import is not the

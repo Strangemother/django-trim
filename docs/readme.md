@@ -25,3 +25,5 @@ Some quick examples to quickly trim your code.
 + [Templates](./templates)
 + Apps
     + [Live Import](./apps.md)
++ Execute
+    + [`read_one_stream_command`](./execute.md)
