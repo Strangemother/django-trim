@@ -1,8 +1,8 @@
 # Models
 
 + Fields
-+ Auto Model Mixin
-+ _Live_ Models
++ [Auto Model Mixin](./auto_model_mixin.md)
++ [_Live_ Models](./live.md)
 
 ## Fields
 

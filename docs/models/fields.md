@@ -2,38 +2,41 @@
 
 All `trim.models.fields` shadow the standard Django field. They are designed to be completely interchangable.
 
++ [All fields](./fields-auto.md)
+
+
+## Usage Example
+
 ```py
 from trim.models import fields
 
 
 class StockChange(models.Model):
-    """A Stock change occurs for:
+    """A Stock change example """
 
-    + a document upload (stock list file)
-    + A user purchase
-    + Human change.
-
-    A record is created detailing the instigator.
-    """
-
-    # user # who made the change
-    # reason = document | purchase | user (Admin)
+    # ForeignKey to another model.
     stockcount = fields.fk(StockCount)
+
+    # Standard ints
     from_count = fields.int(0)
     to_count = fields.int(1)
+
+    # A datetime pair; created, updated.
     created, updated = fields.dt_cu_pair()
+
+
+    # The "Any" for contentType modelling. Creating 3 fields
     (
         associated,
         associated_content_type,
         associated_object_id
     ) = fields.any(prefix='associated')
 
+
     @property
     def count(self):
+        """A stock count property using the int field."""
         return self.to_count
-
-    def get_delta(self):
-        return self.to_count - self.from_count
 ```
 
 ## Django Fields
@@ -127,33 +130,4 @@ class MyModel(models.Model):
 
 This allows you to assume your preferred flavour, without _learning_ a special `trim` language.
 
-    | Field | Alternatives | ... |
-    | --- | --- | --- |
-    | float | float_ |
-    | auto_small | small_auto |
-    | auto_big | big_auto |
-    | int_small | small_int |
-    | int_big | big_int |
-    | int_pos | pos_int |
-    | int_small_pos | pos_small_int |
-    | int_big_pos | pos_big_int |
-    | int_ | integer |
-    | int | integer |
-    | --- | --- | --- |
-    | str | string | chars |
-    | --- | --- | --- |
-    | boolean_null | bool_null | null_bool |
-    | boolean_true | bool_true | true_bool |
-    | boolean_false | bool_false | false_bool |
-    | bool | boolean |
-    | --- | --- | --- |
-    | dt_blank | blank_dt |
-    | dt | datetime |
-    | created | dt_created |
-    | updated | dt_updated |
-    | --- | --- | --- |
-    | any_model | any |
-    | o2o_user | user_o2o |
-    | fk_user | user_fk |
-    | fk_self | self_fk |
-    | m2m_self | self_m2m |
+[All fields](./fields-auto.md)

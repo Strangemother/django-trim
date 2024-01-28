@@ -2,7 +2,7 @@
 
 The `{% wrap %}` template tag allows you to wrap some content with another common template:
 
-```jin
+```jinja
 {% load trim %}
 
 {% wrap "fragments/other.html" with custom="attributes" %}
@@ -10,14 +10,61 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 {% endwrap %}
 ```
 
+> `{% wrap ... %}` acts very similar to `{% include ... %}` with an additional `wrap` context.
+
 ## Usage
+
+Create a fragment of which utilises the `{{ wrap.content }}`:
+
+_fragments/other.html_
+```jinja2
+<div class="complex-content">
+    <div class='text-content'>
+        {{ wrap.content }}
+    </div>
+    <!-- Some very complex HTML -->
+    <div class='right-content'></div>
+</div>
+```
+
+We can can use it within another template, adding some content to the wrap:
+
+_homepage.html_
+```jinja2
+{% load trim %}
+
+{% wrap "fragments/other.html" %}
+    <h1>Welcome</h1>
+    <p>The quick brown fox has complex content.</p>
+{% endwrap %}
+```
+
+## Complex Content
+
+The content within the `wrap` is _rendered inline_ using the _current_ context. The variable available in the fragment `wrap.content` is considered "rendered" when used.
+
+
+```jinja2
+{% load trim %}
+
+{% wrap "fragments/other.html" %}
+    <!-- Content can be complex -->
+    {% include "homepage/intro-text.html" %}
+{% endwrap %}
+```
+
+
+## Attributes and Conditionals
 
 The `wrap` tag accepts _with_ statement keyword arguments.
 
 ```jinja2
 {% load trim %}
 
+<!-- make a complex thing. -->
 {% quickform "products:stock-notify-form" as stock_form %}
+
+<!-- provide as an argument -->
 {% wrap "fragments/form.html" with form=stock_form %}{% endwrap %}
 ```
 
@@ -33,7 +80,7 @@ You can test for empty content using standard template tags.
 </ul>
 ```
 
-## Example
+# Example
 
 For this example the `wrap_form.html` accepts some some HTML in place of a _form_:
 

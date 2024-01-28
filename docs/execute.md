@@ -14,3 +14,8 @@ from trim.execute import read_one_stream_command as read_one
 
 read_one('powershell')
 ```
+
+
+---
+
+This isn't strictly a _Django_ specific tool and will work outside the django environment for any terminal byte streaming.

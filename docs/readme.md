@@ -9,20 +9,24 @@ Django Trim reduces the amount of text, imports and general congantive overload 
 + Leverage conventions for faster prototyping
 + 100% compatible with existing django components.
 
-## Trim Examples
+## Trim
 
-Some quick examples to quickly trim your code.
 
 + [Models](./models)
     + [Auto Model Mixin](./models/auto_model_mixin.md)
     + [Fields](./models/fields.md)
     + [Live Models](./models/live.md)
 + [Views](./views)
+    + [Authed Views](./views/authed-views.md)
 + [Forms](./forms.md)
+    + [Quick Forms](./forms/quickforms.md)
     + [Hidden Widget](./widgets/hidden.md)
 + [URLs](./urls.md)
 + [Admin](./admin.md)
-+ [Templates](./templates)
++ [Template Tags](./templates)
+    + [link](tags/link.md)
+    + [wrap](tags/wrap.md)
+    + [quickform](tags/quickform.md)
 + Apps
     + [Live Import](./apps.md)
 + Execute
