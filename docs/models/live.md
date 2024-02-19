@@ -2,23 +2,31 @@
 
 > The `trim.live` models is a simple shortcut to your installed django application models without the need to import. Gather any model using standard dotted notation `trim.live.myapp.ModelName`
 
-The "live" models tool provides a fast access method to all the existing installed models using a single concat string, resolving to the model.
+```py
+from trim import live
+
+other = live.myapp.ModelName
+```
+
+The "live" models tool provides a fast access method to all the existing installed models using a single concat string resolving to the model.
 
 ## Example
 
 ```py
 from trim import live
 
-other = live.myapp.ModelName
+# model cart.Cart
 cart = live.carts.Cart.objects.create(demo=True)
 
+# model checkout.Checkout
 checkout = live.checkout.Checkout(cart=cart)
 checkout.save()
 ```
 
 ---
 
-Replace a standard model import, or the django get_model import:
+
+the `trim.live` object can replace a standard import or the `app.get_model` function.
 
 Before:
 
@@ -46,6 +54,7 @@ cart = live.carts.Cart.objects.create(demo=True)
 checkout = live.checkout.Checkout(cart=cart)
 checkout.save()
 ```
+
 
 ## Another Example
 

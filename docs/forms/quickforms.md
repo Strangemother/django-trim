@@ -1,27 +1,20 @@
 # Quick Forms
 
-> Implement a prepared form on any page using the existing view and URLS. [read more in templatetags/quickforms](./templates/tags/quickforms.md)
+> _Quick Forms_ offers a seamless approach to embedding prepared forms on any page by leveraging existing views and URLs. For more in-depth information, see the [templatetags/quickforms documentation](../templates/tags/quickforms.md).
 
+_Quick forms_ utilizes your existing Django FormViews to display a form on any chosen page. The `{% quickform app:viewname %}` tag retrieves and uses the form from the specified view. When the form is submitted, the data is posted directly to that view.
 
-_Quick forms_ utilise the your existing django FormView to present a form on a chosen page.
-The `{% quickform app:viewname %}` tag uses the _form_ from the target view, and upon submission, the result is posted to the view.
-
-This allows you to create a standard form-view (with your business logic) and use it _anywhere_ without the integration issues complex form integration.
-
-_Quick Forms_ offers a seamless approach to embedding prepared forms on any page by leveraging existing views and URLs. For more in-depth information, see the [templatetags/quickforms documentation](./templates/tags/quickforms.md).
-
-_Quick forms_ smartly utilize your existing Django FormView to display a form on any chosen page. The `{% quickform app:viewname %} ` tag **retrieves and uses the form from the specified view**. When the form is submitted, the data is posted directly to that view.
+1. Build a standard `FormView`. e.g: view `contact:contact-us-form`
+2. Use the form on another page. e.g `{% quickform.form "contact:contact-us-form" %}`
 
 > This feature enables you to construct a standard form-view incorporating your business logic and deploy it anywhere in your application, bypassing the usual complexities associated with integrating forms in multiple places.
 
 Quick Forms provide two distinct methods for ease of use:
 
-+ The standard method, which returns the actual Form instance.
-+ The instant form method, which generates a complete HTML form ready for use.
++ The standard method `{% quickform %}`, which returns the actual Form instance.
++ The instant form method `{% quickform.form %}`, which generates a complete HTML form ready for use.
 
-
-Below is an example of how to use Quick Forms in your templates:
-
+Below is an example of how to use quick-forms in your templates:
 
 ```jinja
 {% load quickforms %}
@@ -35,11 +28,18 @@ Below is an example of how to use Quick Forms in your templates:
 {% quickform.form "app:formview-name" %}
 ```
 
-## Demo
+## Example Usage
 
-You should have a _view_ and it should be ready for a standard `FormView`. The `quickform` templatetag extracts the `form_class` and produces a finished form.
+The `{% quickform "app:formview-name" %}` utilised an `FormView`. The `quickform` templatetag extracts the `form_class` and produces a finished form.
 
-The view and URL for the target form isn't special. Here we can use trim parts to cutdown on boilerplate
+### Setup
+
+The view, form, and URL (for the target formview) are not special. For the example you should already have:
+
+1. A FormView
+2. A URL to the FormView
+
+Or to clarify you have a ready-to-go standard form of some type. For this example we create a basic `product_seach:searchform` on the POST URL `/search/`:
 
 _views.py_
 ```py
@@ -50,7 +50,10 @@ from . import forms
 class SearchFormView(views.FormView):
     form_class = forms.SearchForm
     template_name = 'product_search/form.html'
-    ...
+
+    def form_valid(self, form):
+        # complex form handling ...
+        ...
 ```
 
 _forms.py_
@@ -68,6 +71,8 @@ class SearchForm(forms.Form):
         fields = ('query',)
 ```
 
+Here we use trim urls - exposing the url `/search/` and our name `product_seach:searchform`
+
 _urls.py_
 ```py
 from trim import urls as turls
@@ -81,19 +86,19 @@ urlpatterns = turls.paths_dict(views, dict(
 )
 ```
 
-This isn't new and the interesting part is the `{% quickform %}`.
+### Implement
 
-To target the above we access the url `product_search:searchform`, of which will return a prepared `forms.SearchForm`:
+Now the interesting part: `{% quickform %}`. To target the above we access the url `product_search:searchform` of which will return a prepared `forms.SearchForm`:
 
-_other_view.py_
-```jinja2
+```jinja
 {% load quickforms %}
+
 <div class=myform>
-{% quickform.form "product_search:searchform" %}
+    {% quickform.form "product_search:searchform" %}
 </div>
 ```
 
-This produces a ready form:
+The result on our page includes a action url with a correct target, inside a finished form.
 
 ```html
 <div class=myform>

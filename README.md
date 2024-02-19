@@ -26,7 +26,7 @@ Download:
 pip install django-trim
 ```
 
-### Install:
+### Install
 
 Note this Apply the app `trim` to your `INSTALLED_APPS` within your `settings.py`:
 
@@ -80,7 +80,7 @@ from django.db import models
 class Musician(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    instrument = models.CharField(max_length=100)
+    instrument = models.TextField(max_length=100)
 
 
 class Album(models.Model):
@@ -101,14 +101,14 @@ from trim.models import fields
 
 class Musician(models.Model):
     first_name = models.chars(50)
-    last_name = models.chars(50)
-    instrument = models.chars(100)
+    last_name = models.str(50)    # alias of string or chars
+    instrument = models.text(100)
 
 
 class Album(models.Model):
     artist = models.fk(Musician)
     name = models.chars(100)
-    release_date = models.dt()
+    release_date = models.date()
     num_stars = models.int()
 ```
 
