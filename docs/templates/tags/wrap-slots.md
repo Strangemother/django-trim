@@ -19,18 +19,18 @@ Within the [wrap tag](./wrap.md), we can define placeholders:
 <!-- filename `wraps/hero-header.html` -->
 {% load slot %}
 
-<div class='hero-header'>
-    <header>
-        {% slot.define "title" %}
-            <h1>Spoons?</h1>
-        {% endslot %}
-    </header>
-
-    {% slot.define default %}
-        <p>Default slot content</p>
+<header>
+    {% slot.define "title" %}
+        <h1>Spoons?</h1>
     {% endslot %}
-</div>
+</header>
+
+{% slot.define default %}
+    <p>Default slot content</p>
+{% endslot %}
 ```
+
+Note _wrap templates_ don't load `wrap`. (it's not needed.)
 
 </td>
 <td>
