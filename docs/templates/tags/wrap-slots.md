@@ -1,15 +1,51 @@
 # `slot` Tag
 
++ Take a look at [the wrap tag](./wrap.md) to implement slots
+
+Use the `{% slot [name] %}` tag to push content into the `{% slot.define [name] %}` within a `{% wrap %}`.
+
+
+```jinja2
+<!-- filename `home.html` -->
+{% load wrap %}
+
+{% wrap "wraps/hero-header.html" %}
+    {% slot "title" %}<h1>Sugar not Shugar?</h1>{% endslot %}
+    {% slot %}<p>Alternative HTML</p>{% endslot %}
+{% endwrap %}
+```
+
+
 A `{% slot.define %}` defines a position within a target `{% wrap %}` as a placeholder for user content. Multiple optional slots may be defined within the wrap template:
 
-+ Take a look at [the wrap tag](./wrap.md) to implement slots
+
+```jinja
+<!-- filename `wraps/hero-header.html` -->
+{% load slot %}
+
+<div class='hero-header'>
+    <header>
+        {% slot.define "title" %}<h1>Spoons?</h1>{% endslot %}
+    </header>
+
+    <div class='split-50-50'>
+        {% slot.define default %}
+            <p>Default slot content</p>
+        {% endslot %}
+
+        <div class="right-image"><img src="hero.png"></div>
+    </div>
+</div>
+```
+
+## Define Slots
 
 Our wrap template is the target to import. Within this target we can add `{% slot.define named %}` definitions:
 
-_Wrap Template `wraps/hero-header.html`_
 ```jinja
+<!-- filename `wraps/hero-header.html` -->
 {% load slot %}
-<!-- View Wrap; for the header -->
+
 <div class='hero-header'>
     <header>
         {% slot.define "title" %}<h1>Spoons Can Run?</h1>{% endslot %}
@@ -25,10 +61,12 @@ _Wrap Template `wraps/hero-header.html`_
 </div>
 ```
 
-When implementing this wrap we can use it as normal:
+### Wrap Usage
 
-_View Template `homepage.html`_
+When implementing this wrap we can use it as normal without `slot` tags:
+
 ```jinja2
+<!-- filename `homepage.html` -->
 {% load wrap %}
 
 {% wrap "wraps/hero-header.html" %}
@@ -39,6 +77,7 @@ _View Template `homepage.html`_
 Or we can target our slots:
 
 ```jinja2
+<!-- filename `homepage.html` -->
 {% load wrap %}
 
 {% wrap "wraps/hero-header.html" %}
@@ -49,7 +88,9 @@ Or we can target our slots:
 
 Notice within the wrap we use `slot` (not `slot.define`).
 
-Result:
+### Result
+
+The output HTML collapses `slot` or `slot.define` placeholders:
 
 ```jinja
 <!-- View Wrap; for the header -->
@@ -82,12 +123,10 @@ When implementing a slot, we _define_ its placement ready for override. This can
 
 ### Default Slot Definition
 
-The `default` slot defines the _general_ placeholder used when the wrap does not use any `slot` tags, or uses a `slot` tag without a name:
+The `default` slot defines the _general_ placeholder used when the wrap does not use any `slot` tags, or uses a `slot` tag without a name. Notice `default` (keyword) not `"default"` (string);
 
-+ Notice `default` not `"default"`;
-
-_Wrap Template `wraps/target.html`_
 ```jinja
+<!-- Wrap Template `wraps/target.html` -->
 {% load slot %}
 <div>
     <!-- Define fields to override. -->
@@ -100,8 +139,8 @@ _Wrap Template `wraps/target.html`_
 
 We can access this `default` slot without using any `{% slot %}` tags:
 
-_view template `homepage.html`_
 ```jinja2
+<!-- view template `homepage.html` -->
 {% load wrap %}
 
 {% wrap "wraps/target.html" %}
@@ -109,10 +148,7 @@ _view template `homepage.html`_
 {% endwrap %}
 ```
 
-However, if given a slot without a name, this utilised `default`:
-
-+ This uses `{% slot %}` when importing or calling the wrap template
-+ Tags: `{% slot %}`, `{% slot default %}`, and  _no slots_, are treated as the same _default_ placeholder.
+Use `{% slot %}` when importing or calling the wrap template. Tags: `{% slot %}`, `{% slot default %}`, and  _no slots_, are treated as the same _default_ placeholder:
 
 ```jinja2
 {% load wrap slot %}
