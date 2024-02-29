@@ -22,7 +22,9 @@ Within the
 
 <div class='hero-header'>
     <header>
-        {% slot.define "title" %}<h1>Spoons?</h1>{% endslot %}
+        {% slot.define "title" %}
+            <h1>Spoons?</h1>
+        {% endslot %}
     </header>
     {% slot.define default %}
         <p>Default slot content</p>
@@ -40,8 +42,12 @@ When implementing the _wrap_, we can opt to use the slots:
 {% load wrap %}
 
 {% wrap "wraps/hero-header.html" %}
-    {% slot "title" %}<h1>Sugar not Shugar?</h1>{% endslot %}
-    {% slot %}<p>Alternative HTML</p>{% endslot %}
+    {% slot "title" %}
+        <h1>Sugar not Shugar?</h1>
+    {% endslot %}
+    {% slot %}
+        <p>Alternative HTML</p>
+    {% endslot %}
 {% endwrap %}
 ```
 
