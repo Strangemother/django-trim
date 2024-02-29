@@ -58,6 +58,8 @@ Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in th
 {% endwrap %}
 ```
 
+---
+
 Create a fragment of which utilises the `{{ wrap.content }}`:
 
 ```jinja2
@@ -71,7 +73,7 @@ Create a fragment of which utilises the `{{ wrap.content }}`:
 </div>
 ```
 
-We can can use it within another template, adding some content to the wrap:
+We can use it within another template, adding some content to the wrap:
 
 ```jinja2
 <!-- homepage.html -->
