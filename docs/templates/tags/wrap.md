@@ -20,6 +20,8 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 <tr valign="top">
 <td>
 
+Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in the best place for content injection:
+
 ```jinja2
 <div class="complex-content">
     <div class='text-content'>
@@ -33,6 +35,7 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 </td>
 <td>
 
+At the place of include use the `{% wrap %}{% endslot %}` tag to _use_ the wrap template:
 
 ```jinja
 {% load wrap %}
@@ -45,19 +48,7 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 </td>
 </tr>
 <tr>
-<td colspan="2">
 
-```jinja2
-<div class="complex-content">
-    <div class='text-content'>
-        My View content
-    </div>
-    <!-- Some very complex HTML -->
-    <div class='right-content'></div>
-</div>
-```
-
-</td>
 </tr>
 </tbody></table>
 
