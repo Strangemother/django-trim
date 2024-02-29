@@ -5,11 +5,20 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 
 <table>
 <thead><tr>
-  <th align="left">Template</th>
-  <th align="left">Usage</th>
-  <th align="left">Result</th>
+  <th align="left">
+
+  Template `fragments/other.html`
+
+  </th>
+  <th align="left">
+
+  Usage `homepage.html`
+
+  </th>
 </tr></thead>
-<tbody><tr valign="top"><td>
+<tbody>
+<tr valign="top">
+<td>
 
 ```jinja2
 <div class="complex-content">
@@ -21,7 +30,8 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 </div>
 ```
 
-</td><td>
+</td>
+<td>
 
 
 ```jinja
@@ -32,7 +42,10 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 {% endwrap %}
 ```
 
-</td><td>
+</td>
+</tr>
+<tr>
+<td>
 
 ```jinja2
 <div class="complex-content">
@@ -44,7 +57,9 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 </div>
 ```
 
-</td></tbody></table>
+</td>
+</tr>
+</tbody></table>
 
 ---
 
