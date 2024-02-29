@@ -7,12 +7,12 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 <thead><tr>
   <th align="left">
 
-  Template
+  Implement
 
   </th>
   <th align="left">
 
-  Implement
+  Template
 
   </th>
 </tr></thead>
@@ -25,7 +25,7 @@ At the place of include use the `{% wrap %}{% endslot %}` tag to _use_ the wrap 
 ```jinja
 {% load wrap %}
 
-{% wrap "fragments/other.html" with custom="attributes" %}
+{% wrap "fragments/other.html" %}
     My View content
 {% endwrap %}
 ```
