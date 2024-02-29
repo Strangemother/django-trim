@@ -3,18 +3,10 @@
 The `{% wrap %}` template tag allows you to wrap some content with another common template. Check out [slots](./wrap-slots.md) for defined placeholders.
 
 
-<table style="width: 100%">
+<table>
 <thead><tr>
-  <th align="left">
-
-  Implement
-
-  </th>
-  <th align="left">
-
-  Template
-
-  </th>
+  <th align="left">Implement</th>
+  <th align="left">Template</th>
 </tr></thead>
 <tbody>
 <tr valign="top">
@@ -52,7 +44,11 @@ Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in th
 </tr>
 </tbody></table>
 
----
+
+
+# Usage
+
+`{% wrap ... %}` acts very similar to `{% include ... %}` with an additional `wrap` context.
 
 ```jinja
 {% load wrap %}
@@ -62,14 +58,10 @@ Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in th
 {% endwrap %}
 ```
 
-> `{% wrap ... %}` acts very similar to `{% include ... %}` with an additional `wrap` context.
-
-## Usage
-
 Create a fragment of which utilises the `{{ wrap.content }}`:
 
-_fragments/other.html_
 ```jinja2
+<!-- fragments/other.html -->
 <div class="complex-content">
     <div class='text-content'>
         {{ wrap.content }}
@@ -81,8 +73,8 @@ _fragments/other.html_
 
 We can can use it within another template, adding some content to the wrap:
 
-_homepage.html_
 ```jinja2
+<!-- homepage.html -->
 {% load wrap %}
 
 {% wrap "fragments/other.html" %}
