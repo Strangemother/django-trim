@@ -1,8 +1,52 @@
 # `wrap` Tag
 
-The `{% wrap %}` template tag allows you to wrap some content with another common template
+The `{% wrap %}` template tag allows you to wrap some content with another common template. Check out [slots](./wrap-slots.md) for defined placeholders.
 
-+ Check out [slots](./wrap-slots.md) for defined placeholders
+
+<table>
+<thead><tr>
+  <th align="left">Template</th>
+  <th align="left">Usage</th>
+  <th align="left">Result</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
+
+```jinja2
+<div class="complex-content">
+    <div class='text-content'>
+        {{ wrap.content }}
+    </div>
+    <!-- Some very complex HTML -->
+    <div class='right-content'></div>
+</div>
+```
+
+</td><td>
+
+
+```jinja
+{% load wrap %}
+
+{% wrap "fragments/other.html" with custom="attributes" %}
+    My View content
+{% endwrap %}
+```
+
+</td><td>
+
+```jinja2
+<div class="complex-content">
+    <div class='text-content'>
+        My View content
+    </div>
+    <!-- Some very complex HTML -->
+    <div class='right-content'></div>
+</div>
+```
+
+</td></tbody></table>
+
+---
 
 ```jinja
 {% load wrap %}
