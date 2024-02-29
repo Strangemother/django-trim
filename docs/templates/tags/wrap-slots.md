@@ -15,7 +15,6 @@ Use the `{% slot [name] %}` tag to push content into the `{% slot.define [name] 
 
 Within the [wrap tag](./wrap.md), we can define placeholders:
 
-Within the
 ```jinja
 <!-- filename `wraps/hero-header.html` -->
 {% load slot %}
@@ -26,6 +25,7 @@ Within the
             <h1>Spoons?</h1>
         {% endslot %}
     </header>
+
     {% slot.define default %}
         <p>Default slot content</p>
     {% endslot %}
@@ -45,6 +45,7 @@ When implementing the _wrap_, we can opt to use the slots:
     {% slot "title" %}
         <h1>Sugar not Shugar?</h1>
     {% endslot %}
+
     {% slot %}
         <p>Alternative HTML</p>
     {% endslot %}
