@@ -3,7 +3,7 @@
 The `{% wrap %}` template tag allows you to wrap some content with another common template. Check out [slots](./wrap-slots.md) for defined placeholders.
 
 
-<table width="100%">
+<table style="width: 100%">
 <thead><tr>
   <th align="left">
 
