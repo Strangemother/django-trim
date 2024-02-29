@@ -1,9 +1,11 @@
 # `wrap` Tag
 
-The `{% wrap %}` template tag allows you to wrap some content with another common template:
+The `{% wrap %}` template tag allows you to wrap some content with another common template
+
++ Check out [slots](./wrap-slots.md) for defined placeholders
 
 ```jinja
-{% load trim %}
+{% load wrap %}
 
 {% wrap "fragments/other.html" with custom="attributes" %}
     ...
@@ -31,7 +33,7 @@ We can can use it within another template, adding some content to the wrap:
 
 _homepage.html_
 ```jinja2
-{% load trim %}
+{% load wrap %}
 
 {% wrap "fragments/other.html" %}
     <h1>Welcome</h1>
@@ -45,7 +47,7 @@ The content within the `wrap` is _rendered inline_ using the _current_ context. 
 
 
 ```jinja2
-{% load trim %}
+{% load wrap %}
 
 {% wrap "fragments/other.html" %}
     <!-- Content can be complex -->
@@ -59,7 +61,7 @@ The content within the `wrap` is _rendered inline_ using the _current_ context. 
 The `wrap` tag accepts _with_ statement keyword arguments.
 
 ```jinja2
-{% load trim %}
+{% load wrap %}
 
 <!-- make a complex thing. -->
 {% quickform "products:stock-notify-form" as stock_form %}
