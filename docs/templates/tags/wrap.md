@@ -45,7 +45,7 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 </td>
 </tr>
 <tr>
-<td>
+<td colspan="2">
 
 ```jinja2
 <div class="complex-content">
