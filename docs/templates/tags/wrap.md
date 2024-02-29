@@ -7,12 +7,12 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 <thead><tr>
   <th align="left">
 
-  Template `fragments/other.html`
+  Template
 
   </th>
   <th align="left">
 
-  Usage `homepage.html`
+  Implement
 
   </th>
 </tr></thead>
@@ -20,7 +20,20 @@ The `{% wrap %}` template tag allows you to wrap some content with another commo
 <tr valign="top">
 <td>
 
-Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in the best place for content injection:
+At the place of include use the `{% wrap %}{% endslot %}` tag to _use_ the wrap template `homepage.html`
+
+```jinja
+{% load wrap %}
+
+{% wrap "fragments/other.html" with custom="attributes" %}
+    My View content
+{% endwrap %}
+```
+
+</td>
+<td>
+
+Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in the best place for content injection `fragments/other.html`:
 
 ```jinja2
 <div class="complex-content">
@@ -30,19 +43,6 @@ Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in th
     <!-- Some very complex HTML -->
     <div class='right-content'></div>
 </div>
-```
-
-</td>
-<td>
-
-At the place of include use the `{% wrap %}{% endslot %}` tag to _use_ the wrap template:
-
-```jinja
-{% load wrap %}
-
-{% wrap "fragments/other.html" with custom="attributes" %}
-    My View content
-{% endwrap %}
 ```
 
 </td>
