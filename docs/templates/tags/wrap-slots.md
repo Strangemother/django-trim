@@ -13,7 +13,7 @@ Use the `{% slot [name] %}` tag to push content into the `{% slot.define [name] 
 <tr valign="top">
 <td>
 
-Within the [wrap tag](./wrap.md), we can define placeholders with `{% slot.define name %}{% endslot %}`.
+Within the [wrap tag](./wrap.md), we can define placeholders:
 
 Within the
 ```jinja
