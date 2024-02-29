@@ -58,6 +58,9 @@ Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in th
 {% endwrap %}
 ```
 
+We can apply any content within a slot, such as conditions and other include statement. The HTML is rendered within the context of the parent (before it's inserted into the wrap template), therefore we consider `wrap.content` as the "finished" result.
+
+
 ---
 
 Create a fragment of which utilises the `{{ wrap.content }}`:

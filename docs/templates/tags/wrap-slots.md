@@ -1,9 +1,63 @@
 # `slot` Tag
 
-+ Take a look at [the wrap tag](./wrap.md) to implement slots
-
 Use the `{% slot [name] %}` tag to push content into the `{% slot.define [name] %}` within a `{% wrap %}`.
 
+
+
+<table>
+<thead><tr>
+  <th align="left">Define</th>
+  <th align="left">Use</th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td>
+
+Within the [wrap tag](./wrap.md), we can define placeholders with `{% slot.define name %}{% endslot %}`.
+
+Within the
+```jinja
+<!-- filename `wraps/hero-header.html` -->
+{% load slot %}
+
+<div class='hero-header'>
+    <header>
+        {% slot.define "title" %}<h1>Spoons?</h1>{% endslot %}
+    </header>
+    {% slot.define default %}
+        <p>Default slot content</p>
+    {% endslot %}
+</div>
+```
+
+</td>
+<td>
+
+When implementing the _wrap_, we can opt to use the slots:
+
+```jinja2
+<!-- filename `home.html` -->
+{% load wrap %}
+
+{% wrap "wraps/hero-header.html" %}
+    {% slot "title" %}<h1>Sugar not Shugar?</h1>{% endslot %}
+    {% slot %}<p>Alternative HTML</p>{% endslot %}
+{% endwrap %}
+```
+
+</td>
+</tr>
+<tr>
+
+</tr>
+</tbody></table>
+
+
+Take a look at [the wrap tag](./wrap.md) to implement slots
+
+## Usage
+
+A wrap accepts slots when applied. The slot name is the same as the target sibling `slot.define`. Within a slot we can apply any HTML:
 
 ```jinja2
 <!-- filename `home.html` -->
@@ -25,11 +79,13 @@ A `{% slot.define %}` defines a position within a target `{% wrap %}` as a place
 
 <div class='hero-header'>
     <header>
-        {% slot.define "title" %}<h1>Spoons?</h1>{% endslot %}
+        {% slot.define "title" %} <!-- Define the "title" slot -->
+            <h1>Spoons?</h1>
+        {% endslot %}
     </header>
 
     <div class='split-50-50'>
-        {% slot.define default %}
+        {% slot.define default %} <!-- The _default_ slot -->
             <p>Default slot content</p>
         {% endslot %}
 
@@ -48,18 +104,25 @@ Our wrap template is the target to import. Within this target we can add `{% slo
 
 <div class='hero-header'>
     <header>
-        {% slot.define "title" %}<h1>Spoons Can Run?</h1>{% endslot %}
+        {% slot.define "title" %}
+            <h1>Spoons Can Run?</h1>
+        {% endslot %}
     </header>
     <div class='split-50-50'>
+
         {% slot.define default %}
-        <p>The question is <em>how</em> did the spoon run off with the fork?</p>
+            <p>The question is <em>how</em>
+               did the spoon run off with the fork?</p>
         {% endslot %}
-        <div class="right-image">
-            <img src="hero.png">
-        </div>
+
+        <div class="right-image"><img src="hero.png"></div>
     </div>
 </div>
 ```
+
+The `default` name is a keyword and not a string
+
+    default != "default"
 
 ### Wrap Usage
 
@@ -200,8 +263,8 @@ _wraps/product-card.html_
 
 When implementing this wrap template, we can choose to override any (or no) slots:
 
-_homepage.html_
 ```jinja2
+<!-- homepage.html -->
 {% load wrap slot %}
 
 {% for item in products.all() %}
