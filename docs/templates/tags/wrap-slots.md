@@ -13,7 +13,7 @@ Use the `{% slot [name] %}` tag to push content into the `{% slot.define [name] 
 <tr valign="top">
 <td>
 
-Within the [wrap tag](./wrap.md), we can define placeholders:
+Within the [wrap tag](./wrap.md), we can define placeholders with `slot.define`
 
 ```jinja
 <!-- filename `wraps/hero-header.html` -->
@@ -35,7 +35,7 @@ Note _wrap templates_ don't load `wrap`. (it's not needed.)
 </td>
 <td>
 
-When implementing the _wrap_, we can opt to use the slots:
+When implementing the _wrap_, we can opt to use the slots with the `slot` tag
 
 ```jinja2
 <!-- filename `home.html` -->
@@ -51,6 +51,8 @@ When implementing the _wrap_, we can opt to use the slots:
     {% endslot %}
 {% endwrap %}
 ```
+
+We don't need to _define_ here, as we're now attempting to slot into already defined placeholders.
 
 </td>
 </tr>
