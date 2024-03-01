@@ -62,7 +62,7 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 | Thing     |  Bits |
 | --- | --- |
-| Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) [Fields](./docs/models/fields.md) [Live String](./docs/models/live.md) |
+| Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) [Live String](./docs/models/live.md) |
 | Views     | [Authed Views](./docs/views/authed-views.md) [List View](./docs/views/listviews.md) [JSON Views](./docs/views/serialized.md)  |
 | Forms     | [quickforms](./docs/forms/quickforms.md)  |
 | URLs      | [named urls](./docs/urls.md)  |
