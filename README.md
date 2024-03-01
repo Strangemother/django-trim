@@ -27,6 +27,134 @@ Django Trim complements Django's robust framework, offering a suite of tools tha
 `django-trim` respects Django's core principles, adding a layer of convenience and efficiency for developers who love Django's power but want to type lss wrds.
 
 
+## Features
+
+Some of our favourite features!
+
+### Models
+
+Use `trim.models.fields` for easy to grab model fields:
+
+
+```py
+from trim.models import fields
+
+
+class HenBasket(models.Model):
+    """A Stock change example """
+
+    # ForeignKey to another model.
+    chicken = fields.fk(Chicken)
+    user = fields.user_fk()
+    # Standard Fields
+    full = fields.bool_false()
+    other = fields.text()
+    eggs = fields.int(6)
+    # A datetime pair; created, updated.
+    created, updated = fields.dt_cu_pair()
+```
+
+All `trim.models.fields` shadow the standard Django field. They are designed to be completely interchangable.
+
+
+### Views
+
+Simplify your class-based-view Generation with a single-point imports and trimmed extras:
+
+```py
+from trim import views # All views available
+from . import models
+
+class MyModelListView(views.ListView, views.Permissioned):
+    model = models.MyModel
+    permission_required = 'stocks.view_stockingmethod'
+
+
+class AddressDetailView(views.UserOwnedMixin, views.DetailView):
+    user_field = 'creator'
+    user_allow_staff = True
+
+    model = models.Address
+    ...
+```
+
+### Forms
+
+Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`:
+
+```jinja
+{% load quickforms %}
+
+<form>
+{% quickform "app:formview-name" %} <!-- synonymous to {{ form.as_ul }} -->
+</form>
+
+{% quickform.form "app:formview-name" %} <!-- Ready to go POST form -->
+```
+
+
+### URLs
+
+Looking for instantly readable URLs, connected to your class based views?
+
+```py
+from trim import urls
+from . import views
+
+app_name = 'website'
+
+trim_patterns = dict(
+    ListView='',                               # Blank URLS? No problem
+    CreateView=('create', 'new/'),             # Use named urls: website:create
+    UpdateView=('update', 'change/<str:pk>/'), # Paths are Paths!
+    DeleteView='delete/<str:pk>/',             # _JUST_ a URL? Cool
+    DetailView='<str:pk>/',
+)
+
+urlpatterns = trims.paths_dict(views, trim_patterns)
+```
+
+
+### Admin
+
+Instantly and automatically generate admin views for all your models
+
+```py
+from django.contrib import admin
+from trim import admin as t_admin
+
+from . import models
+
+t_admin.register_models(models)
+```
+
+### Template Tags
+
+#### Wrap Tag
+
+Generate `wrap` templates to import into your view:
+
+```jinja2
+{% load wrap slot %}
+
+{% wrap "wraps/target.html" %}
+    {% slot %}
+        <p>Replace the default content with alternative HTML,
+        no slot names needed.</p>
+    {% endslot %}
+{% endwrap %}
+```
+
+#### Link Tag
+
+Generate a hyperlink to a view with `{% link viewname arguments label %}`
+
+```jinja2
+{% load link %}
+{% link "appname:viewname" %}
+```
+
+
 ## Setup
 
 Download:
