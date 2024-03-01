@@ -4,7 +4,7 @@
 
 # Django Trim
 
-Effortlessly trim the boilerplate in your Django projects with `django-trim`
+Effortlessly trim the boilerplate in your Django projects.
 
 [![Upload Python Package](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml)
 ![PyPI](https://img.shields.io/pypi/v/django-trim?label=django-trim)
@@ -14,7 +14,7 @@ Effortlessly trim the boilerplate in your Django projects with `django-trim`
 
 </div>
 
-> Effortlessly trim the boilerplate in your Django projects with `django-trim`. This convenient little library streamlines your models, views, forms, and more, - supporting core functionality for a smoother, more enjoyable day of coding.
+> This convenient little library streamlines your models, views, forms, and more, - supporting core functionality for a smoother, more enjoyable day of coding.
 
 
 Django Trim complements Django's robust framework, offering a suite of tools that enhance and simplify the creation of URLs, forms, views, models, templates, and more.
@@ -60,12 +60,14 @@ You're ready to go.
 
 Django trim is a facade to the common features of Django providing a layer of sugar for all those daily components. Some quick examples to quickly trim your code:
 
-+ Models
-+ Views
-+ Forms
-+ URLs
-+ Admin
-+ Templates
+| Thing     |  Bits |
+| --- | --- |
+| Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) [Fields](./docs/models/fields.md) [Live String](./docs/models/live.md) |
+| Views     | [Authed Views](./docs/views/authed-views.md) [List View](./docs/views/listviews.md) [JSON Views](./docs/views/serialized.md)  |
+| Forms     | [quickforms](./docs/forms/quickforms.md)  |
+| URLs      | [named urls](./docs/urls.md)  |
+| Admin     | [register_models](./docs/admin.md)  |
+| Templates | [link tag](./tags/link.md) [wrap](./docs/tags/wrap.md)  [slots](./docs/tags/wrap-slots.md) |
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
@@ -142,11 +144,12 @@ from . import views
 app_name = 'website'
 
 trim_patterns = dict(
-    ListView='',                               # Blank URLS? No problem
+    MyModelListView='',
+    AddressDetailView='<str:pk>/',
+    ...
     CreateView=('create', 'new/'),             # Use named urls: website:create
     UpdateView=('update', 'change/<str:pk>/'), # Paths are Paths!
     DeleteView='delete/<str:pk>/',             # _JUST_ a URL? Cool
-    DetailView='<str:pk>/',
 )
 
 urlpatterns = trims.paths_dict(views, trim_patterns)
