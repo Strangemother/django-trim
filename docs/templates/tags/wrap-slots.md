@@ -241,8 +241,8 @@ A wrap template can be more complex, applying multiple optional placeholders to 
 + `slot.define` can have multiple names
 + Slot names are `"strings"` (because they can be variables)
 
-_wraps/product-card.html_
 ```jinja
+<!-- wraps/product-card.html -->
 {% load slot %}
 <div class='product card'>
     <header>
