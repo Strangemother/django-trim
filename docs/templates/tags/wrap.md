@@ -1,24 +1,32 @@
 # `wrap` Tag
 
-The `{% wrap %}` template tag allows you to wrap some content with another common template
+The `{% wrap %}` template tag allows you to wrap some content with another common template. Check out [slots](./wrap-slots.md) for defined placeholders.
 
-+ Check out [slots](./wrap-slots.md) for defined placeholders
+
+<table>
+<thead><tr>
+  <th align="left">Implement</th>
+  <th align="left">Template</th>
+</tr></thead>
+<tbody>
+<tr valign="top">
+<td>
+
+At the place of include use the `{% wrap %}{% endslot %}` tag to _use_ the wrap template `homepage.html`
 
 ```jinja
 {% load wrap %}
 
-{% wrap "fragments/other.html" with custom="attributes" %}
-    ...
+{% wrap "fragments/other.html" %}
+    My View content
 {% endwrap %}
 ```
 
-> `{% wrap ... %}` acts very similar to `{% include ... %}` with an additional `wrap` context.
+</td>
+<td>
 
-## Usage
+Create a _wrap template_ with any HTML, and apply the `{{ wrap.content }}` in the best place for content injection `fragments/other.html`:
 
-Create a fragment of which utilises the `{{ wrap.content }}`:
-
-_fragments/other.html_
 ```jinja2
 <div class="complex-content">
     <div class='text-content'>
@@ -29,10 +37,49 @@ _fragments/other.html_
 </div>
 ```
 
-We can can use it within another template, adding some content to the wrap:
+</td>
+</tr>
+<tr>
 
-_homepage.html_
+</tr>
+</tbody></table>
+
+
+
+# Usage
+
+`{% wrap ... %}` acts very similar to `{% include ... %}` with an additional `wrap` context.
+
+```jinja
+{% load wrap %}
+
+{% wrap "fragments/other.html" with custom="attributes" %}
+    ...
+{% endwrap %}
+```
+
+We can apply any content within a slot, such as conditions and other include statement. The HTML is rendered within the context of the parent (before it's inserted into the wrap template), therefore we consider `wrap.content` as the "finished" result.
+
+
+---
+
+Create a fragment of which utilises the `{{ wrap.content }}`:
+
 ```jinja2
+<!-- fragments/other.html -->
+<div class="complex-content">
+    <div class='text-content'>
+        {{ wrap.content }}
+    </div>
+    <!-- Some very complex HTML -->
+    <div class='right-content'></div>
+</div>
+```
+
+We can use it within another template, adding some content to the wrap:
+
+```jinja2
+<!-- homepage.html -->
 {% load wrap %}
 
 {% wrap "fragments/other.html" %}

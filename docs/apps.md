@@ -29,6 +29,7 @@ class ProjectConfig(AppConfig):
 
 As an example we be a resource provider. Our integration requires the file `coolapp.py` to exist at the root of an application:
 
+```
 _directory layout_
     root/mysite/
       mysite/
@@ -38,16 +39,18 @@ _directory layout_
       fooapp/
         - views.py
         - models.py
-        - coolapp.py
+        - coolapp.py*
       otherapp/
         - views.py
         - models.py
-        - coolapp.py
+        - coolapp.py*
       - manage.py
       - requirements.txt
+```
 
-With our application prepped we can build an application to _load_ the `coolapp` files:
+With our project prepped, we can build an application to _load_ the `coolapp` files:
 
+```
 _directory layout_
     root/mysite/
       cooler/
@@ -56,10 +59,9 @@ _directory layout_
         - models.py
       ...
       - manage.py
+```
 
-Within the `app.py` of the parent app (in this case `cooler`), perform late imports of the target module name within each app:
-
-import \*.coolapp module for every installed app:
+Within the `app.py` of the parent app (in this case `cooler`), perform late imports of the target module name within each app. import `*.coolapp` module for every installed app:
 
 ```py
 from trim.apps import live_import
@@ -72,7 +74,7 @@ class ProjectConfig(AppConfig):
 
     def ready(self):
         ...
-        live_import('coolapp')
+        live_import('coolapp')      # import coolapp.py from every installed app
 ```
 
 This allows the import of modules for an installed app without mandatory imports within the target app. Any app without the target file `coolapp.py`, it will silently fail.
@@ -80,9 +82,7 @@ This allows the import of modules for an installed app without mandatory imports
 
 ## Results
 
-The first question may be - where do the imports go?
-
-The `trim.live_import` fundamentally _"actives"_ the module, ensuring it's imported before your Django app wakes up. Without this, you would need to `import coolapp` somewhere within the app.
+_Where do the imports go?_ The `trim.live_import` fundamentally _"actives"_ the module, ensuring it's imported before your Django app wakes up. Without this, you would need to `import coolapp` somewhere within the app.
 
 
 An example of "waking up" all modules across all apps:
@@ -90,15 +90,11 @@ An example of "waking up" all modules across all apps:
 ```py
     from trim.apps import live_import
     loaded = live_import('coolapp')
-    # e.g. All 10 django apps are tested:
-    # blog.coolapp
-    # search.coolapp
+    # e.g. All django apps are tested:
+    # blog.coolapp          # not found
+    # search.coolapp        # not found
     # accounts.coolapp      # Found!
     # ...
-    # contacts.coolapp
-    # stocks.coolapp
-    # string_integration.coolapp
-    # home.coolapp
 ```
 
 `live_import` helps perform an _import_ on all modules named `coolapp` (or anything you prefer) within all apps within your Django site.
