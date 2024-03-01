@@ -1,8 +1,10 @@
 <div align="center">
 
-[![Upload Python Package](./docs/logo/django-trim-logo-flat-300.png)]
+![Upload Python Package](./docs/logo/django-trim-logo-flat-300.png)
 
 # Django Trim
+
+Effortlessly trim the boilerplate in your Django projects with `django-trim`
 
 [![Upload Python Package](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml)
 ![PyPI](https://img.shields.io/pypi/v/django-trim?label=django-trim)
