@@ -72,6 +72,8 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
+---
+
 ### Models
 
 Use `trim.models.fields` for easy to grab model fields:
@@ -97,6 +99,7 @@ class HenBasket(models.Model):
 
 All `trim.models.fields` shadow the standard Django field. They are designed to be completely interchangable.
 
+---
 
 ### Views
 
@@ -119,6 +122,8 @@ class AddressDetailView(views.UserOwnedMixin, views.DetailView):
     ...
 ```
 
+---
+
 ### Forms
 
 Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`:
@@ -133,6 +138,7 @@ Instantly install prepared forms into a view, utilising the form built-into the 
 {% quickform.form "app:formview-name" %} <!-- Ready to go POST form -->
 ```
 
+---
 
 ### URLs
 
@@ -156,6 +162,7 @@ trim_patterns = dict(
 urlpatterns = trims.paths_dict(views, trim_patterns)
 ```
 
+---
 
 ### Admin
 
@@ -169,6 +176,8 @@ from . import models
 
 t_admin.register_models(models)
 ```
+
+---
 
 ### Template Tags
 
@@ -196,11 +205,11 @@ Generate a hyperlink to a view with `{% link viewname arguments label %}`
 {% link "appname:viewname" %}
 ```
 
---
+---
 
 And so much more! All designed to trim your code for readability and us lazy fingers.
 
----
+
 
 ## Philosophy
 
