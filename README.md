@@ -27,6 +27,35 @@ Django Trim complements Django's robust framework, offering a suite of tools tha
 `django-trim` respects Django's core principles, adding a layer of convenience and efficiency for developers who love Django's power but want to type lss wrds.
 
 
+## Setup
+
+Download:
+
+```bash
+pip install django-trim
+```
+
+### Install
+
+Note this Apply the app `trim` to your `INSTALLED_APPS` within your `settings.py`:
+
+```python
+INSTALLED_APPS = [
+    # ...
+    'trim',
+    # ...
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+```
+
+You're ready to go.
+
+
 ## Features
 
 Some of our favourite features!
@@ -154,35 +183,7 @@ Generate a hyperlink to a view with `{% link viewname arguments label %}`
 {% link "appname:viewname" %}
 ```
 
-
-## Setup
-
-Download:
-
-```bash
-pip install django-trim
-```
-
-### Install
-
-Note this Apply the app `trim` to your `INSTALLED_APPS` within your `settings.py`:
-
-```python
-INSTALLED_APPS = [
-    # ...
-    'trim',
-    # ...
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-]
-```
-
-You're ready to go.
-
+---
 
 ## Trim Examples
 
