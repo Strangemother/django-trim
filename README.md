@@ -1,9 +1,16 @@
+<div align="center">
+
+[![Upload Python Package](./docs/logo/django-trim-logo-flat-300.png)]
+
 # Django Trim
 
 [![Upload Python Package](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Strangemother/django-trim/actions/workflows/python-publish.yml)
 ![PyPI](https://img.shields.io/pypi/v/django-trim?label=django-trim)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/django-trim)
 
+---
+
+</div>
 
 > Effortlessly trim the boilerplate in your Django projects with `django-trim`. This convenient little library streamlines your models, views, forms, and more, - supporting core functionality for a smoother, more enjoyable day of coding.
 
