@@ -60,14 +60,15 @@ You're ready to go.
 
 Django trim is a facade to the common features of Django providing a layer of sugar for all those daily components. Some quick examples to quickly trim your code:
 
-| Thing     |  Bits |
+| Thing | Bits |
 | --- | --- |
 | Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) \| [Live String](./docs/models/live.md) |
 | Views     | [Authed Views](./docs/views/authed-views.md) \| [List View](./docs/views/listviews.md) \| [JSON Views](./docs/views/serialized.md) |
-| Forms     | [quickforms](./docs/forms/quickforms.md)  |
+| Forms     | [quickforms](./docs/forms/quickforms.md) \| [`{% quickform %}` tag](./docs/template/tags/quickform.md) |
 | URLs      | [named urls](./docs/urls.md)  |
-| Admin     | [register_models](./docs/admin.md)  |
-| Templates | [link tag](./tags/link.md) \| [wrap](./docs/tags/wrap.md) \| [slots](./docs/tags/wrap-slots.md) |
+| Admin     | [`register_models`](./docs/admin.md)  |
+| Templates | [`{% link %}` tag](./docs/templates/tags/link.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) |
+| _Execute_ | [`read_one`](./docs/execute.md)
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
