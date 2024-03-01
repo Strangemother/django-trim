@@ -62,12 +62,12 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 | Thing     |  Bits |
 | --- | --- |
-| Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) [Live String](./docs/models/live.md) |
-| Views     | [Authed Views](./docs/views/authed-views.md) [List View](./docs/views/listviews.md) [JSON Views](./docs/views/serialized.md)  |
+| Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) \| [Live String](./docs/models/live.md) |
+| Views     | [Authed Views](./docs/views/authed-views.md) \| [List View](./docs/views/listviews.md) \| [JSON Views](./docs/views/serialized.md) |
 | Forms     | [quickforms](./docs/forms/quickforms.md)  |
 | URLs      | [named urls](./docs/urls.md)  |
 | Admin     | [register_models](./docs/admin.md)  |
-| Templates | [link tag](./tags/link.md) [wrap](./docs/tags/wrap.md)  [slots](./docs/tags/wrap-slots.md) |
+| Templates | [link tag](./tags/link.md) \| [wrap](./docs/tags/wrap.md) \| [slots](./docs/tags/wrap-slots.md) |
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
