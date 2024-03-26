@@ -72,7 +72,8 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
----
+## Highlights
+
 
 ### Models
 
@@ -185,7 +186,7 @@ t_admin.register_models(models)
 
 Generate `wrap` templates to import into your view:
 
-```jinja2
+```jinja
 {% load wrap slot %}
 
 {% wrap "wraps/target.html" %}
@@ -200,7 +201,7 @@ Generate `wrap` templates to import into your view:
 
 Generate a hyperlink to a view with `{% link viewname arguments label %}`
 
-```jinja2
+```jinja
 {% load link %}
 {% link "appname:viewname" %}
 ```

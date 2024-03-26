@@ -3,3 +3,4 @@ from .serialized import JsonListView, JsonDetailView, JsonView, JSONResponseMixi
 from . import errors
 from .errors import Custom404
 from .auth import *
+from .download import streamfile_response

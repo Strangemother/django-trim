@@ -1,5 +1,5 @@
 include LICENSE *.rst *.txt
-recursive-include src/trim/ *
+recursive-include src/trim *
 graft trim
 prune **/__pycache__
 global-exclude *.py[co]
