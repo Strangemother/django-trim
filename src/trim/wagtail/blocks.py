@@ -16,6 +16,8 @@ try:
     from wagtail.snippets.blocks import SnippetChooserBlock
     from wagtail.images.blocks import ImageChooserBlock
     from wagtail.documents.blocks import DocumentChooserBlock
+    from wagtail.admin.panels import FieldPanel
+    from wagtail.api import APIField
     # StreamField
     PREPARED = True
 except ImportError as e:
@@ -25,6 +27,15 @@ except ImportError as e:
 if PREPARED is True:
     streamfield = stream_field = StreamField
 
+def field_panel(*a, **kw):
+    return FieldPanel(*a, **kw)
+
+
+def api_field(*a, **kw):
+    return APIField(*a, **kw)
+
+fieldpanel = field_panel
+apifield = api_field
 
 def chars(*a, **kw):
     return CharBlock(*a, **kw)
