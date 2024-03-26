@@ -185,7 +185,7 @@ t_admin.register_models(models)
 
 Generate `wrap` templates to import into your view:
 
-```jinja2
+```jinja
 {% load wrap slot %}
 
 {% wrap "wraps/target.html" %}
@@ -200,7 +200,7 @@ Generate `wrap` templates to import into your view:
 
 Generate a hyperlink to a view with `{% link viewname arguments label %}`
 
-```jinja2
+```jinja
 {% load link %}
 {% link "appname:viewname" %}
 ```
