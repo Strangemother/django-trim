@@ -72,7 +72,8 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
----
+## Highlights
+
 
 ### Models
 
