@@ -6,6 +6,7 @@ register = template.Library()
 
 quickform_kwargs = ('form_submit_label', 'form_submit_button', )
 
+
 @register.inclusion_tag('trim/quickform.html', takes_context=True, name='quickform.form')
 def quickform_template(context, view_name, *args, **kwargs):
     """Apply a quickform within a form template, utilising the quickform as
@@ -17,10 +18,22 @@ def quickform_template(context, view_name, *args, **kwargs):
             id='quicksearchform'
         %}
 
+    Provide a `Form` instance as the first object to render a page form.
+
+        {% quickform.form myform %}
+
     any option not in `quickform_kwargs` is applied to the form a node parameter.
     """
-    form = quickform(context, view_name, *args, **kwargs)
-    extra = { 'opts': {}, 'trim_form': {}}
+    form = view_name
+    if isinstance(view_name, str):
+        form = quickform(context, view_name, *args, **kwargs)
+
+    extra = { 'opts': {}, 'trim_form': {}, 'multipart': kwargs.get('multipart', True)}
+
+    if getattr(form, 'action_url', None) is None:
+        kwpop = kwargs.pop('action_url', None)
+        if kwpop is not None:
+            form.action_url = kwpop
 
     for x,v in kwargs.items():
         # x, y for x, y in kwargs.items() if x in quickform_kwargs
@@ -50,9 +63,9 @@ def quickform(context, view_name, *url_args, **kwargs):
     request = context.get('request')
     args = kwargs.get('view_args', ()) if len(url_args) == 0 else url_args
 
-
     rev = reverse(view_name, args=args)
     resolve_match = resolve(rev)
+    action_url = kwargs.pop('action_url', rev)
 
     view = resolve_match.func.view_class
     initkwargs = resolve_match.func.view_initkwargs
@@ -62,7 +75,9 @@ def quickform(context, view_name, *url_args, **kwargs):
     instance.setup(request, *args, **kwargs)
 
     form = instance.get_form()
-    form.action_url = rev
+    # Mutate the form to apply the action URL.
+    form.action_url = action_url
+
     initial = kwargs.get('initial', None) or kwargs
     if hasattr(form, 'initial') and (len(initial) > 0):
         form.initial.update(initial)
