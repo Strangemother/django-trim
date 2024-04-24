@@ -1,0 +1,24 @@
+{% load static %}
+<div class="flex-down gap-1">
+
+    <div class="grid">
+        {# include "crud/form.html" #}
+
+        <form method="post">
+            <ul class="crud-form">
+                {{ form.as_ul }}
+            </ul>
+            <div class="actions">
+                <input class='btn' type="submit" value="Confirm">
+            </div>
+            {% csrf_token %}
+        </form>
+
+        <a href='{% url "account:admin_password_reset" %}'>forgotten password</a>
+    </div>
+
+    <div class="actions btns flex-down">
+        {% include "account/sub/register_button.html" %}
+        {# include "account/sub/social_buttons.html" #}
+    </div>
+</div>

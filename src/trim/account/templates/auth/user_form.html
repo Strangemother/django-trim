@@ -1,0 +1,25 @@
+{% extends "products/page.html" %}
+
+{% block content %}
+
+
+<!--     <div class="hero-header secondary">
+        <div class="flex-across align-center gap-1">
+            <h1>Your Account</h1>
+            <span class='font-vlarge'>&#xbb;</span>
+            <h2>Edit</h2>
+
+        </div>
+    </div>
+ -->
+{% include "v1/secondary-header.html" with primary="Profile" secondary="Edit" %}
+
+<div class="flex-center">
+    <div class="flex-down">
+        <div class="grid margin-top-6em">
+            {% include "short/crud/form.html" %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

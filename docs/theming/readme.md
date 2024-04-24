@@ -4,12 +4,26 @@ The Theming or a plain or `trim.theme` app provides a new layer of abstraction o
 
 The `theme` template tag acts just like the `{% extends "filename.html" %}`, except you can provide uniquly created _theme_ named files from your `theming.py` definition:
 
-```html
+```py
+# themes.py
+from trim.theming import install
+
+SITE_THEMES = {
+    'detail': '/foo/name.html',
+    'other': '/foo/name.html',
+}
+
+SCOPE = install(SITE_THEMES)
+```
+
+```jinja
+<!-- model detail view.html -->
 {% theme "detail" %}
 {% block content %}
     {{ object}}
 {% endblock %}
 ```
+
 
 It allows you to write a dictionary definitions of the target theme, then use it across all your files.
 
@@ -27,6 +41,29 @@ INSTALLED_APPS = [
 ```
 
 There are optional `settings.py` configurations you may apply, however we advise the packaged `theming.py` autoloading method, as this easier to trasport if you're supplying packages to the wild.
+
+
+Insert `'trim.theming.builtins'` to your 'builtins' list for the template renderer:
+
+```py
+
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        ...
+
+        "OPTIONS": {
+
+            # Add to TEMPLATES.OPTIONS.builtins
+            'builtins': [
+                ...
+                'trim.theming.builtins',
+            ],
+            "context_processors": [ ... ],
+        },
+    },
+]
+```
 
 ### Settings.py
 
@@ -87,7 +124,7 @@ An example file setup:
     mysite
         settings.py
         urls.py
-    
+
     manage.py
 
 The two files `books/theming.py` and `locations/theming.py` are automatically loaded.

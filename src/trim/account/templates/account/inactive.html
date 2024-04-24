@@ -1,0 +1,10 @@
+{% extends "products/page.html" %}
+{% load static wagtailcore_tags wagtailuserbar %}
+
+{% block content %}
+    <h3>Inactive account</h3>
+    <p>The account you attempted to log into - is not active.</p>
+
+    <a href='{% url "account:logout" %}'>Logout</a>
+    <a href='{% url "account:profile" %}'>Account</a>
+{% endblock %}

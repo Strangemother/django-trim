@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% load link %}
+{% load quickforms %}
+
+{% block body_class %}cars-list background-#111{% endblock %}
+
+{% block extra_css %}
+
+    {% css "css/general.css" %}
+
+{% endblock extra_css %}
+
+{% block content %}
+
+    <h1>Upload</h1>
+    {% quickform.form form %}
+
+    <a class='merge-link' href="javascript:;" onclick="openFormMerge(event)">Recombine</a>
+
+    <div class="file-chunk-form hidden">
+        {% url "file:upload_chunk" as form_upload_url %}
+        {% quickform.form file_chunk_form action_url=form_upload_url %}
+    </div>
+
+    <div class="upload_percent">
+        <label for="file">File progress:</label>
+        <progress id="file_upload_progress" max="100" value="70">70%</progress>
+        <span class='percent-text'>-1%</span>
+    </div>
+    <script>
+        var UPLOADS = {
+            templateStr: 999,
+            mergeView: '{% url "file:merge" 999 %}',
+        }
+
+    </script>
+    {% js "js/forms/chunk_upload.js" %}
+
+{% endblock content %}

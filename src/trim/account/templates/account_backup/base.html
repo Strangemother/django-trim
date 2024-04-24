@@ -1,0 +1,21 @@
+{% extends "primary2/secondary-page.html" %}
+
+{% load static wagtailcore_tags wagtailuserbar %}
+
+{% block content_container %}
+
+    {% block hero_header %}
+        <div class="new-hero-header">
+        {% block hero_content %}
+            {% include "v4/secondary-header.html" with secondary="Login" primary='Account' %}
+        {% endblock hero_content %}
+        </div>
+    {% endblock hero_header %}
+
+    <div class="">
+        <div class="margin-top-5vh flex-down">
+        {% block deep_content %}{% endblock %}
+        </div>
+    </div>
+
+{% endblock %}

@@ -23,11 +23,13 @@ Django Trim reduces the amount of text, imports and general congantive overload 
     + [Hidden Widget](./widgets/hidden.md)
 + [URLs](./urls.md)
 + [Admin](./admin.md)
-+ [Template Tags](./templates)
-    + [link](./templates/tags/link.md)
-    + [wrap](./templates/tags/wrap.md)
-        + [slots](./templates/tags/wrap-slots.md)
-    + [quickform](./templates/tags/quickform.md)
++ [Templates](./templates)
+    + [Theming](./theming/readme.md)
+    + [Tags](./templates/tags)
+        + [link](./templates/tags/link/readme.md)
+        + [wrap](./templates/tags/wrap.md)
+            + [slots](./templates/tags/wrap-slots.md)
+        + [quickform](./templates/tags/quickform.md)
 + Apps
     + [Live Import](./apps.md)
 + Execute

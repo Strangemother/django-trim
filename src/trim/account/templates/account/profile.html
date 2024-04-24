@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load link %}
+
+{# include "v1/secondary-header.html" with primary="Profile" secondary="Your Account" #}
+
+{% block content %}
+
+
+    <h1>Your Account</h1>
+
+    <ul>
+
+        {% if user.is_anonymous %}
+        {# <li>{% link "account:login" "Account Login" %}</li> #}
+        {# <li>{% link "admin:login" "Account Login" %}</li> #}
+        {% else %}
+        <li>{% link "account:logout" "Logout" %}</li>
+        {% endif %}
+
+        {% if user.is_staff %}
+        <li>{% link "admin:index" "Admin" %}</li>
+        <li>{% link "wagtailadmin_home" "CMS" %}</li>
+        {% endif %}
+    </ul>
+
+    {% if user.is_anonymous %}
+        {% include "account/sub/login_prompt.html" %}
+    {% else %}
+
+    <ul>
+
+        <li>
+            {% link "account:edit" "Name" %}:
+
+            {% link "account:edit" user.first_name %}
+            {% link "account:edit" user.last_name %}
+        </li>
+        <li>
+            Username: {% link "account:edit_username" user.username %}
+        </li>
+        <li>
+            email: {% link "account:edit_email_verified" user.email %}
+        </li>
+        <li>
+            Password: {% link "account:edit_password" "Change Password" %}
+        </li>
+    </ul>
+    {% endif %}
+
+{% endblock %}
