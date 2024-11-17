@@ -26,7 +26,7 @@ checkout.save()
 ---
 
 
-the `trim.live` object can replace a standard import or the `app.get_model` function.
+The `trim.live` object can replace a standard import or the `app.get_model` function.
 
 Before:
 
@@ -66,7 +66,7 @@ cart_owner = self.get_object().cart.owner
 user_addresses = ShippingAccount.objects.filter(owner=cart_owner, deleted=False)
 ```
 
-after:
+After:
 
 ```py
 from trim import live

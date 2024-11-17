@@ -4,7 +4,7 @@
     + `paths_named`
     + `paths_dict`
 + Includes
-    + `path_includes`
+    + `path_includes`, `path_includes_pair`
 
 
 ## Named Patterns

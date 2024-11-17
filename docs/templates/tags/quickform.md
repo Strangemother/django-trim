@@ -4,25 +4,30 @@ The `{% quickform "app:view" %}` applies an expected _form_ to the view, given t
 
 This allows you to create a standard formview, and address it within another page, utilising the full functionality of the target formview.
 
+1. Write your standard _formview_ e.g. `about:contact`
+2. Add the `{% quickform ... %}` tag to a page
+3. It renders the as a `<form>`, submitted to `about:contact`
+
+
 ## Usage
 
 Two quickform methods exist for your choosing. The _standard_ method return the real Form instance, the _instant form_ creates a finished HTML form.
 
-```html
+```jinja2
 {% load quickforms %}
 
 <form>
-{% quickform "app:formview-name" %}
+{% quickform "app:formview-name" %} <!-- Just the fields (no submit button) -->
 </form>
 
-{% quickform.form "app:formview-name" %}
+{% quickform.form "app:formview-name" %} <!-- Correct <form> tags are applied. -->
 ```
 
 ### Instant Forms with `quickform.form`
 
 The `{% quickform.form %}` tag provides a complete form, with the form method, action setup, and a submit button. You don't need write a `<form>` wrapper:
 
-```html
+```jinja2
 <p>Looking to talk? Contact us using the convenient form:</p>
 
 {% quickform.form "contact:message-form" %}
@@ -42,7 +47,7 @@ This generates everything required to produce a valid form including:
 
 Apply a _form_ to any page - such as a "notify me" form for a product page:
 
-```html
+```jinja2
 {% load trim %}
 
 <form method='post' action='{% url "products:stock-notify-form" %}''>
@@ -53,7 +58,7 @@ Apply a _form_ to any page - such as a "notify me" form for a product page:
 
 This produces a _real_ form, with an extra `action_url` attribute:
 
-```html
+```jinja2
 {% load trim %}
 
 {% quickform "products:stock-notify-form" as myform %}
@@ -176,7 +181,7 @@ Alternatively you may provide an object as all data through the `initial` keywor
 
 The form will post-back to its own formview, you can capture this as the `form.action_url`:
 
-```html
+```jinja2
 {% load trim %}
 
 {% quickform "products:stock-notify-form" as form %}

@@ -1,29 +1,48 @@
 # Account module
 
+The trim account module aims to simplify generic user login, offering a _login_, _logout_, _profile_ and a few associated pages. This is specificially designed to expose the standard Django user for general user accounts and not intended to replace or override the existing users.
+
+Fundamentally `trim.account` creates those extra login pages given to standard users. The `django` admin, and `wagtail` admin login pages will still function as expected.
+
+
+> [!NOTE]
+> We opted for the `account` (singular) here to ensure the more generic _accounts/_ (plural) is available for your own tools.
+
+
 ## Install
 
 Add to installed apps:
 
-    INSTALLED_APPS = [
-        'trim',
-        'trim.account',
-    ]
+```py
+INSTALLED_APPS = [
+    'trim',
+    'trim.account',   # A sub module of the trim package.
+]
+```
 
 Add to settings for redirects:
 
-    LOGIN_REDIRECT_URL = 'account:profile'
-    LOGIN_URL = 'account:login'
+```py
+LOGIN_REDIRECT_URL = 'account:profile'
+LOGIN_URL = 'account:login'
+```
 
 Add to URLs:
 
+```py
+from trim.urls import path_includes as includes
 
-    from trim.urls import path_includes as includes
+# path('account/', include('trim.account.urls'))
+urlpatterns += includes(
+        'trim.account',
+        ...
+    )
+```
 
-    # path('account/', include('trim.account.urls'))
-    urlpatterns += includes(
-            'trim.account',
-            ...
-        )
+And you're good to go, head to the account login page such as  `/trim.account/login/`
+
+
+- The associated model `trim.account.Account` is a _one to one_ related object, created when required. It's not required for the basic account login.
 
 ## Info
 

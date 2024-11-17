@@ -1,6 +1,6 @@
 <div align="center">
 
-![Upload Python Package](./docs/logo/django-trim-logo-flat-300.png)
+![django trim logo](./docs/logo/django-trim-logo-flat-300.png)
 
 # Django Trim
 

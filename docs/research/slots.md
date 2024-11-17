@@ -1,5 +1,8 @@
 # Wraps and slots
 
+> [!NOTE]
+> Implemented! This can be found under the template tags.
+
 A fragment
 
 ```html
@@ -105,7 +108,7 @@ But is always:
     {% endwrap %}
 
 + Content outside a slot when the default slot is defined, is lost
-  
+
       {% wrap "fragment.html" %}
       {% slot "right" %}<p>right content</p>{% endslot %}
       {% slot default %}<p>left content</p>{% endslot %}
@@ -113,9 +116,9 @@ But is always:
       {% endwrap %}
 
 + Apply a _lost_ slot to capture anything unexpected
-  
+
     frangement:
-  
+
         {% wrap "fragment.html" %}
             {% slot %}
                 <p>content</p>
@@ -123,14 +126,14 @@ But is always:
             {% slot "right" %}
                 <p>more content</p>
             {% endslot %}
-      
+
             {% slot lost %}
                 <p>more content</p>
             {% endslot %}
         {% endwrap %}
-  
+
     wrap:
-  
+
         {% wrap "fragment.html" %}
             {% slot "right" %}<p>right content</p>{% endslot %}
             {% slot default %}<p>left content</p>{% endslot %}
