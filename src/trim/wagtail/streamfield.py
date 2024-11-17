@@ -10,13 +10,22 @@ from wagtail.api import APIField
 from trim.wagtail import blocks as wbl
 
 
+FIELDS_CACHE = {
+    'pre': ()
+}
+
+def pre_install_global_block(name, class_):
+    FIELDS_CACHE['pre'] += ((name, class_),)
+
+
 def get_fields():
     FIELDS = {
         "default": [
             ('heading', HeadingBlock()),
             ('paragraph', RichTextBlock()),
             ('image', ImageChooserBlock()),
-        ]
+
+        ] + list(FIELDS_CACHE['pre'])
     }
 
     return FIELDS
@@ -90,7 +99,7 @@ def as_api_fields(*items):
     return list(res)
 
 
-def prepared_streamfield(group='default'):
+def prepared_streamfield(group='default', **kw):
     items = get_fields().get(group)
-    return StreamField(items)
+    return StreamField(items, **kw)
 

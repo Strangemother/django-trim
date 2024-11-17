@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% load link %}
+{% load quickforms %}
+
+{% block body_class %}chunk-view background-#111{% endblock %}
+
+{% block extra_css %}
+
+    {% css "css/general.css" %}
+
+{% endblock extra_css %}
+
+{% block content %}
+
+    <h1>Upload Chunk</h1>
+    {% quickform.form form %}
+
+    <div class="file-chunk-form hidden">
+        {% url "file:upload_chunk" as form_upload_url %}
+        {% quickform.form form action_url=form_upload_url %}
+    </div>
+
+{% endblock content %}

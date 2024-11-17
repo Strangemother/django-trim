@@ -14,4 +14,4 @@ register = template.Library()
 
 @register.simple_tag(takes_context=False)
 def str_merge(*targs, **kwargs):
-    return ''.join(map(targs, str))
+    return ''.join(map(str, targs))

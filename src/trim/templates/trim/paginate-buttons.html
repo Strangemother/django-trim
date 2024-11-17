@@ -1,0 +1,167 @@
+{% firstof search_results.query '' as qs%}
+
+{% with qval=search_results.query n=page_obj.number p=page_obj.paginator qss="?query="|add:qs|add:"&page=" total=page_obj.paginator.count count=object_list.count per_page=page_obj.paginator.per_page %}
+
+            <script>
+                var _params = undefined;
+
+                var getCachedParams = function(extras){
+                    extras = extras || {}
+                    if(_params) {
+                        for(let k in extras){
+                            _params.set(k, extras[k])
+                        }
+                        return _params
+                    }
+
+                    _params = (new URL(document.location)).searchParams;
+                    for(let k in extras){
+                        _params.set(k, extras[k])
+                    }
+                    return _params
+                }
+
+                var pageChangeFunc = function(ev){
+                    console.log('pageChangeFunc', ev)
+                    let i = ev.currentTarget.value
+                    return pageClick(i)
+                }
+
+                var pageClick = function(num) {
+                    /* Change to the new page. */
+                    let params = getCachedParams();
+                    params.set('page', num)
+                    paramLocChange(params)
+                }
+
+                var changeCount = function(ev) {
+                    let i = ev.currentTarget.value
+                    let params = getCachedParams({
+                        count: i,
+                        page: 1
+                    });
+                    paramLocChange(params)
+                }
+
+                var changeOrder = function(ev){
+                    let s = ev.currentTarget.value
+                    let params = getCachedParams();
+                    params.set('order_by', s)
+                    paramLocChange(params)
+                }
+
+                var paramLocChange = function(params) {
+                    window.location.href = `?${params}`
+                }
+
+                var directionClick = function(current) {
+                    let d = current == 'asc'? 'desc': 'asc'
+                    let params = getCachedParams({
+                        direction: d
+                    });
+                    paramLocChange(params)
+                }
+            </script>
+
+<div class="pagination-container {% if count == 0 %}empty-list no-products{% endif %} flex across {% if p.num_pages < 3 %}lt-3-pages{% endif %}"
+    data-count='{{ count }}'
+    data-total='{{total}}'
+    >
+    <div class="pad left"></div>
+
+    <div class="product-list-tools pagination flex-grow flex down gap-1">
+        <div class="step-links flex-grow flex across align-center gap-1">
+            {% if show_count_choice %}
+            <div class="flex-grow flex margin-right-auto gap-p5em">
+                <select name="page_number" onchange="changeCount(event)">
+                    <option {% if per_page == 10 %}selected=selected{% endif %} value='10'>10</option>
+                    <option {% if per_page == 20 %}selected=selected{% endif %} value='20'>20</option>
+                    <option {% if per_page == 50 %}selected=selected{% endif %} value='50'>50</option>
+                    <option {% if per_page == 100 %}selected=selected{% endif %} value='100'>100</option>
+                    <option {% if per_page == 200 %}selected=selected{% endif %} value='200'>200</option>
+                </select>
+                Showing {{ count }} of {{ total }}
+            </div>
+            {% endif %}
+
+            <div class="flex-grow"></div>
+
+            {% if page_obj.has_previous %}
+            <div class="buttons">
+                <a class='btn small' href="javascript: pageClick(1)">&laquo; first</a>
+                <a class='btn small' href="javascript: pageClick({{ page_obj.previous_page_number }})">previous</a>
+            </div>
+            {% endif %}
+
+            <span class="current">
+                Page
+                <select name="page_number" onchange="pageChangeFunc(event)">
+                    {% for i in p.page_range %}
+                        <option value='{{ i }}' {% if i == n %}selected=selected{% endif %}>
+                            {{i}}
+                        </option>
+                    {% endfor %}
+                </select>
+                 of {{ p.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <div class="buttons">
+                    <a class='btn small' href="javascript: pageClick({{ page_obj.next_page_number }})">next</a>
+                    <a class='btn small' href="javascript: pageClick({{ p.num_pages }})">last &raquo;</a>
+                </div>
+            {% endif %}
+
+            <div class="flex-grow"></div>
+
+            {% if order_fields %}
+
+            <div class="flex-grow flex gap-p5em">
+                <div class="margin-left-auto">
+                    <select name="page_number" onchange="changeOrder(event)">
+                        <option value=''>default</option>
+                        {% for field in order_fields %}
+                            {# <option {% if field == selected_order_field %}selected=selected{% endif %} value='20'>20</option> #}
+                            <option {% if field.0 == selected_order_field %}selected=selected{% endif %}
+                                value='{{field.0}}'>{{field.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="direction-container">
+                    <a href="javascript: directionClick('{{ direction }}');" class="no-style inherit-color">
+                        {% if direction == 'asc' %}
+                            Ascending <i class="icon strong">arrow_upward</i>
+                        {% else %}
+                            Descending <i class="icon strong">arrow_downward</i>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+
+
+            {% endif %}
+        </div>
+
+        <div class="flex-grow page-index-container {% if show_index %}visible{% else %}hidden{% endif %}">
+            <div class="pad left"></div>
+            <div class="align-items-center flex-down flex-grow page-index-content">
+
+                <ul class="page-index no-style flex across gap-p5em flex-wrap">
+                    {% for i in p.page_range %}
+                        <li class="page-index-button {% if i == n %}selected{% endif %}">
+                            <a class="padding-1em page-index-link small btn"
+                                href="javascript: pageClick({{ i }});">{{i}}</a>
+                                {# href="{{ qss }}{{ i }}">{{i}}</a> #}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="pad right"></div>
+        </div>
+
+    </div>
+
+    <div class="pad right"></div>
+</div>
+{% endwith %}

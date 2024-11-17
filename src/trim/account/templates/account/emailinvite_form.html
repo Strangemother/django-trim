@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load link quickforms %}
+
+{# include "v1/secondary-header.html" with primary="Profile" secondary="Your Account" #}
+
+{% block content %}
+    <h1>User Invite</h1>
+    {% quickform.form form %}
+{% endblock %}

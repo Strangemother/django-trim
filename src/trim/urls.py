@@ -40,20 +40,20 @@ Short URL to help lighten the load for dev urls
 
 
 """
-from django.contrib import admin
-from django.urls import path, include as django_include, reverse
-from  django.views.generic import View, TemplateView
 
+from functools import reduce
 import inspect
 import sys
 
-from trim.names import *
-from . import names as trim_names
-
-
+from django.urls import path, include as django_include, reverse
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.generic.base import RedirectView
+from django.views.generic import View, TemplateView
+from django.contrib import admin
 
+
+from trim.names import *
+from . import names as trim_names
 
 
 def absolute_reverse(request, name, *args):
@@ -71,6 +71,16 @@ def absolutify(request, path):
 
 
 def favicon_path(ingress_path='favicon.ico', static_path='images/{ingress_path}'):
+    """Implement your favicon as a static redirect
+
+        # (primary) urls.py
+        from trim.urls import favicon_path
+
+        urlpatterns = [
+            ...
+            favicon_path('favicon.ico'),
+        ]
+    """
     static_path = static_path.format(ingress_path=ingress_path)
     return static_redirect_path(ingress_path, static_path)
 
@@ -96,7 +106,17 @@ def clean_str(variant):
 
 
 def path_includes(*names):
+    """
 
+        from trim.urls import path_includes_pair as includes
+
+        urlpatterns = [
+            path("django-admin/", admin.site.urls),
+        ] + includes(
+                'file',
+                'trim.account',
+            )
+    """
     flat_names = ()
     r = ()
 
@@ -112,7 +132,42 @@ def path_includes(*names):
 
     return paths(r)
 
+
+def path_includes_pair(*items):
+    """Similar to the `path_includes` function; given many names, convert to
+    a django include and return paths. With `path_includes_pair`, a single item
+    may be a list or tuple, allowing ('module', 'url/') expansion.
+
+
+        from trim.urls import path_includes_pair as includes
+
+        urlpatterns = [
+            path("django-admin/", admin.site.urls),
+        ] + includes(
+                'file',
+                ('trim.account', 'account/',),
+            )
+
+    """
+    pairs = ()
+    result = ()
+
+    for item in items:
+        if isinstance(item, (list,tuple)) is False:
+                    # module, url.
+            item = (item, f"{item}/",)
+            pairs += (item,)
+            continue
+        pairs += (item,)
+
+    for module, url in pairs:
+        entry = (module, (url, django_include(f'{module}.urls'),))
+        result += (entry,)
+
+    return paths(result)
+
 include = path_includes
+
 
 def path_urls(views, path_rels):
     for url, view_call in path_rels:
@@ -376,7 +431,6 @@ def paths_dict(views, patterns=None, view_prefix=None,
     return r
 
 
-
 def template_view(url_string, html_path, name='template_view'):
 
     # urlpatterns += [
@@ -395,9 +449,6 @@ def as_templates(**props):
 
     """
     return [template_view(*v, name=k) for k,v in props.items()]
-
-
-from functools import reduce
 
 
 def paths(path_dict):
