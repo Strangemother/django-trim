@@ -21,6 +21,9 @@ urlpatterns = t_urls.paths_named(views,
     new=('ProfileNewAccount', 'welcome/',),
     inactive=('ProfileInactiveAccount', 'inactive/',),
     forgot_success=('ProfileForgotPasswordSuccessView', 'forgot/sent/',),
+
+    invite=('EmailInviteCreateView', 'invite/',),
+    invites=('EmailInviteListView', 'invites/',),
 )
 
 
