@@ -29,6 +29,17 @@ class Account(models.Model):
     updated = fields.dt_updated()
 
 
+class EmailInvite(models.Model):
+    user = fields.fk_user()
+
+    email_address = fields.email(help_text='The target user email address')
+    uuid_token = fields.str_uuid()
+
+    accepted = fields.datetime(nil=True)
+    expires = fields.datetime(nil=True)
+
+    created, updated = fields.dt_cu_pair()
+
 
 class ForgotPasswordRecord(models.Model):
     email_address = fields.email()
