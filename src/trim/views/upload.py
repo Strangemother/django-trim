@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
-from ..forms.upload import FileChunkForm, FilesForm, MergeConfirmForm
+from ..forms.upload import FileChunkForm, FilesForm, FileForm, MergeConfirmForm
 from .base import FormView, TemplateView
 
 import os
@@ -108,7 +108,7 @@ class AssetMixin(object):
 class UploadAssetView(FormView, AssetMixin):
     """An upload file form view, with two forms.
     """
-    form_class = FilesForm
+    form_class = FileForm
     template_name = "trim/upload/upload_view.html"
 
     def get_context_data(self, **kwargs):
@@ -162,7 +162,7 @@ class UploadAssetSuccessView(TemplateView, AssetMixin):
 @method_decorator(csrf_exempt, name="dispatch")
 class UploadChunkView(FormView, AssetMixin):
     form_class = FileChunkForm
-    template_name = "trim/upload/upload_view.html"
+    template_name = "trim/upload/upload_chunk_view.html"
 
     def ensure_fullpath(self, filename):
         fs = self.get_fs()
@@ -232,6 +232,19 @@ class MergeAssetView(FormView, AssetMixin):
     form_class = MergeConfirmForm
     # template_name = "corsa/form.html"
     template_name = "trim/file/merge_view.html"
+    skip_step = False
+
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests: instantiate a blank version of the form."""
+        ctx = self.get_context_data()
+        if self.skip_step:
+            # Perform auto valid form
+            # form = ctx['form']
+            form_class = self.get_form_class()
+            form = form_class({"delete_cache": True, 'confirm_merge': True})
+            assert form.is_valid()
+            return self.form_valid(form)
+        return self.render_to_response(ctx)
 
     def get_success_url(self):
         args = (self.get_uuid(),)
@@ -285,7 +298,6 @@ class MergeAssetView(FormView, AssetMixin):
             "path": Path(fs.location) / self.get_parts_dir(),
             "output_path": out_path,
         }
-
 
     def delete_cache(self, asset):
         # delete the merge parts.

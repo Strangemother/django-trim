@@ -58,7 +58,7 @@ class ToggleHost {
 
         let preSelected = new Set()
         let host = this;
-
+        console.log(clickers)
         clickers.forEach(function(n,i,a){
             // assign an onlick
             n.addEventListener('click', function(e){

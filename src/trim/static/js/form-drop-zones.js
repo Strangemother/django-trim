@@ -1,5 +1,35 @@
 /*Apply a 'drag and drop' zone for a field- focusing on _django_ forms, but the
 form appliance should work with any form field..
+
+Step 0: You have a form with  a file field:
+
+    <form>
+        <input type=file></input>
+    </form>
+
+Step 1: Create a div to accept the file drop
+
+    <div class="single drag-drop-zone">
+    </div>
+
+Step 2: Apply the Dropzone setup in your JS:
+
+    dz = new DropZone()
+    dz.setup({
+        dropSpace: '.single.drag-drop-zone'
+        , formField: '#id_file'
+    })
+
+    dz2 = new DropZone()
+    dz2.setup({
+        dropSpace: '.multi.drag-drop-zone'
+        , formField: '#id_files_field'
+    })
+
+---
+
+Upon a file drop the Dropzone handler will populate the form field.
+
  */
 
 let stop = function(event) {
@@ -291,20 +321,7 @@ async function asyncMain() {
     console.log("success:", success);
 }
 
-let runMain = function(){
+// let runMain = function(){
+//     asyncMain().catch(console.error);
+// }
 
-    asyncMain().catch(console.error);
-}
-
-
-dz = new DropZone()
-dz.setup({
-    dropSpace: '.single.drag-drop-zone'
-    , formField: '#id_document'
-})
-
-dz2 = new DropZone()
-dz2.setup({
-    dropSpace: '.multi.drag-drop-zone'
-    , formField: '#id_files_field'
-})

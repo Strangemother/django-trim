@@ -15,13 +15,30 @@ def file_upload_loc(instance, filename):
     Each chunk response returns an update result
 """
 
-class FilesForm(forms.Form):
+class FileForm(forms.Form):
     """A Meta form is served in parallel to the file upload
     The meta should receive an upload ID, stored with the
     asset to the temp location until required.
     """
     filename = fields.chars(max_length=255, required=False)
     file = fields.file(required=False)
+    # files = fields.files(required=False)
+
+    byte_size = fields.hidden(fields.int(required=False))
+    filepath = fields.hidden(fields.chars(max_length=255, required=False))
+    filetype = fields.hidden(fields.chars(max_length=255, required=False))
+
+    # class Meta:
+    #     fields = ('query',)
+
+class FilesForm(forms.Form):
+    """A Meta form is served in parallel to the file upload
+    The meta should receive an upload ID, stored with the
+    asset to the temp location until required.
+    """
+    filename = fields.chars(max_length=255, required=False)
+    # file = fields.file(required=False)
+    files = fields.files(required=False)
 
     byte_size = fields.hidden(fields.int(required=False))
     filepath = fields.hidden(fields.chars(max_length=255, required=False))

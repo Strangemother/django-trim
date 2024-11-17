@@ -10,7 +10,7 @@ const form = document.querySelector('form')
 //     , formField: '#id_file'
 // })
 
-const formSubmitHandler = function(ev) {
+const formSubmitHandler = function(ev, fieldName='file') {
     // ev.stopImmediatePropagation()
     // ev.stopPropagation()
     ev.preventDefault()
@@ -21,8 +21,8 @@ const formSubmitHandler = function(ev) {
     // post for pre-fetch
     let form = ev.currentTarget
     let formData = new FormData(form)
-    let files = formData.getAll('file')
-    formData.delete('file')
+    let files = formData.getAll(fieldName)
+    formData.delete(fieldName)
 
     // Install the byte size
     let size = countBytesMany(files)
@@ -51,6 +51,7 @@ const formSubmitHandler = function(ev) {
         .then((response) => response.json())
         .then(function(d){
             document.querySelector('.merge-link').dataset.uuid = d.file_uuid
+            UPLOADS.uuid = d.file_uuid
             let eachFunc = function(d){
                 console.log('eachFunc', d)
                 d.timeTaken
@@ -65,6 +66,10 @@ form.addEventListener('submit', formSubmitHandler)
 
 const openFormMerge = function(ev) {
     let uuid = ev.currentTarget.dataset.uuid
+    return changeUUIDLocation(uuid)
+}
+
+const changeUUIDLocation = function(uuid) {
     if(uuid == undefined) {
         console.warn('File not given')
         return
@@ -104,7 +109,7 @@ const countBytes = function(file) {
 }
 
 
-const chunkSize = 1024 * 1024; // size of each chunk (1MB)
+const chunkSize = 1024 * 1024 * UPLOADS.allowances.max_file_size; // size of each chunk (1MB)
 const submitParts = function(form, extra, eachFunc){
     // Read the file
     // make a new form to the parts endpoint.
@@ -118,6 +123,11 @@ const submitParts = function(form, extra, eachFunc){
 
 const allDoneFunc = function(form, file){
     console.log('Done', form, file)
+    if(UPLOADS.autoContinue) {
+        // press the recombine button.
+        let uuid = UPLOADS.uuid;
+        return changeUUIDLocation(uuid)
+    }
 }
 
 const progressBar = function(){
@@ -126,7 +136,7 @@ const progressBar = function(){
 
 
 const progressBarLabel = function(){
-    return document.querySelector('.upload_percent .percent-text')
+    return document.querySelector('.upload-percent .percent-text')
 }
 
 
@@ -165,7 +175,6 @@ const submitFileForm = function(file, extra, allDoneFunc, eachFunc) {
     // let sent = chunkFileUpload(file, extra, _eachFunc)
     let sent = chunkFileUploadLinear(file, extra, _eachFunc, _allDoneFunc)
     console.log('sent', sizeString(sent))
-
 }
 
 
@@ -320,8 +329,6 @@ function uploadChunk(chunk, extra) {
         // duplex: 'half',
     });
 }
-
-
 
 
 function wait(milliseconds) {

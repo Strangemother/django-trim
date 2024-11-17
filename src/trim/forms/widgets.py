@@ -37,10 +37,13 @@ def choice(*a, **kw):
     """ChoiceWidget"""
     return widgets.ChoiceWidget(*a, **kw)
 
+class MultipleFileInput(widgets.ClearableFileInput):
+    allow_multiple_selected = True
+
 
 def clearable_file_input(*a, **kw):
     """ClearableFileInput"""
-    return widgets.ClearableFileInput(*a, **kw)
+    return MultipleFileInput(*a, **kw)
 
 
 def date(*a, **kw):
