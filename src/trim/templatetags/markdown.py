@@ -2,6 +2,9 @@ from django import template
 from django.urls import resolve, reverse
 from django.conf import settings
 
+from .shared_tools import parse_until
+
+import textwrap
 
 try:
     import markdown as markdown_orig
@@ -11,15 +14,52 @@ except ImportError:
 
 register = template.Library()
 
-# @register.simple_tag(takes_context=True, name='file_content')
-# def file_content(context, view_name, *url_args, **kwargs):
+
+
+@register.tag(name="markdown")
+def do_slot(parser, token):
+    nodelist, splits, extra = parse_until(parser, token, ('endmarkdown',))
+    return MarkdownContentNode(nodelist, splits, **extra)
+
+
+class MarkdownContentNode(template.Node):
+
+    def __init__(self, nodelist, tokens, *a, **kw):
+        self.nodelist = nodelist
+        self.token_template_name = template.Variable(tokens[0])
+        self.extra_context = kw
+
+    def render(self, context):
+        print('rendering markdown')
+
+        wrap = {}
+        md = get_markdown_object()
+
+        # Make a resolved dict of values given through the init.
+        values = {key: val.resolve(context) for key, val in self.extra_context.items()}
+        with context.push(**wrap, **values):
+            # Context({'source': content}, autoescape=context.autoescape)
+            ## This is markdown plain - convert to rendered markdown
+            django_markdown_text = self.nodelist.render(context)
+            plain_markdown_text = textwrap.dedent(django_markdown_text)
+            return md.convert(plain_markdown_text)
+
+
 
 @register.inclusion_tag('trim/templatetags/markdown_file_content.html', takes_context=True,
                         name='markdown.file')
-def src_code_content_template(context, filename, *args, **kwargs):
+def src_code_content_template(context, part_a=None, part_b=None, *args, **kwargs):
     """Load and process a markdown file.
     """
-    info = get_file_contents(filename, settings.POLYPOINT_DOCS_DIR)
+    base_dir = settings.POLYPOINT_DOCS_DIR
+    filename = part_a
+
+    if part_b is not None:
+        base_dir = settings.TRIM_MARKDOWN_DIRS.get(part_a)
+        # dir, filename.
+        filename = part_b
+
+    info = get_file_contents(filename, base_dir)
     if info['exists']:
         content = info['content']
         md = get_markdown_object()
@@ -27,7 +67,6 @@ def src_code_content_template(context, filename, *args, **kwargs):
         info['metadata'] = md.Meta
 
     return {
-        'lang_class': 'language-javascript',
         'markdown_object': info,
     }
 

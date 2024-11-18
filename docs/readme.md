@@ -18,6 +18,7 @@ Django Trim reduces the amount of text, imports and general congantive overload 
     + [Live Models](./models/live.md)
 + [Views](./views)
     + [Authed Views](./views/authed-views.md)
+    + [Markdown](./markdown.md)
 + [Forms](./forms.md)
     + [Quick Forms](./forms/quickforms.md)
     + [Hidden Widget](./widgets/hidden.md)
@@ -31,6 +32,7 @@ Django Trim reduces the amount of text, imports and general congantive overload 
             + [slots](./templates/tags/wrap-slots.md)
         + [quickform](./templates/tags/quickform.md)
         + [strings](./templates/tags/strings.md)
+        + [markdown](./markdown.md)
 + Apps
     + [Live Import](./apps.md)
 + Execute

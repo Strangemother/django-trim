@@ -14,4 +14,9 @@ register = template.Library()
 
 @register.simple_tag(takes_context=False)
 def str_merge(*targs, **kwargs):
+    """Join many separate strings into a single string
+
+        {% str_merge "foo" var ".baz" as my_str %}
+        {{ my_str }}
+    """
     return ''.join(map(str, targs))

@@ -4,6 +4,8 @@ from django.utils.functional import cached_property
 from django.views.generic import ListView
 
 class OrderPaginatedListView(ListView):
+    """A ListView with prepared ordering and pagination.
+    """
     default_orderby = 'default_orderby_field'
     default_selected_orderby = 'name'
     default_direction = 'asc'
