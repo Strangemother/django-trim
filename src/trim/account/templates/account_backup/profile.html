@@ -1,0 +1,184 @@
+{% extends "account/base.html" %}
+{% load link %}
+
+{# include "v1/secondary-header.html" with primary="Profile" secondary="Your Account" #}
+
+{% block hero_content %}
+    {% include "v4/secondary-header.html" with secondary="Your Profile" primary='Account' %}
+
+    <div class="v1 v1p5 hero-header secondary flex-grow hidden">
+
+        <div class="content flex-reverse flex-down">
+            <h1 class="margin-left-10vw">Profile</h1>
+            <hr class="grow">
+            <h2 class="margin-left-10vw">Your Account</h2>
+        </div>
+
+        <div class="actions btns margin-left-auto margin-right-10vw">
+
+        {% if user.is_anonymous %}
+            {% link "admin:login" "Login" %}
+        {% else %}
+            {% link "account:logout" "Logout" %}
+        {% endif %}
+
+            {% if user.is_staff %}
+                {% link "admin:index" "Admin" %}
+                {% link "wagtailadmin_home" "CMS" %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock hero_content %}
+
+
+{% block deep_content %}
+
+    {% if user.is_anonymous %}
+        {% include "account/sub/login_prompt.html" %}
+    {% else %}
+
+        <div class="flex-down gap-2">
+
+            <div class="font-size-1p2em">
+                <ul class="strong-table table user-links">
+                    <li>
+                        <span>
+                        {% link "account:edit" "Name" %}
+                        {% link "account:edit_email_verified" "email address" %}
+                        </span>
+                        <span>
+                            <p>All About you</p>
+                            <div class="flex-across gap-1">
+                                <div class="flex-across gap-p5em">
+                                {% link "account:edit" user.first_name %}
+                                {% link "account:edit" user.last_name %}
+                                </div>
+                                <div>
+                                    {% link "account:edit_email_verified" user.email %}
+                                </div>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <span>
+                        {% link "account:edit_password" "Password" %}
+                        {% link "account:edit_username" "Username" %}
+                        </span>
+                        <span>
+                            <div>
+                                <p>Your login details</p>
+                                <div class="flex across gap-1">
+                                    {% link "account:edit_username" user.username %}
+                                    {% link "account:edit_password" "Change Password" %}
+                                </div>
+
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <span>
+                            {% link "baskets:purchases" "purchases" %}
+                        </span>
+                        <span>
+                            <div class="flex-down">
+                                <p>Your purchases and receipts.</p>
+                                {% link "baskets:purchases" "View" %}
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <span>
+                            {% link "baskets:shippingaccount_list" "Shipping Accounts" %}
+                        </span>
+                        <span>
+                            <div>
+                                <p>Your business shipping account details</p>
+                                {% link "baskets:shippingaccount_list" "Shipping Accounts" %}
+                            </div>
+                        </span>
+                    </li>
+                    {% comment "no internal addresses for stripe" %}
+                    <li>
+                        {% link "locality:index" "addresses" %}
+                    </li>
+                    {% endcomment %}
+
+                    <li>
+                        <span>
+                            {% link "orgs:index" "organisations" %}
+                        </span>
+                        <span>
+                            <p>Onboard your company for continued support and reseller discounts</p>
+                        </span>
+                    </li>
+
+                    {% if user.is_staff %}
+
+
+                    <li>
+                        <span>
+                            {% link "baskets:user" "baskets" %}
+                        </span>
+                        <span>
+                            <p>Your previous shopping carts</p>
+                        </span>
+                    </li>
+
+                     <li>
+                        <span>stocks</span>
+                        <span>
+                            <ul>
+                                <li>{% link "stocks:counts" "list" %}</li>
+                                <li>{% link "stocks:list" "uploaded" %}</li>
+                                <li>{% link "stocks:upload" "upload new" %}</li>
+                            </ul>
+                            <ul>
+                                <li>{% link "stocks:notification-all-list" "notifications" %}</li>
+                                <li>{% link 'stocks:notification-list' 'users' "Quick List" %}</li>
+                            </ul>
+                        </span>
+                    </li>
+                    <li>
+                        <span>pricing</span>
+                        <span>
+                            <ul>
+                                <li>{% link "pricing:index" "list" %}</li>
+                            </ul>
+                        </span>
+                    </li>
+                    <li>
+                        <span>baskets</span>
+                        <span>
+                            <ul>
+                                <li>{% link "baskets:all" "all" %}</li>
+                            </ul>
+                        </span>
+                    </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+
+        {% if user.is_staff %}
+            <h2>Admin Extras</h2>
+
+            <div class="flex-down gap-2">
+                <div class="admin-links">
+                    <p>You can see these extra staff links, as you are designated a staff member within the admin.</p>
+                </div>
+
+                <div class="hyperlinks">
+                    <p>Your Hyperlinks</p>
+                    {% include "core/hyperlink_list.html" %}
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        </div>
+
+    {% endif %}
+
+{% endblock %}

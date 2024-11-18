@@ -1,0 +1,16 @@
+{% extends "account/base.html" %}
+{% load static wagtailcore_tags wagtailuserbar %}
+{% block hero_content %}
+{% include "v4/secondary-header.html" with primary="Profile" secondary="New Account" %}
+{% endblock hero_content %}
+
+{% block deep_content %}
+    <h1>Welcome {{ user.first_name }}</h1>
+
+    <p>Your new account has been created.</p>
+    <a href='{% url "account:logout" %}'>Logout</a>
+    <a href='{% url "account:profile" %}'>Account</a>
+
+    <div class="template_name">page < new-profile</div>
+{% endblock %}
+

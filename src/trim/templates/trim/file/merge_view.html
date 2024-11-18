@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static link quickforms %}
+
+{% block body_class %}form{% endblock %}
+
+{% block extra_css %}
+    {% css "css/general.css" %}
+{% endblock extra_css %}
+
+{% block content %}
+    <h1>Form</h1>
+    {% quickform.form form %}
+{% endblock content %}

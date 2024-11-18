@@ -1,0 +1,30 @@
+
+main > .column-base {
+  display: grid;
+  grid-template-columns: minmax(2em, 1fr) minmax(auto, 64em) minmax(2em, 1fr);
+  gap: 1em; /* Space between columns */
+}
+
+.dev-mode .secondary-column {
+    border: dashed 2px rebeccapurple;
+    border-radius: 0.7em;
+    margin: 0 0.5em;
+}
+
+.secondary-column {
+  /* Styles for your left and right columns */
+  display: grid;
+  min-width: 2em;
+}
+
+.primary-column {
+  max-width: 64em;
+  width: 100%; /* Makes it flexible */
+  /* Additional styles for the center column */
+}
+
+main + footer {
+    min-height: 20em;
+    background: #111;
+    display: grid;
+}

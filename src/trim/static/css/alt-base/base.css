@@ -1,0 +1,35 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 0 0px;
+    color: #231f20;
+    color: #ddd;
+    font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+    line-height: 1.25;
+}
+
+a {
+    background-color: transparent;
+    color: #308282;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #ea1b10;
+}
+
+
+body {
+    background: #222;
+    padding: 0em;
+}

@@ -1,0 +1,29 @@
+{% theme "form" %}
+{# extends "account/base.html" #}
+
+
+{% block header_title %}Login{% endblock header_title %}
+{% block secondary_title %}Account{% endblock secondary_title %}
+{% block title %}Login{% endblock title %}
+{% block body_class %}login-form {{ block.super }}{% endblock body_class %}
+
+{% block info_area %}
+    <h2>Your Account</h2>
+    <p>Log into your Princeton Scientific account, or use your social login below</p>
+    <div class="actions btns flex-across">
+        {% include "account/sub/social_buttons.html" %}
+    </div>
+{% endblock info_area %}
+
+
+{% block below_form_area %}
+    <div>
+        <a href='{% url "account:admin_password_reset" %}'>Forgot Password</a>
+    </div>
+
+    <div class="actions btns flex-across">
+        {% include "account/sub/register_button.html" %}
+
+    </div>
+
+{% endblock below_form_area %}

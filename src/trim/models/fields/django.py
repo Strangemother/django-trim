@@ -240,6 +240,9 @@ def m2m(other, *a, **kw):
     to model type.
     """
     kw = defaults(a, kw, blank=True)
+    if 'null' in kw:
+        # (fields.W340) null has no effect on ManyToManyField.
+        kw.setdefault('blank', kw.pop('null'))
     return models.ManyToManyField(other, *a, **kw)
 
 

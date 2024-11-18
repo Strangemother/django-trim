@@ -2,6 +2,10 @@
 
 Quickly integrate Admin, staff, and user permissioned views using `trim.Permissioned` and other mixins.
 
++ [Permissioned](#Permissioned)
++ [IsStaffMixin](#IsStaffMixin)
++ [UserOwnedMixin](#UserOwnedMixin)
+
 ## Permissioned
 
 `trim.views.Permissioned` is the `PermissionRequiredMixin`

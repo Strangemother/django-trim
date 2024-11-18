@@ -1,0 +1,21 @@
+{% extends "account/base.html" %}
+
+
+{% block title %}Form{% endblock %}
+{% block body_class %}{{ block.super }} account/form{% endblock %}
+
+
+{% block hero_content %}
+    {% include "v4/secondary-header.html" with primary="Account" secondary="Form" %}
+{% endblock hero_content %}
+
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="flex-center">
+        <div class="flex-down gap-1">
+            {% include 'generic-form.html' %}
+        </div>
+    </div>
+{% endblock %}

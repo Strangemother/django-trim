@@ -1,0 +1,9 @@
+{% comment "What" %}
+    This file presents converted _markdown_ - used by the markdown.file tag
+
+        {% load markdown %}
+        {% markdown.file "readme.md" %}
+{% endcomment %}
+<div class="markdown-object-container">
+{{ markdown_object.html|safe }}
+</div>

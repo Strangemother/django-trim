@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static link quickforms %}
+
+{% block body_class %}form{% endblock %}
+
+{% block extra_css %}
+    {% css "css/general.css" %}
+{% endblock extra_css %}
+
+{% block content %}
+    <h1>Upload Complete</h1>
+
+    <pre>
+    {{ asset.output.uuid }}
+    </pre>
+
+    {{ asset }}
+
+    <div>
+
+    {% if asset.store_path %}
+    {% link "file:download"  asset.file_uuid "Download" %}
+    {% endif %}
+    </div>
+{% endblock content %}

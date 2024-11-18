@@ -12,6 +12,11 @@ def link_info(view_name, *targs, **kwargs):
     return link(view_name, *targs, **kwargs)
 
 
+@register.simple_tag(takes_context=False, name='link.url')
+def link_info(view_name, *targs, **kwargs):
+    return link(view_name, *targs, **kwargs)['url']
+
+
 @register.inclusion_tag('trim/link.html', takes_context=True)
 def abs_link(context, link, *targs, **kwargs):
     res = gen_link(link, *targs, **kwargs)
@@ -45,6 +50,8 @@ def script_link(link, *targs, **kwargs):
         'kwargs': kwargs,
     }
 
+register.inclusion_tag('trim/js_link.html', name='link.js',
+    takes_context=False)(script_link)
 
 @register.inclusion_tag('trim/css_link.html', name='css', takes_context=False)
 def css_link(link, *targs, **kwargs):
@@ -65,6 +72,9 @@ def css_link(link, *targs, **kwargs):
         'static_name': link,
         'kwargs': kwargs,
     }
+
+register.inclusion_tag('trim/css_link.html', name='link.css',
+    takes_context=False)(css_link)
 
 
 @register.inclusion_tag('trim/link.html', takes_context=False)

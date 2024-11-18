@@ -1,0 +1,24 @@
+{% extends "account/base.html" %}
+
+
+{% block title %}Register for an account{% endblock %}
+{% block body_class %}{{ block.super }} registration_form{% endblock %}
+
+
+{% block hero_content %}
+    {% include "v4/secondary-header.html" with primary="Register" secondary="New Account" %}
+{% endblock hero_content %}
+
+
+{% block content %}
+    {{ block.super }}
+
+    <div class="flex-center">
+        <div class="flex-down gap-1">
+            <div class="actions btns flex-down">
+                {% include "account/sub/social_buttons.html" %}
+            </div>
+            {% include 'generic-form.html' %}
+        </div>
+    </div>
+{% endblock %}

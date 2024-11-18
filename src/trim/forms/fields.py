@@ -186,37 +186,60 @@ def typed_choice(*a, **kw):
 
 
 def typed_multiple_choice(*a, **kw):
-    """A standard `forms.TypedMultipleChoiceField` field."""
+    """A standard `forms.TypedMultipleChoiceField` field.
+
+    https://docs.djangoproject.com/en/5.0/ref/forms/fields/#typedmultiplechoicefield
+    """
     return forms.TypedMultipleChoiceField(*a,**kw)
 
 
 def url(*a, **kw):
-    """A standard `forms.URLField` field."""
+    """A standard `forms.URLField` field.
+
+    https://docs.djangoproject.com/en/5.0/ref/forms/fields/#urlfield
+    """
     return forms.URLField(*a,**kw)
 
 
 def uuid(*a, **kw):
-    """A standard `forms.UUIDField` field."""
+    """A standard `forms.UUIDField` field.
+
+    https://docs.djangoproject.com/en/5.0/ref/forms/fields/#uuidfield
+    """
     return forms.UUIDField(*a,**kw)
 
 
 def combo(*a, **kw):
-    """A standard `forms.ComboField` field."""
+    """A standard `forms.ComboField` field.
+
+        ComboField(fields=[CharField(max_length=20), EmailField()])
+
+    https://docs.djangoproject.com/en/5.0/ref/forms/fields/#combofield
+    """
     return forms.ComboField(*a,**kw)
 
 
 def multi_value(*a, **kw):
-    """A standard `forms.MultiValueField` field."""
+    """A standard `forms.MultiValueField` field.
+
+    https://docs.djangoproject.com/en/5.0/ref/forms/fields/#multivaluefield
+    """
     return forms.MultiValueField(*a,**kw)
 
 
 def split_datetime(*a, **kw):
-    """A standard `forms.SplitDateTimeField` field."""
+    """A standard `forms.SplitDateTimeField` field.
+
+    https://docs.djangoproject.com/en/5.0/ref/forms/fields/#splitdatetimefield
+    """
     return forms.SplitDateTimeField(*a,**kw)
 
 
 def modelchoice(*a, **kw):
-    """A standard `forms.ModelChoiceField` field."""
+    """A standard `forms.ModelChoiceField` field.
+
+    https://docs.djangoproject.com/en/5.0/ref/forms/fields/#modelchoicefield
+    """
     return forms.ModelChoiceField(*a,**kw)
 
 

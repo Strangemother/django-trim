@@ -1,0 +1,25 @@
+{% extends "account/base.html" %}
+
+{% block hero_content %}
+    {% include "v4/secondary-header.html" with primary="Account" secondary="Logged Out" %}
+{% endblock hero_content %}
+
+{% block deep_content %}
+    {{ block.super }}
+
+
+    {% if user.is_anonymous %}
+        <p>You are logged out of your account. <br>Thank you for your time today.</p>
+
+        {% include "account/sub/login_prompt.html" %}
+
+    {% else %}
+
+        <h2>A Potential Issue Occured</h2>
+
+        <p>You should have been logged out of your website profile, but we've detected you are still logged-in.
+            <br>If this message is unexpected please attempt to <a href='{% url "logout" %}'>logout</a> again.
+        </p>
+    {% endif %}
+
+{% endblock %}

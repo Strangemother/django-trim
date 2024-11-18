@@ -1,0 +1,16 @@
+{% extends "account/base.html" %}
+
+{% block title %}Activation complete{% endblock %}
+{% block body_class %}{{ block.super }} registration_activation_complete{% endblock %}
+
+
+{% block hero_title %}Activation complete{% endblock hero_title %}
+
+{% block hero_header %}
+    {% include "v1/secondary-header.html" with primary='Account' secondary='Activation complete' %}
+{% endblock hero_header %}
+
+{% block deep_content %}
+  <p>Congratulations, your account has been activated.</p>
+
+{% endblock %}

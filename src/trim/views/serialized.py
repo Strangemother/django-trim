@@ -65,7 +65,8 @@ class JSONListResponseMixin(object):
 
         if keys == '__all__':
             r = ()
-            for field in obj._meta.fields:
+            fields = obj.keys() if isinstance(obj, dict) else obj._meta.fields
+            for field in fields:
                 r += (field.attname, )
             keys = r
         return { x: getattr(obj, x) for x in keys}

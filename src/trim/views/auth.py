@@ -38,7 +38,7 @@ class UserOwnedMixin(UserPassesTestMixin):
         model_user = getattr(self.get_object(), self.user_field)
 
         try:
-            owns = model_user.pk == request_pk
+            owns = model_user and (model_user.pk == request_pk)
         except AttributeError as err:
             raise MissingField(self.user_field) from err
 

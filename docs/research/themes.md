@@ -1,5 +1,8 @@
 # Themes
 
+> [!NOTE]
+> Implemented! This can be found under the template themes.
+
 A basic theme acts like the `{% extends "filename.html" %}`, but the name of the file is pre-written in the theming module:
 
     {% theme "detail" %}

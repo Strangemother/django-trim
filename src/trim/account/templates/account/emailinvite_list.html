@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load link quickforms %}
+
+{# include "v1/secondary-header.html" with primary="Profile" secondary="Your Account" #}
+
+{% block content %}
+    <h1>Your Invites</h1>
+    <ul>
+        {% for item in object_list %}
+        <li>
+            {{ item.email_address }}
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

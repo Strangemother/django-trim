@@ -27,6 +27,7 @@ class Styles(t_blocks.StructBlock):
 
 from wagtail.core.blocks import StructValue
 
+
 class LinkStructValue(StructValue):
     """
     https://docs.wagtail.org/en/v4.0.1/advanced_topics/customisation/streamfield_blocks.html#additional-methods-and-properties-on-structblock-values

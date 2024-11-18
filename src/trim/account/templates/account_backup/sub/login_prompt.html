@@ -1,0 +1,6 @@
+<p>You're not logged in.</p>
+
+<div class="flex-center gap-1">
+    <a href='{% url "account:login" %}' class="btn">Login</a>
+    {% include "account/sub/register_button.html" %}
+</div>

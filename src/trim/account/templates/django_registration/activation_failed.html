@@ -1,0 +1,15 @@
+{% extends "django_registration/base_registration.html" %}
+
+
+{% block title %}Account activation failed{% endblock %}
+{% block body_class %}{{ block.super }} registration_activation_failed{% endblock %}
+
+
+{% block content_title %}
+  <h2>Account activation failed</h2>
+{% endblock %}
+
+
+{% block content %}
+  <p>your account has been not been activated.</p>
+{% endblock %}

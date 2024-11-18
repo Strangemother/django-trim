@@ -1,0 +1,38 @@
+header.classic-header {
+    display: grid;
+    grid-template-columns: 1fr minmax(auto, 64em) 1fr;
+    gap: 1em;
+}
+
+header.classic-header.sticky {
+    position: sticky;
+    top: 0;
+    background: #1c1c1c;
+}
+
+nav.header-nav ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.header-nav a {
+    font-size: 1.3em;
+    padding: 1em;
+    display: inline-block;
+}
+
+.user-area, .logo {
+    display: grid;
+    align-content: center;
+    padding: 0 2em;
+}
+
+.user-area {
+    justify-content: end;
+}
+
+.logo {
+    justify-content: start;
+}

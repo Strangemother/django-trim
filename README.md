@@ -1,6 +1,6 @@
 <div align="center">
 
-![Upload Python Package](./docs/logo/django-trim-logo-flat-300.png)
+![django trim logo](./docs/logo/django-trim-logo-flat-300.png)
 
 # Django Trim
 
@@ -64,11 +64,12 @@ Django trim is a facade to the common features of Django providing a layer of su
 | --- | --- |
 | Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) \| [Live String](./docs/models/live.md) |
 | Views     | [Authed Views](./docs/views/authed-views.md) \| [List View](./docs/views/listview.md) \| [JSON Views](./docs/views/serialized.md) |
-| Forms     | [quickforms](./docs/forms/quickforms.md) \| [`{% quickform %}` tag](./docs/template/tags/quickform.md) |
+| Forms     | [quickforms](./docs/forms/quickforms.md) \| [`{% quickform %}` tag](./docs/templates/tags/quickform.md) |
 | URLs      | [named urls](./docs/urls.md)  |
 | Admin     | [`register_models`](./docs/admin.md)  |
 | Templates | [`{% link %}` tag](./docs/templates/tags/link.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) |
 | _Execute_ | [`read_one`](./docs/execute.md)
+
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
