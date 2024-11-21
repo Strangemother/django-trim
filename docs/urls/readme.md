@@ -201,9 +201,9 @@ from django.views.generic import TemplateView
 from .views import HomePage
 
 urlpatterns += [
-        path('account/', include('account.urls'))
-        path('products/', include('products.urls'))
-        path('contact/', include('contact.urls'))
+        path('account/', include('account.urls')),
+        path('products/', include('products.urls')),
+        path('contact/', include('contact.urls')),
     ]
 
 # Other examples
