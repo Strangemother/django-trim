@@ -20,19 +20,28 @@ class MarkdownReponseMixin(views.TemplateView):
     template_name = "contact/index.md"
 ```
 
+Collect a markdown file:
+
+```jinja
+{% load markdown %}
+
+<div>
+    {% markdown.file "readme.md" %}
+</div>
+```
+
+
 Use Markdown within the view:
 
 ```jinja
 {% load markdown %}
 
 <div>
-    {% markdown "foo" %}
+    {% markdown %}
     # Markdown Block.
 
     Write markdown content within the template directly.
     {% endmarkdown %}
-
-    {% endblock content %}
 </div>
 ```
 

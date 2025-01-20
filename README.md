@@ -1,4 +1,4 @@
-<div align="center">
+<div markdown=1 align="center">
 
 ![django trim logo](./docs/logo/django-trim-logo-flat-300.png)
 
