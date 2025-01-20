@@ -44,14 +44,31 @@ def new_link(link, *targs, **kwargs):
 
 @register.inclusion_tag('trim/js_link.html', name='js', takes_context=False)
 def script_link(link, *targs, **kwargs):
+    """Build a standard `<script>` for JS, usig the static path.
+
+        {% link.js "examples/js/my-js-file.js"  %}
+
+    Creating a standard script tag:
+
+        <script type="text/javascript"  src="/static/examples/js/my-js-file.js></script>
+
+    Apply args and kwargs as required:
+
+        {% link.js "examples/js/petite-vue.iife.js" "defer" "init" %}
+        # <script src="examples/js/petite-vue.iife.js" defer init></script>
+
+    """
     kwargs.setdefault('type', 'text/javascript')
     return {
         'static_name': link,
         'kwargs': kwargs,
+        'args': targs,
     }
+
 
 register.inclusion_tag('trim/js_link.html', name='link.js',
     takes_context=False)(script_link)
+
 
 @register.inclusion_tag('trim/css_link.html', name='css', takes_context=False)
 def css_link(link, *targs, **kwargs):
@@ -71,6 +88,7 @@ def css_link(link, *targs, **kwargs):
     return {
         'static_name': link,
         'kwargs': kwargs,
+        'args': targs,
     }
 
 register.inclusion_tag('trim/css_link.html', name='link.css',
@@ -121,7 +139,6 @@ def gen_link(link, *targs, **kwargs):
     cutlen = -3 if hotix_as_word else -1
     # Args are exerything given except the last "text" arg (and hotfix 'as X')
     args = targs[:cutlen] if len(targs) > 0 else targs
-
     url = kwargs.get('url', None) or reverse(link, args=args)
     text = targs[cutlen] if len(targs) > 0 else url
 
