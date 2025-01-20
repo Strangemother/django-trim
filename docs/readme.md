@@ -11,7 +11,6 @@ Django Trim reduces the amount of text, imports and general congantive overload 
 
 ## Trim
 
-
 + [Models](./models)
     + [Auto Model Mixin](./models/auto_model_mixin.md)
     + [Fields](./models/fields.md)

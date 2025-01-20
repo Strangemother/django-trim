@@ -1,1 +1,1 @@
-{% load static %}<script {% for key, val in kwargs.items %}{{ key }}="{{ val }}" {% endfor %} src="{% static static_name %}"></script><!-- js_link: {{ static_name }} -->
+{% load static %}<script {% for key, val in kwargs.items %}{{ key }}="{{ val }}" {% endfor %} src="{% static static_name %}"{% for argv_v in args %} {{ argv_v }}{% endfor %}></script><!-- js_link: {{ static_name }} -->
