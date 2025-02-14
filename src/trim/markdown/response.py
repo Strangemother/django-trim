@@ -10,6 +10,7 @@ except ImportError:
 
 __all__ = [
     "MissingImportError",
+    "MarkdownToMarkdownTemplateResponse",
     "MarkdownTemplateResponse",
     "MarkdownDoubleTemplateResponse",
     "MarkdownReponseMixin",
@@ -72,6 +73,29 @@ class MarkdownTemplateResponse(TemplateResponse):
 
         md = markdown_orig.Markdown(extensions=extensions)
         return md
+
+
+class MarkdownToMarkdownTemplateResponse(MarkdownTemplateResponse):
+
+    @property
+    def rendered_content(self):
+        """Return the freshly rendered content for the template and context
+        described by the TemplateResponse.
+
+        This *does not* set the final content of the response. To set the
+        response content, you must either call render(), or set the
+        content explicitly using the value of this property.
+        """
+        # django.template.backends.django.Template
+        template = self.resolve_template(self.template_name)
+        context = self.resolve_context(self.context_data)
+
+        source_text = template.template.source
+        old_inner = template.template
+        inner = Template(source_text, old_inner.origin, old_inner.name, old_inner.engine)
+        template.template = inner
+        res = template.render(context, self._request)
+        return res
 
 
 class MarkdownDoubleTemplateResponse(MarkdownTemplateResponse):

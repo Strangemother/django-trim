@@ -79,7 +79,9 @@ def get_markdown_object():
     # https://python-markdown.github.io/extensions/
     extensions=[
         'meta',
-        'extra',
+        # 'extra',
+        "pymdownx.extra",
+
     ]
 
     if markdown_orig is None:
