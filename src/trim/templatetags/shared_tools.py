@@ -18,11 +18,21 @@ def parse_until(parser, token, ends):
     # rather than delete, change;
     # inject_node(parser)
     splits = token.split_contents()[1:]
+    extra = extract_with_statement(token, parser, splits=splits)
+    return nodelist, splits, extra
+
+
+def extract_with_statement(token, parser, splits=None):
+    """
+    Discover anything after the _with_ statement, and return a dict.
+    """
+
     extra = {}
+    splits = splits or token.split_contents()[1:]
     for i, word in enumerate(splits):
         if word == 'with':
             extra = token_kwargs(splits[i+1:], parser)
-    return nodelist, splits, extra
+    return extra
 
 from django.template.loader_tags import (
         TemplateSyntaxError,

@@ -20,7 +20,9 @@ classifiers = [
 ]
 license = {text='MIT'}
 dynamic = ['version']
-# dependencies
+dependencies = [
+  "loguru",
+]
 # dynamic
 # entry-points
 # gui-scripts
