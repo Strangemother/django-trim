@@ -1,6 +1,47 @@
 # Quick Forms
 
-> _Quick Forms_ offers a seamless approach to embedding prepared forms on any page by leveraging existing views and URLs. For more in-depth information, see the [templatetags/quickforms documentation](../templates/tags/quickforms.md).
+Plug your existing `FormView` form into any page. The form submission is sent to the correct page.
+
+_Template examples:_
+
+```jinja
+{% load quickforms %}
+
+<!-- Acts like a `form` -->
+<form action='/myform/'>{% quickform "app:formview-name" %}</form>
+
+<!-- Put a prepared form in the view -->
+{% quickform.form "app:formview-name" %}
+
+<!-- Put a prepared form in the view - from a form object -->
+{% quickform.form form %}
+```
+
+
+**Where is the _form_?**
+
+That's the clever part. The _form_ is your standard (already wired) `FormView`, with a name: `"app:formview-name"` and a url `/myform/`.
+
+The `{% quickform %}` uses the formclass within the working view.
+
+## Why
+
+_Quick Forms_ offers a seamless approach to embedding **prepared forms on any page** by leveraging existing views and URLs. For more in-depth information, see the [templatetags/quickforms documentation](../templates/tags/quickforms.md).
+
+**Assumptions:**
+
+1. **Safer**: Post to an form page, using the validation and a success page within.
+2. **Easier**: Reuse the same form across multiple pages without view context alterations
+3. **Faster**: Immediately put any form on any page
+
+**Examples**
+
++ **Contact Forms**: Create a single "Contact" `FormView` page with its own validation, processing (perhaps firing emails), Then flourish every page on your entire website, using the same contact form and validation.
++ **Vote Forms (same form pre-populated)**: Reuse the same form without submission woes. Apply init data in the tag for multiple forms on a page.
++ **Clever switchy**: Include your chosen form with a string, for switching of forms without the overhead.
+
+
+## Getting Started
 
 _Quick forms_ utilizes your existing Django FormViews to display a form on any chosen page. The `{% quickform app:viewname %}` tag retrieves and uses the form from the specified view. When the form is submitted, the data is posted directly to that view.
 
@@ -100,7 +141,7 @@ Now the interesting part: `{% quickform %}`. To target the above we access the u
 
 The result on our page includes a action url with a correct target, inside a finished form.
 
-```html
+```jinja
 <div class=myform>
     <form method="post" action="/product_search/" data="">
         <ul>
@@ -112,5 +153,19 @@ The result on our page includes a action url with a correct target, inside a fin
         <input type="hidden" name="csrfmiddlewaretoken" value="8GVupx...tjwkcxD">
         <button type="submit">Submit</button>
     </form>
+</div>
+```
+
+
+### Initial data
+
+Prepoluate a form with keyword parameters, matching the field names within the form
+
+
+```jinja
+{% load quickforms %}
+
+<div class=myform>
+    {% quickform.form "product_search:searchform" query='four weddings' %}
 </div>
 ```
