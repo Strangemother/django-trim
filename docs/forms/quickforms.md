@@ -156,6 +156,24 @@ The result on our page includes a action url with a correct target, inside a fin
 </div>
 ```
 
+Notice the `action` and `csrftoken` are prepared.
+
+### Form URL Arguments
+
+The target form page (such as `/product/search/`) may required path arguments in the url:
+
+    # params:  "product_search:searchform" [shop slug] [subtype slug]
+    # pattern: "product_search:searchform" "<str:shop_slug>/<str:subtype_slug>/"
+    # url:     /product/search/tillys-bakery/muffins
+
+```jinja
+<!-- Arguments apply to the form endpoint -->
+{% quickform.form "product_search:searchform" shop.slug "muffins" %}
+```
+
+```jinja
+<form method="post" action="/product/search/tillys-bakery/muffins"> ... </form>
+```
 
 ### Initial data
 
