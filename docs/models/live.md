@@ -5,10 +5,17 @@
 ```py
 from trim import live
 
-other = live.myapp.ModelName
+MyModel = live.myapp.ModelName
 ```
 
 The "live" models tool provides a fast access method to all the existing installed models using a single concat string resolving to the model.
+
+**Why**
+
++ **Just works**: Access all your models without pre-loading.
++ **It's Lazy**: Trouble-free Bypassing of early import issues.
++ **Tiny**: One import. All models. No Magic.
+
 
 ## Example
 
@@ -28,7 +35,15 @@ checkout.save()
 
 The `trim.live` object can replace a standard import or the `app.get_model` function.
 
-Before:
+
+<table>
+<thead><tr>
+  <th align="left">Before</th>
+  <th align="left">After</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
+
+Example standard import methods:
 
 ```py
 from django.apps import apps
@@ -36,27 +51,41 @@ from django.apps import apps
 from checkout.models import Checkout
 from carts.models import Cart
 
-other = apps.get_model('myapp.ModelName')
+ModelName = apps.get_model('myapp.ModelName')
 cart = Cart.objects.create(demo=True)
 
 checkout = Checkout(cart=cart)
 checkout.save()
 ```
 
-After:
+</td><td>
+
+The `trim.live` can do exactly same, with one import:
 
 ```py
 from trim import live
 
-other = live.myapp.ModelName
+ModelName = live.myapp.ModelName
 cart = live.carts.Cart.objects.create(demo=True)
 
 checkout = live.checkout.Checkout(cart=cart)
 checkout.save()
 ```
 
+</td></tbody></table>
+
+
 
 ## Another Example
+
+In this example we use an example `ShippingAccount` model. The `trim.live` returns the expected class model, allowing normal operations:
+
+<table>
+<thead><tr>
+  <th align="left">Before</th>
+  <th align="left">After</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
 
 ```py
 from django.apps import apps
@@ -65,6 +94,8 @@ ShippingAccount = apps.get_model('baskets.ShippingAccount')
 cart_owner = self.get_object().cart.owner
 user_addresses = ShippingAccount.objects.filter(owner=cart_owner, deleted=False)
 ```
+
+</td><td>
 
 After:
 
@@ -76,3 +107,6 @@ user_addresses = live.baskets.ShippingAccount.objects.filter(
         owner=owner, deleted=False
     )
 ```
+
+</td></tbody></table>
+

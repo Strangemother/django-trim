@@ -9,6 +9,9 @@
 Reduce typing on models! Import ready-to-use fields for your models.
 All fields shadow the existing django field.
 
+
++ [All fields](./fields-auto.md)
+
 Here's a fast example:
 
 _models.py_
@@ -25,3 +28,5 @@ class ContactMessage(models.Model):
     message = fields.text(nil=False)
     created, updated = fields.dt_cu_pair()
 ```
+
++ [More Examples](./fields.md)

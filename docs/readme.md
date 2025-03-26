@@ -12,27 +12,28 @@ Django Trim reduces the amount of text, imports and general congantive overload 
 ## Trim
 
 + [Models](./models)
-    + [Auto Model Mixin](./models/auto_model_mixin.md)
-    + [Fields](./models/fields.md)
-    + [Live Models](./models/live.md)
+    + [Auto Model Mixin](./models/auto_model_mixin.md): Bridge models across apps automatically
+    + [Fields](./models/fields.md): Functional model field names
+    + [Live Models](./models/live.md): Utilise any model, with one import
 + [Views](./views)
-    + [Authed Views](./views/authed-views.md)
-    + [Markdown](./markdown.md)
-+ [Forms](./forms.md)
-    + [Quick Forms](./forms/quickforms.md)
-    + [Hidden Widget](./widgets/hidden.md)
-+ [URLs](./urls.md)
-+ [Admin](./admin.md)
+    + [Authed Views](./views/authed-views.md): Fast mixing for user authentication
+    + [Markdown](./markdown.md): Markdown template views, and responses classes
++ [Forms](./forms)
+    + [Quick Forms](./forms/quickforms.md): Apply your prepared form on any view
+    + [Hidden Widget](./widgets/hidden.md): easily apply _hidden_ to form fields
++ [URLs](./urls): less typing for includes and patterns
++ [Admin](./admin.md): Register all models in your django admin with one function call.
 + [Templates](./templates)
-    + [Theming](./theming/readme.md)
+    + [Theming](./theming/readme.md): Centralise template import names with your own theming package
     + [Tags](./templates/tags)
-        + [link](./templates/tags/link/readme.md)
-        + [wrap](./templates/tags/wrap.md)
-            + [slots](./templates/tags/wrap-slots.md)
-        + [quickform](./templates/tags/quickform.md)
-        + [strings](./templates/tags/strings.md)
-        + [markdown](./markdown.md)
+        + [link](./templates/tags/link/readme.md): Generate `<a>` hyperlinks in the view using view names.
+            + [css|js link](./templates/tags/css-js-tag.md): Generate standard _script_ and _stylesheet_ imports using view names.
+        + [wrap](./templates/tags/wrap.md): Build HTML fragments (like `{% include %}`), with additional body content
+            + [slots](./templates/tags/wrap-slots.md): Extend `{% wrap %}` with _slot_ for multiple body definitions.
+        + [quickform](./templates/tags/quickform.md): Use a single view tag to import a ready-to-go `FormView` form.
+        + [strings](./templates/tags/strings.md): Utilities for string management within a template.
+        + [markdown](./markdown.md): Template tags for rendering Markdown in the view
 + Apps
-    + [Live Import](./apps.md)
+    + [Live Import](./apps.md): Live import special named files across all apps at _boot-time_
 + Execute
-    + [`read_one_stream_command`](./execute.md)
+    + [`read_one_stream_command`](./execute.md): Read tricky byte pipes with one-bit stream reader (not django specific)

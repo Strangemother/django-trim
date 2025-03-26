@@ -1,22 +1,22 @@
 # `trim.urls`
 
-+ Named Paths
-    + `paths_named`
-    + `paths_dict`
-+ Includes
-    + `path_includes`, `path_includes_pair`
+| Tool | Description |
+| ---  |  --- |
+| paths_named | Apply patterns using the _view name_ as the keyword |
+| paths_dict |  A pattern using the _class name_ as the keyword |
+| path_includes | Create many _include_ patterns, using the _appname_ |
+| path_includes_pair | Perform _includes_ with a tuple of _appname_, and _url_ |
+| absolute_reverse | a `reverse(name)` with the request host prefix |
+| absolutify | convert any url-like string to a fully resolved url  |
+| favicon_path | create a general favicon url |
+
 
 
 ## Named Patterns
 
 Named Patterns helps build a list of `paths()` for your `urlspatterns` using dictionary mappings.
 
-
-### Example
-
-The `trim.urls.paths_named` function reduces the typing required for `path()` URLs.
-
-The function accepts keyword arguments as the _name_ of pattern, accepting a tuple for the target _class_ within `views` and the target _url_.
+The function accepts keyword arguments as the _name_ of pattern, and a tuple for the target _class_ within `views` and the target _url_.
 
 _urls.py_
 ```py
@@ -26,8 +26,12 @@ from . import views
 app_name = 'myapp'
 
 urlpatterns = urls.paths_named(views,
-    # {% url myapp:name 'foostring' %}%
+    # {% url myapp:name 'foostring' %}
     name=('ClassNamedView', 'my/url/<str:foo>/',),
+    # {% url myapp:stock_list 'Go to stock list' %}
+    stock_list=('StockListView', 'stocks/',),
+    # {% url myapp:stock_detail object.slug 'view item' %}
+    stock_detail=('StockDetailView', 'stocks/<str:slug>',),
     ...
 )
 ```
@@ -38,6 +42,7 @@ urlpatterns = urls.paths_named(views,
   <th align="left">After</th>
 </tr></thead>
 <tbody><tr valign="top"><td>
+
 Using django's standard pattern for `urls.py`, it may look something like this:
 
 ```py
@@ -77,10 +82,9 @@ urlpatterns = urls.paths_named(views,
 The tuple value contains: `("ClassName", "url")`. The `"url"` may be a tuple, for many urls to one view. As per the example for the _home_ view:
 
 ```py
-    home=('HomeView', (
-                        '/',
-                        '<str:theme>/',
-                       ),
+    home=('HomeView',
+        # Many URLS - same view.
+        ('/', '<str:theme>/', ),
     ), ...
 ```
 
@@ -191,7 +195,14 @@ The URL for the _contact_ app would be:
     https://127.0.0.1:8000/contact/
 
 
-#### Before
+
+<table>
+<thead><tr>
+  <th align="left">Before</th>
+  <th align="left">After</th>
+</tr></thead>
+<tbody><tr valign="top"><td>
+
 
 With `trim.urls.path_includes`, The URL patterns will look something like this:
 
@@ -213,7 +224,7 @@ urlpatterns = [
 ]
 ```
 
-#### After
+</td><td>
 
 We can trim this down, by performing full `include` through single entries - each entry will become the conventional `path` include:
 
@@ -234,3 +245,67 @@ urlpatterns += [urls.template_view('about/', 'about.html')]
 ```
 
 This example is purposefully verbose to show we can still concatenate `paths_dict`, `lists` and `includes` without issue.
+
+</td></tbody></table>
+
+### path_includes_pair
+
+Similar to the `path_includes` function; given many names, convert to a django include and return paths. With `path_includes_pair`, a single item may be a list or tuple, allowing ('module', 'url/') expansion.
+
+```py
+from trim.urls import path_includes_pair as includes
+
+urlpatterns = [
+    path("django-admin/", admin.site.urls),
+] + includes(
+        'file', # file/
+        ('home', "",) # /
+        ('trim.account', 'myprofile/',),
+    )
+```
+
+
+### absolute_reverse
+
+Reverse a name and return the _absolute_ URL from the request header, returning the host used by the request.
+
+```py
+from trim.urls import absolute_reverse
+
+name = 'account:home'
+args = (user.slug, )
+absolute_reverse(request, name, *args)
+# https://userhostdomain.com/profiles/terry-99
+```
+
+
+### absolutify
+
+Given any string (preferably a URL path fragment), return the absolute URL using the host within the given request.
+
+```py
+path = '/foo/bar/'
+absolutify(request, path)
+# https://userhostdomain.com/foo/bar/
+```
+
+### favicon_path
+
+Implement your favicon as a static redirect
+
+```
+favicon_path(ingress_path='favicon.ico', static_path='images/{ingress_path}')
+```
+
+It returns a `RedirectView` with a URL to the applied static files address.
+
+```py
+# (primary) urls.py
+from trim.urls import favicon_path
+
+urlpatterns = [
+    # /static/images/favicon.ico
+    favicon_path('favicon.ico'),
+    ...
+]
+```

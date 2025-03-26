@@ -42,7 +42,7 @@ def register_models(models, ignore=None):
 
 def register(*a, **kw):
     """Perform a standard django `admin.register(Model)` with the model being
-    _cached_ for later assessment duringthe grab models ignore filters.
+    _cached_ for later assessment during the grab models ignore filters.
 
     Replace `admin.register` with `trims.register`:
 

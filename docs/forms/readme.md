@@ -19,7 +19,7 @@ class ContactForm(forms.Form):
 
 ## Quick Forms
 
-> Implement a prepared form on any page using the existing view and URLS. [read more in templatetags/quickforms](./quickforms.md)
+> Implement a prepared form on any page using the existing view and URLS. [read more in quickforms](./quickforms.md)
 
 Two quickform methods exist for your choosing. The _standard_ method return the real Form instance, the _instant form_ creates a finished HTML form.
 
@@ -33,4 +33,6 @@ Two quickform methods exist for your choosing. The _standard_ method return the 
 {% quickform.form "app:formview-name" %}
 ```
 
+## All Field Form
 
+> Use the demo form for your own debug and design purposes `trim.forms.demo.AllFieldsForm`. [read more in the all-fields-form document](./all-fields-form.md)

@@ -65,7 +65,7 @@ Django trim is a facade to the common features of Django providing a layer of su
 | Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) \| [Live String](./docs/models/live.md) |
 | Views     | [Authed Views](./docs/views/authed-views.md) \| [List View](./docs/views/listview.md) \| [JSON Views](./docs/views/serialized.md) |
 | Forms     | [quickforms](./docs/forms/quickforms.md) \| [`{% quickform %}` tag](./docs/templates/tags/quickform.md) |
-| URLs      | [named urls](./docs/urls.md)  |
+| URLs      | [named urls](./docs/urls)  |
 | Admin     | [`register_models`](./docs/admin.md)  |
 | Templates | [`{% link %}` tag](./docs/templates/tags/link.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) |
 | _Execute_ | [`read_one`](./docs/execute.md)
@@ -101,7 +101,7 @@ class HenBasket(models.Model):
 
 All `trim.models.fields` shadow the standard Django field. They are designed to be completely interchangable.
 
----
+
 
 ### Views
 
@@ -124,7 +124,6 @@ class AddressDetailView(views.UserOwnedMixin, views.DetailView):
     ...
 ```
 
----
 
 ### Forms
 
@@ -140,7 +139,6 @@ Instantly install prepared forms into a view, utilising the form built-into the 
 {% quickform.form "app:formview-name" %} <!-- Ready to go POST form -->
 ```
 
----
 
 ### URLs
 
@@ -164,7 +162,6 @@ trim_patterns = dict(
 urlpatterns = trims.paths_dict(views, trim_patterns)
 ```
 
----
 
 ### Admin
 
@@ -179,7 +176,6 @@ from . import models
 t_admin.register_models(models)
 ```
 
----
 
 ### Template Tags
 
@@ -204,7 +200,7 @@ Generate a hyperlink to a view with `{% link viewname arguments label %}`
 
 ```jinja
 {% load link %}
-{% link "appname:viewname" %}
+{% link "appname:viewname" "Click this link!" %}
 ```
 
 ---
