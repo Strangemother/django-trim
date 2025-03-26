@@ -3,6 +3,26 @@
     Add a _click_ event to toggle a class on a target,
     For example a _button_ to show/hide a div.
 
+TL;DR:
+
+    {% static "js/toggle-links.js" %}
+    <div>
+        <a data-toggle-group="baz"
+            class="toggle-selected"
+            data-target='foo-bar'>Click Foo</a>
+        <a data-toggle-group="baz"
+            data-target='another-foo'>Click Other</a>
+
+        <div data-name='foo-bar'>
+            toggled foobar content 1
+        </div>
+        <div data-name='another-foo'>
+            toggled another foo content 2.
+        </div>
+    </div>
+
+--
+
 Usage:
 
 Include this JS Asset in your code:
@@ -42,6 +62,7 @@ Use CSS to Toggle the visibility of the panel:
     }
  */
 
+console.log('toggle-links')
 class ToggleHost {
     /* Host for the page. */
     targetSelector = "*[data-target]"
@@ -65,8 +86,9 @@ class ToggleHost {
                 // Activate the change.
                 host.onClick(n, e)
                 // unclick the group.
-                if(n.dataset.toggleGroup) {
-                    host.deleselectGroup(n.dataset.toggleGroup, n)
+                let toggleGroup = n.dataset.toggleGroup || n.dataset.group
+                if(toggleGroup) {
+                    host.deleselectGroup(toggleGroup, n)
                 }
             })
 
@@ -97,7 +119,7 @@ class ToggleHost {
             let clickers = document.querySelectorAll(`*[data-target="${name}"]`)
             clickers.forEach(function(n){
                 this.onClick(n)
-                let toggleGroup = n.dataset.toggleGroup
+                let toggleGroup = n.dataset.toggleGroup || n.dataset.group
                 if(toggleGroup) {
                     this.deleselectGroup(toggleGroup, n)
                 }
