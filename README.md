@@ -44,12 +44,6 @@ INSTALLED_APPS = [
     # ...
     'trim',
     # ...
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
 ]
 ```
 
@@ -71,7 +65,12 @@ Django trim is a facade to the common features of Django providing a layer of su
 | _Execute_ | [`read_one`](./docs/execute.md)
 
 
+> [!TIP]
+> Head to the [docs/ for a list of components](./docs/)!
+
+
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
+
 
 ## Highlights
 
@@ -80,14 +79,11 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 Use `trim.models.fields` for easy to grab model fields:
 
-
 ```py
 from trim.models import fields
 
 
 class HenBasket(models.Model):
-    """A Stock change example """
-
     # ForeignKey to another model.
     chicken = fields.fk(Chicken)
     user = fields.user_fk()
@@ -99,9 +95,23 @@ class HenBasket(models.Model):
     created, updated = fields.dt_cu_pair()
 ```
 
-All `trim.models.fields` shadow the standard Django field. They are designed to be completely interchangable.
+All `trim.models.fields` shadow the standard Django field. They are designed to be completely interchangable. [Read more in Fields](./docs/models/fields.md)
+
++ [Auto Model Mixin](./docs/models/auto_model_mixin.md)
+
+---
+
+The `trim.live` models is a simple shortcut to your installed django application models without the need to import.
 
 
+Gather any model using standard dotted notation `trim.live.myapp.ModelName`
+```py
+from trim import live
+
+MyModel = live.myapp.ModelName
+```
+
+Take a look in [Live String Docs](./docs/models/live.md)
 
 ### Views
 
@@ -173,9 +183,9 @@ from trim import admin as t_admin
 
 from . import models
 
+# register all models in this app.
 t_admin.register_models(models)
 ```
-
 
 ### Template Tags
 
@@ -205,8 +215,7 @@ Generate a hyperlink to a view with `{% link viewname arguments label %}`
 
 ---
 
-And so much more! All designed to trim your code for readability and us lazy fingers.
-
+[And so much more](./docs/)!
 
 
 ## Philosophy
