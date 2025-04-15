@@ -2,6 +2,10 @@
 
 > Reduce typing on forms! Use the `fields` to quickly flesh out your form fields.
 
++ ["All Field" form](./all-fields-form.md)
++ [quickforms](./quickforms.md)
+
+
 All django fields are interchangable. Some are convenience tools such as the `trim.forms.fields.text()` TextArea input field:
 
 _forms.py_
@@ -36,3 +40,12 @@ Two quickform methods exist for your choosing. The _standard_ method return the 
 ## All Field Form
 
 > Use the demo form for your own debug and design purposes `trim.forms.demo.AllFieldsForm`. [read more in the all-fields-form document](./all-fields-form.md)
+
+```py
+from django import forms
+from trim.forms import demo
+
+
+class ExampleForm(demo.AllFieldsForm):
+    pass
+```

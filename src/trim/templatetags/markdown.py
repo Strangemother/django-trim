@@ -237,6 +237,32 @@ def src_code_content_template(context, part_a=None, part_b=None, *args, **kwargs
     }
 
 
+@register.inclusion_tag('trim/templatetags/markdown_file_content.html', takes_context=True,
+                        name='markdown.text')
+def src_code_content_text(context, *args, **kwargs):
+    """Load and process markdown from a var or string.
+
+        {% markdown.text 'This _content_ is rendered through **Markdown**' %}
+    """
+
+    content = "\n".join(args)
+
+    info = {
+        'filepath': None,
+        'exists': True,
+        'content': content,
+    }
+
+
+    md = get_markdown_object()
+    info['html'] = md.convert(content)
+    info['metadata'] = md.Meta
+
+    return {
+        'markdown_object': info,
+    }
+
+
 def get_markdown_object():
     # context['view']
 
