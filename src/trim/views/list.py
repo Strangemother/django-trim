@@ -15,6 +15,10 @@ class OrderPaginatedListView(ListView):
     max_paginate_by = 200
     paginate_by = 50
 
+    order_by_field = 'order_by'
+    paginate_by_field = 'count'
+    direction_field = 'direction'
+
     ordering_fields = (
         # ext. val, ext. label, int. key
         ('name', ('Name', 'short_description')),
@@ -63,16 +67,16 @@ class OrderPaginatedListView(ListView):
         # return field
 
     def get_selected_orderby(self):
-        return self.filter_data.get('order_by', None) or self.default_selected_orderby
+        return self.filter_data.get(self.order_by_field, None) or self.default_selected_orderby
 
     def get_selected_direction(self):
-        return self.filter_data.get('direction', None) or self.default_direction
+        return self.filter_data.get(self.direction_field, None) or self.default_direction
 
     def format_internal(self, data):
         """Convert the form dict into something internal.
         """
         field = self.get_orderby_field(data)
-        direction = data.get('direction', None)
+        direction = data.get(self.direction_field, None)
         direction = dict(self.direction_fields).get(direction, None) or ''
         # direction = '' if direction else '-'
 
@@ -80,7 +84,9 @@ class OrderPaginatedListView(ListView):
         data['ordering'] = ds
         print('Order', ds)
         data.setdefault('paginate_by', self.paginate_by)
-        data['paginate_by'] = self.clamp_paginate_by(data.get('count', None) or None)
+        user_pagination = self.clamp_paginate_by(data.get(self.paginate_by_field, None) or None)
+        if user_pagination is not None:
+            data['paginate_by'] = user_pagination
         return data
 
     def get_ordering(self):
