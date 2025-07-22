@@ -77,7 +77,11 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 ### Models
 
-Use `trim.models.fields` for easy to grab model fields:
+Use `trim.models` for easy to grab model fields, shortcuts, and fancy non-magic magic.
+
+#### Urm... Models?
+
+All django fields have functional (guessable) names. Plus a few shortcuts to trim down those chars!
 
 ```py
 from trim.models import fields
@@ -87,28 +91,69 @@ class HenBasket(models.Model):
     # ForeignKey to another model.
     chicken = fields.fk(Chicken)
     user = fields.user_fk()
+
     # Standard Fields
     full = fields.bool_false()
     other = fields.text()
     eggs = fields.int(6)
+
     # A datetime pair; created, updated.
     created, updated = fields.dt_cu_pair()
 ```
 
-All `trim.models.fields` shadow the standard Django field. They are designed to be completely interchangable. [Read more in Fields](./docs/models/fields.md)
+> [!TIP]
+> All `trim.models.fields` shadow the standard Django field. They're completely interchangable! [Read more in Fields](./docs/models/fields.md)
+
+#### Auto Composition at its finest!
+
+Hoist model mixins automatically! from any installed app!! Automatically!!!
+
+Put this anywhere (Perhaps in a fancy `shopping_addons` tool)
+
+```py
+# shopping_addons.models
+from trim.models import AutoModelMixin
+
+class StockPriceAutoMixin(AutoModelMixin):
+    """Add "pricing" functionality to a "Stock" model
+    """
+
+    def get_price(self, vat=.13):
+        return self.stock_price + (self.stock_price * vat)
+
+    class Meta:
+        # The target app 'baskets' and its model 'Cart'
+        model_name = 'stocks.Stock'
+```
+
+```py
+# Using the hoisted model
+>>> from stocks.models import Stock
+>>> stock = Stock(id=100)
+>>> stock.stock_price # existing django field
+10
+>>> stock.get_price(.33) # Auto mixin.
+13.3
+```
 
 + [Auto Model Mixin](./docs/models/auto_model_mixin.md)
 
----
+
+#### Forget Import Hell!
 
 The `trim.live` models is a simple shortcut to your installed django application models without the need to import.
 
+This allows you to call upon a model **when required**, not in the runtime startup. Allowing you to call upon _late models_ without the circular hell.
 
 Gather any model using standard dotted notation `trim.live.myapp.ModelName`
+
 ```py
 from trim import live
 
+# Import any existing model from any app!
 MyModel = live.myapp.ModelName
+
+MyModel()
 ```
 
 Take a look in [Live String Docs](./docs/models/live.md)
