@@ -79,7 +79,7 @@ Django trim is a facade to the common features of Django providing a layer of su
 
 Use `trim.models` for easy to grab model fields, shortcuts, and fancy non-magic magic.
 
-#### Urm... Models?
+#### Function Model Fields
 
 All django fields have functional (guessable) names. Plus a few shortcuts to trim down those chars!
 
@@ -91,22 +91,20 @@ class HenBasket(models.Model):
     # ForeignKey to another model.
     chicken = fields.fk(Chicken)
     user = fields.user_fk()
-
     # Standard Fields
     full = fields.bool_false()
     other = fields.text()
     eggs = fields.int(6)
-
     # A datetime pair; created, updated.
     created, updated = fields.dt_cu_pair()
 ```
 
 > [!TIP]
-> All `trim.models.fields` shadow the standard Django field. They're completely interchangable! [Read more in Fields](./docs/models/fields.md)
+> All `trim.models.fields` shadow the standard Django field and completely interchangable. [Read more in Fields](./docs/models/fields.md)
 
-#### Auto Composition at its finest!
+#### Auto Composition
 
-Hoist model mixins automatically! from any installed app!! Automatically!!!
+> Hoist model mixins automatically, from any installed app.
 
 Put this anywhere (Perhaps in a fancy `shopping_addons` tool)
 
@@ -136,12 +134,14 @@ class StockPriceAutoMixin(AutoModelMixin):
 13.3
 ```
 
+It works with any model, allowing you to apply methods on models without manipulating the original model definition (such as the `User` model)
+
 + [Auto Model Mixin](./docs/models/auto_model_mixin.md)
 
 
-#### Forget Import Hell!
+#### Live Model Access
 
-The `trim.live` models is a simple shortcut to your installed django application models without the need to import.
+> The `trim.live` models access provides a shortcut to your all installed your models without the need to import such as `trim.live.users.User()`
 
 This allows you to call upon a model **when required**, not in the runtime startup. Allowing you to call upon _late models_ without the circular hell.
 
@@ -156,9 +156,14 @@ MyModel = live.myapp.ModelName
 MyModel()
 ```
 
-Take a look in [Live String Docs](./docs/models/live.md)
+You never need to `import` your models. Take a look in [Live String Docs](./docs/models/live.md)
 
 ### Views
+
+> Django Trim embraces class-based-views and bundles a set of useful integration mixins and trim tools
+
+
+#### Instant View Permissioning
 
 Simplify your class-based-view Generation with a single-point imports and trimmed extras:
 
@@ -179,25 +184,120 @@ class AddressDetailView(views.UserOwnedMixin, views.DetailView):
     ...
 ```
 
+#### JSON Views
+
+Quick and dirty JSON views wired into the django tooling
+
+```py
+from trim.views import JsonView, JsonListView, JsonDetailView
+
+class ExampleJsonListView(JsonListView):
+    # A list of JSON objects /items/
+    model = models.MyModel
+
+class ExampleJsonDetailView(JsonDetailView):
+    # A single object, /items/<str:pk>/
+    model = models.MyModel
+```
+
+Or just role your own:
+
+```py
+class ExampleJsonView(JsonView):
+    """ returns:
+        {
+            "object": {
+                "hello": "world"
+            }
+        }
+    """
+    def get_data(self):
+        return {'hello': 'world'}
+```
+
+#### Markdown Views
+
+> Bored of writing HTML? Directly use markdown as templates
+
+Django Trim offers a markdown block and some tags - for instant markdown:
+
+```jinja
+{% load markdown %}
+
+<div>
+    {% markdown %}
+    # Markdown Block.
+
+    Write markdown content within the template directly.
+    {% endmarkdown %}
+</div>
+```
+
+A markdown template response class for full markdown templating:
+
+```py
+from trim import views
+from trim.markdown.response import MarkdownTemplateResponse
+
+class MarkdownReponseIndexView(views.TemplateView):
+    response_class = MarkdownTemplateResponse
+    template_name = "contact/index.md"
+```
 
 ### Forms
+
+Forms can be tedious. Django Trim offers functional fields, site-wide form template tags and more.
+
+#### Zero Config, Any Time, Plugged Correctly.
 
 Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`:
 
 ```jinja
 {% load quickforms %}
 
+{# A rendered form, posted to /myapp/formview-name/ #}
+{% quickform.form "app:formview-name" %} <!-- Ready to go POST form -->
+
+
 <form>
 {% quickform "app:formview-name" %} <!-- synonymous to {{ form.as_ul }} -->
 </form>
 
-{% quickform.form "app:formview-name" %} <!-- Ready to go POST form -->
 ```
+
+It's wired to your existing view (`app:formview-name`) Allowing you to build **one form endpoint** and use the form **everywhere**.
 
 
 ### URLs
 
-Looking for instantly readable URLs, connected to your class based views?
+> Managing the `urls.py` can be ugly in large apps. Django Trim helps with un-uglification for us lazy trimmers.
+
+#### Easy Readable URL Definitions
+
+> Looking for instantly readable URLs? Trim it of course...
+
+One of our favourite features is the _named_ style urls, where the keyword parameter is our `template_name`
+
+```py
+from trim.urls import paths_named
+from . import views
+
+app_name = 'screenshots'
+
+urlpatterns = [] +  paths_named(views,
+    # {% link "screenshots:index" "Index Page" %}
+    index=('ScreenshotIndexView', '',),
+    create=('ScreenshotFormView', 'new/',),
+    form_success=('ScreenshotFormSuccessView', 'success/<str:id>/',),
+
+    # {% link "screenshots:info" object.id "Screenshot Info" %}
+    info=('ScreenshotRequestUpdateView', 'info/<str:id>/',),
+)
+```
+
+> But perhaps a dictionary or tuple of URLs, connected to your class based views?
+
+Dictionary flavour definitions, using the ClassName as the key:
 
 ```py
 from trim import urls
@@ -214,8 +314,26 @@ trim_patterns = dict(
     DeleteView='delete/<str:pk>/',             # _JUST_ a URL? Cool
 )
 
-urlpatterns = trims.paths_dict(views, trim_patterns)
+urlpatterns = urls.paths_dict(views, trim_patterns)
 ```
+
+Or maybe a more pure `tuple` of `tuples`:
+
+```py
+from trim import urls
+from . import views
+
+app_name = 'website'
+
+trim_patterns = (
+    ('NoteIndexView', 'index', '' ),
+    ('EntryJsonList', 'entity-list-json', 'entry/list/json/' ),
+    ('EntryDetailView', 'entry-detail-json', '<str:pk>/json/' ),
+)
+
+urlpatterns = urls.paths_tuple(views, trim_patterns)
+```
+
 
 
 ### Admin

@@ -26,6 +26,15 @@ class ExampleJsonListView(JsonListView):
     """
     model = models.MyModel
 
+
+class ExampleJsonDetailView(JsonDetailView):
+    """ returns:
+        {
+            "object_list": [...]
+        }
+    """
+    model = models.MyModel
+
 ````
 
 
