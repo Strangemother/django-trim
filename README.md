@@ -14,29 +14,28 @@ Effortlessly trim the boilerplate in your Django projects.
 
 </div>
 
-> This convenient little library streamlines your models, views, forms, and more, - supporting core functionality for a smoother, more enjoyable day of coding.
+> Django Trim complements Django's robust framework. Streamline your models, views, forms, and more, - supporting core functionality for a smoother, more enjoyable day of coding.
 
 
-## Some Features
+## Popular Bits
 
-Django trim is a facade to the common features of Django providing a layer of sugar for all those daily components. Some quick examples to quickly trim your code:
+Django trim is a facade to the common features of Django, providing a layer of sugar for all those daily tasks.
+
+Some of our favourite components to quickly trim your code:
 
 | Thing | Bits |
 | --- | --- |
 | Models    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) \| [Live String](./docs/models/live.md) |
-| Views     | [Authed Views](./docs/views/authed-views.md) \| [List View](./docs/views/listview.md) \| [JSON Views](./docs/views/serialized.md) |
+| Views     | [Authed Views](./docs/views/authed-views.md) \| [List View](./docs/views/list-views.md) \| [JSON Views](./docs/views/serialized.md) |
 | Forms     | [quickforms](./docs/forms/quickforms.md) \| [`{% quickform %}` tag](./docs/templates/tags/quickform.md) |
 | URLs      | [named urls](./docs/urls)  |
 | Admin     | [`register_models`](./docs/admin.md)  |
-| Templates | [`{% link %}` tag](./docs/templates/tags/link.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) |
+| Templates | [`{% link %}` tag](./docs/templates/tags/link/readme.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) |
 | _Execute_ | [`read_one`](./docs/execute.md)
 
 
 > [!TIP]
 > Head to the [docs/ for a list of components](./docs/)!
-
-
-Django Trim complements Django's robust framework, offering a suite of tools that enhance and simplify the creation of URLs, forms, views, models, templates, and more.
 
 ## Setup
 
@@ -63,15 +62,14 @@ You're ready to go.
 
 ## Highlights
 
-`django-trim` respects Django's core principles, adding a layer of convenience and efficiency for developers who love Django's power but want to type lss wrds.
+`django-trim` respects Django's core principles, adding a layer of convenience for developers who love Django's power but want to type lss wrds.
 
 + Less typed text, same functionality
 + clear, predicable functional naming
 + Leverage conventions for faster prototyping
 + 100% compatible with existing Django components.
 
-`django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
-
+Head to the [docs/ for a list of components](./docs/), Some of our favourite features:
 
 ## Models
 
@@ -350,7 +348,7 @@ t_admin.register_models(models)
 
 ### Wrap Tag
 
-Generate `wrap` templates to import into your view:
+Slottable, Importable, _includes_ with the `wrap` tag:
 
 ```jinja
 {% load wrap slot %}
@@ -371,8 +369,6 @@ Generate a hyperlink to a view with `{% link viewname arguments label %}`
 {% load link %}
 {% link "appname:viewname" "Click this link!" %}
 ```
-
----
 
 [And so much more](./docs/)!
 
