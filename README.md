@@ -60,10 +60,6 @@ INSTALLED_APPS = [
 
 You're ready to go.
 
----
-
-`django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
-
 
 ## Highlights
 
@@ -74,6 +70,9 @@ You're ready to go.
 + Leverage conventions for faster prototyping
 + 100% compatible with existing Django components.
 
+`django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
+
+---
 
 ### Models
 
