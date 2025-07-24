@@ -10,9 +10,9 @@ class EditIndexView(views.Permissioned, views.TemplateView):
     permission_required = 'pages.change_MyModel'
 ```
 
-+ [Serialized views](./seralized.md): JSON mostly
-+ [Authed views](./seralized.md): Permissioned views and ownership mixins
-    + [Permissioned](./seralized.md#Permissioned)
-    + [IsStaffMixin](./seralized.md#IsStaffMixin)
-    + [UserOwnedMixin](./seralized.md#UserOwnedMixin)
++ [Serialized views](./serialized.md): JSON mostly
++ [Authed views](./authed-views.md): Permissioned views and ownership mixins
+    + [Permissioned](./serialized.md#Permissioned)
+    + [IsStaffMixin](./serialized.md#IsStaffMixin)
+    + [UserOwnedMixin](./serialized.md#UserOwnedMixin)
 
