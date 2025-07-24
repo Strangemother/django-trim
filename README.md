@@ -72,13 +72,12 @@ You're ready to go.
 
 `django-trim` shortcuts a wealth of fun django parts. All are designed to trim your code without effort. Some of our favourite features:
 
----
 
-### Models
+## Models
 
 Use `trim.models` for easy to grab model fields, shortcuts, and fancy non-magic magic.
 
-#### Function Model Fields
+### Function Model Fields
 
 All django fields have functional (guessable) names. Plus a few shortcuts to trim down those chars!
 
@@ -101,7 +100,7 @@ class HenBasket(models.Model):
 > [!TIP]
 > All `trim.models.fields` shadow the standard Django field and completely interchangable. [Read more in Fields](./docs/models/fields.md)
 
-#### Auto Composition
+### Auto Composition
 
 > Hoist model mixins automatically, from any installed app.
 
@@ -138,7 +137,7 @@ It works with any model, allowing you to apply methods on models without manipul
 + [Auto Model Mixin](./docs/models/auto_model_mixin.md)
 
 
-#### Live Model Access
+### Live Model Access
 
 > The `trim.live` models access provides a shortcut to your all installed your models without the need to import such as `trim.live.users.User()`
 
@@ -157,12 +156,12 @@ MyModel()
 
 You never need to `import` your models. Take a look in [Live String Docs](./docs/models/live.md)
 
-### Views
+## Views
 
 > Django Trim embraces class-based-views and bundles a set of useful integration mixins and trim tools
 
 
-#### Instant View Permissioning
+### Instant View Permissioning
 
 Simplify your class-based-view Generation with a single-point imports and trimmed extras:
 
@@ -183,7 +182,7 @@ class AddressDetailView(views.UserOwnedMixin, views.DetailView):
     ...
 ```
 
-#### JSON Views
+### JSON Views
 
 Quick and dirty JSON views wired into the django tooling
 
@@ -214,7 +213,7 @@ class ExampleJsonView(JsonView):
         return {'hello': 'world'}
 ```
 
-#### Markdown Views
+### Markdown Views
 
 > Bored of writing HTML? Directly use markdown as templates
 
@@ -243,11 +242,11 @@ class MarkdownReponseIndexView(views.TemplateView):
     template_name = "contact/index.md"
 ```
 
-### Forms
+## Forms
 
 Forms can be tedious. Django Trim offers functional fields, site-wide form template tags and more.
 
-#### Zero Config, Any Time, Plugged Correctly.
+### Zero Config, Any Time, Plugged Correctly.
 
 Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`:
 
@@ -267,11 +266,11 @@ Instantly install prepared forms into a view, utilising the form built-into the 
 It's wired to your existing view (`app:formview-name`) Allowing you to build **one form endpoint** and use the form **everywhere**.
 
 
-### URLs
+## URLs
 
 > Managing the `urls.py` can be ugly in large apps. Django Trim helps with un-uglification for us lazy trimmers.
 
-#### Easy Readable URL Definitions
+### Easy Readable URL Definitions
 
 > Looking for instantly readable URLs? Trim it of course...
 
@@ -333,9 +332,7 @@ trim_patterns = (
 urlpatterns = urls.paths_tuple(views, trim_patterns)
 ```
 
-
-
-### Admin
+## Admin
 
 Instantly and automatically generate admin views for all your models
 
@@ -349,9 +346,9 @@ from . import models
 t_admin.register_models(models)
 ```
 
-### Template Tags
+## Template Tags
 
-#### Wrap Tag
+### Wrap Tag
 
 Generate `wrap` templates to import into your view:
 
@@ -366,7 +363,7 @@ Generate `wrap` templates to import into your view:
 {% endwrap %}
 ```
 
-#### Link Tag
+### Link Tag
 
 Generate a hyperlink to a view with `{% link viewname arguments label %}`
 
@@ -379,6 +376,7 @@ Generate a hyperlink to a view with `{% link viewname arguments label %}`
 
 [And so much more](./docs/)!
 
+---
 
 ## Philosophy
 
