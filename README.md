@@ -122,94 +122,57 @@ Use `trim.models` for easy to grab model fields, shortcuts, and fancy non-magic 
 
 
 + **Functional field helpers** - import fields and create model fields with fewer keystrokes. They shadow the standard Django field classes and are fully interchangeable.
-+ **Auto composition** - mix behaviour across apps into existing models without modifying their definitions.
++ **Auto composition** - mix behaviour across apps into existing models without modifying their definitions. [Auto Model Mixin](./docs/models/auto_model_mixin.md)
 + **Live model access** - lazy access to any installed model via `trim.live.myapp.ModelName`; no circular imports.
 
-### Function Model Fields
+All `trim.models.fields` shadow the standard Django field for functional - guessable - and completely interchangable. [Read more in Fields](./docs/models/fields.md)
 
-All django fields have functional (guessable) names. Plus a few shortcuts to trim down those chars!
+It works with any model, allowing you to apply methods on models without manipulating the original model definition (such as the `User` model)
+
+
+You never need to `import` your models. Take a look in [Live String Docs](./docs/models/live.md)
+
 
 ```py
-from trim.models import fields
+from django.db import models
+from trim.models import fields, AutoModelMixin
 
 
 class HenBasket(models.Model):
-    # ForeignKey to another model.
-    chicken = fields.fk(Chicken)
-    user = fields.user_fk()
-    # Standard Fields
+    chicken = fields.fk('Chicken')
     full = fields.bool_false()
-    other = fields.text()
     eggs = fields.int(6)
-    # A datetime pair; created, updated.
+    owner = fields.user_fk()
     created, updated = fields.dt_cu_pair()
-```
 
-> [!TIP]
-> All `trim.models.fields` shadow the standard Django field and completely interchangable. [Read more in Fields](./docs/models/fields.md)
-
-### Auto Composition
-
-> Hoist model mixins automatically, from any installed app.
-
-Put this anywhere (Perhaps in a fancy `shopping_addons` tool)
-
-```py
-# shopping_addons.models
-from trim.models import AutoModelMixin
-
-class StockPriceAutoMixin(AutoModelMixin):
-    """Add "pricing" functionality to a "Stock" model
-    """
-
-    def get_price(self, vat=.13):
-        return self.stock_price + (self.stock_price * vat)
+# Mix behaviour into an existing model
+class UserHenBasketsAutoMixin(AutoModelMixin):
+    def get_baskets(self):
+        return HenBasket.objects.filter(owner=self) # Is a mixin on User
 
     class Meta:
-        # The target app 'baskets' and its model 'Cart'
-        model_name = 'stocks.Stock'
+        # model_name = get_user_model()
+        model_name = "user.User" # Target any name or model.
 ```
 
 ```py
 # Using the hoisted model
->>> from stocks.models import Stock
->>> stock = Stock(id=100)
->>> stock.stock_price # existing django field
-10
->>> stock.get_price(.33) # Auto mixin.
-13.3
+>> from trim.models import get_user_model
+>>> User = get_user_model()
+>>> User.objects.first().get_baskets()
+[<baskets.HenBasket object(2)>, <baskets.HenBasket object(3)>]
+
+>>> from trim import live
+>>> live.baskets.HenBasket.objects.filter(id=3).get()
+<baskets.HenBasket object(3)>
 ```
-
-It works with any model, allowing you to apply methods on models without manipulating the original model definition (such as the `User` model)
-
-+ [Auto Model Mixin](./docs/models/auto_model_mixin.md)
-
-
-### Live Model Access
-
-> The `trim.live` models access provides a shortcut to your all installed your models without the need to import such as `trim.live.users.User()`
-
-This allows you to call upon a model **when required**, not in the runtime startup. Allowing you to call upon _late models_ without the circular hell.
-
-Gather any model using standard dotted notation `trim.live.myapp.ModelName`
-
-```py
-from trim import live
-
-# Import any existing model from any app!
-MyModel = live.myapp.ModelName
-
-MyModel()
-```
-
-You never need to `import` your models. Take a look in [Live String Docs](./docs/models/live.md)
 
 ## Views
 
 > Django Trim embraces class-based-views and bundles a set of useful integration mixins and trim tools
 
-
-### Instant View Permissioning
++ Instant View Permissioning
++ JSON Views | Markdown Views
 
 Simplify your class-based-view Generation with a single-point imports and trimmed extras:
 
@@ -228,42 +191,24 @@ class AddressDetailView(views.UserOwnedMixin, views.DetailView):
 
     model = models.Address
     ...
-```
 
-### JSON Views
-
-Quick and dirty JSON views wired into the django tooling
-
-```py
-from trim.views import JsonView, JsonListView, JsonDetailView
+from trim.views import JsonListView, JsonDetailView
 
 class ExampleJsonListView(JsonListView):
     # A list of JSON objects /items/
     model = models.MyModel
 
-class ExampleJsonDetailView(JsonDetailView):
+class ExampleJsonDetailView(views.UserOwnedMixin, JsonDetailView):
     # A single object, /items/<str:pk>/
     model = models.MyModel
+
+
+from trim.markdown.response import MarkdownTemplateResponse
+
+class MarkdownReponseIndexView(views.TemplateView):
+    response_class = MarkdownTemplateResponse
+    template_name = "contact/index.md"
 ```
-
-Or just role your own:
-
-```py
-class ExampleJsonView(JsonView):
-    """ returns:
-        {
-            "object": {
-                "hello": "world"
-            }
-        }
-    """
-    def get_data(self):
-        return {'hello': 'world'}
-```
-
-### Markdown Views
-
-> Bored of writing HTML? Directly use markdown as templates
 
 Django Trim offers a markdown block and some tags - for instant markdown:
 
@@ -279,24 +224,11 @@ Django Trim offers a markdown block and some tags - for instant markdown:
 </div>
 ```
 
-A markdown template response class for full markdown templating:
-
-```py
-from trim import views
-from trim.markdown.response import MarkdownTemplateResponse
-
-class MarkdownReponseIndexView(views.TemplateView):
-    response_class = MarkdownTemplateResponse
-    template_name = "contact/index.md"
-```
-
 ## Forms
 
 Forms can be tedious. Django Trim offers functional fields, site-wide form template tags and more.
 
-### Zero Config, Any Time, Plugged Correctly.
-
-Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`:
++ Quickform: Zero Config, Any Time, Plugged Correctly. Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`
 
 ```jinja
 {% load quickforms %}
@@ -311,18 +243,11 @@ Instantly install prepared forms into a view, utilising the form built-into the 
 
 ```
 
-It's wired to your existing view (`app:formview-name`) Allowing you to build **one form endpoint** and use the form **everywhere**.
-
 
 ## URLs
 
-> Managing the `urls.py` can be ugly in large apps. Django Trim helps with un-uglification for us lazy trimmers.
-
-### Easy Readable URL Definitions
-
-> Looking for instantly readable URLs? Trim it of course...
-
-One of our favourite features is the _named_ style urls, where the keyword parameter is our `template_name`
++ Readable URL helpers - generate named URL patterns from your view classes using `paths_named`
++ Dictionary and tuple patterns - build URL patterns from dictionaries or tuples with `paths_dict`.
 
 ```py
 from trim.urls import paths_named
@@ -330,7 +255,7 @@ from . import views
 
 app_name = 'screenshots'
 
-urlpatterns = [] +  paths_named(views,
+urlpatterns = paths_named(views,
     # {% link "screenshots:index" "Index Page" %}
     index=('ScreenshotIndexView', '',),
     create=('ScreenshotFormView', 'new/',),
@@ -340,10 +265,6 @@ urlpatterns = [] +  paths_named(views,
     info=('ScreenshotRequestUpdateView', 'info/<str:id>/',),
 )
 ```
-
-> But perhaps a dictionary or tuple of URLs, connected to your class based views?
-
-Dictionary flavour definitions, using the ClassName as the key:
 
 ```py
 from trim import urls
@@ -420,7 +341,9 @@ Generate a hyperlink to a view with `{% link viewname arguments label %}`
 {% link "appname:viewname" "Click this link!" %}
 ```
 
-[And so much more](./docs/)!
+> [!TIP]
+> Explore the [And so much more](./docs/) directory for full documentation and many more features.
+
 
 ---
 
