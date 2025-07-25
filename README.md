@@ -14,8 +14,8 @@ Effortlessly trim the boilerplate in your Django projects.
 
 </div>
 
-> Django Trim complements Django's robust framework. Streamline your models, views, forms, and more, - supporting core functionality for a smoother, more enjoyable day of coding.
 
+> Trim the boilerplate from your Django projects with shortcuts for models, views, forms, URLs, template tags, and more.
 
 ## Popular Bits
 
@@ -39,7 +39,7 @@ Some of our favourite components to quickly trim your code:
 
 ## Setup
 
-Download:
+Install Django Trim from [PyPI](https://pypi.org/project/django-trim/) and add it to your Django project:
 
 ```bash
 pip install django-trim
@@ -47,7 +47,7 @@ pip install django-trim
 
 ### Install
 
-Note this Apply the app `trim` to your `INSTALLED_APPS` within your `settings.py`:
+In your `settings.py`, include `trim` in `INSTALLED_APPS`:
 
 ```python
 INSTALLED_APPS = [
@@ -57,10 +57,55 @@ INSTALLED_APPS = [
 ]
 ```
 
-You're ready to go.
+That’s it!
+
+### Minimal Example:
+
+Django trim covers all the chunky parts, allowing you to rapidly run with your ideas without magic or sacrificing clarity.
+
+Here's a fast example for a hen basket model:
+
+```py
+# models.py
+from django.db import models
+from trim.models import fields
+
+class HenBasket(models.Model):
+    chicken = fields.fk('Chicken')
+    owner = fields.user_fk()
+    full = fields.bool_false()
+    eggs = fields.int(6) # args default.
+    created, updated = fields.dt_cu_pair()
+```
+
+```py
+# views.py
+from trim import views
+from .models import Product
+
+class HenBasketListView(views.ListView):
+    model = HenBasket
 
 
-## Highlights
+class HenBasketDetailView(views.DetailView):
+    model = HenBasket
+```
+
+```py
+# urls.py
+from trim import urls
+from . import views
+
+app_name = 'baskets'
+
+urlpatterns = urls.paths_named(views,
+    list=('HenBasketListView', ('', 'baskets/'),),
+    detail=('HenBasketDetailView', 'baskets/<str:pk>/',),
+)
+```
+
+
+## Highlights and Features
 
 `django-trim` respects Django's core principles, adding a layer of convenience for developers who love Django's power but want to type lss wrds.
 
@@ -74,6 +119,11 @@ Head to the [docs/ for a list of components](./docs/), Some of our favourite fea
 ## Models
 
 Use `trim.models` for easy to grab model fields, shortcuts, and fancy non-magic magic.
+
+
++ **Functional field helpers** - import fields and create model fields with fewer keystrokes. They shadow the standard Django field classes and are fully interchangeable.
++ **Auto composition** - mix behaviour across apps into existing models without modifying their definitions.
++ **Live model access** - lazy access to any installed model via `trim.live.myapp.ModelName`; no circular imports.
 
 ### Function Model Fields
 
