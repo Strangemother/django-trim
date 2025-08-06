@@ -30,7 +30,7 @@ def url(*a, **kw):
     A CharField for a URL, validated by URLValidator.
     The default form widget for this field is a URLInput.
     Like all CharField subclasses, URLField takes the optional max_length
-    argument. If you don’t specify max_length, a default of 200 is used.
+    argument. Ifyou don’t specify max_length, a default of 200 is used.
 
         class URLField(max_length=200, **options)
     """

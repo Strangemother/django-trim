@@ -1,0 +1,1 @@
+pytest -sv --cov --cov-report=xml --cov-report=html --cov-report=term-missing

@@ -108,6 +108,7 @@ def read_one_stream_command(command):
 
 
 def proc_wait(proc, timeout=10):
+    """Wait for a process to complete and return its output."""
     try:
         outs, errs = proc.communicate(timeout=timeout)
     except subprocess.TimeoutExpired:
@@ -117,7 +118,8 @@ def proc_wait(proc, timeout=10):
 
 
 def clean(text, default=None):
-    t=text
+    """Clean the text input, ensuring it is a string."""
+    t = text
     if isinstance(text, bytes):
         t = text.decode('utf')
     return default if len(t) == 0 else t
