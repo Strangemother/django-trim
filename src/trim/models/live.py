@@ -46,7 +46,7 @@ class MagicModelModel(object):
     def __init__(self, appname):
         self.appname = appname
 
-    def __getattr__(self, k):
+    def __getattr__(self, k):        
         return apps.get_model(self.appname, k)
 
 
