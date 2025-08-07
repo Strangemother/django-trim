@@ -110,3 +110,14 @@ user_addresses = live.baskets.ShippingAccount.objects.filter(
 
 </td></tbody></table>
 
+## Imports and Testing
+
+Any import through `trim.models.live` is a special call to the `MagicModelApp`. To import classes from the `trim.models.live` _module_:
+
+```py
+from trim.models.live import MagicModelApp, MagicModelModel
+from trim.models import live
+```
+
+
+
