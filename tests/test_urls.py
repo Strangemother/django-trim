@@ -43,12 +43,13 @@ class TestUrls(unittest.TestCase):
         # Check if the result matches expected URL
         self.assertEqual(result, expected_url)
 
-    @patch('trim.urls.path')
     @patch('trim.urls.staticfiles_storage')
+    @patch('trim.urls.path')
     def test_favicon_path(self, mock_path, mock_staticfiles_storage):
         """Test that favicon_path returns the correct path."""
         # Expected: Favicon path should be '/static/favicon.ico'
         expected_path = '/static/favicon.ico'
+        mock_path.return_value = expected_path
         # Result
         result = urls.favicon_path()
         # Check if the result matches expected path

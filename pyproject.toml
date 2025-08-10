@@ -23,6 +23,12 @@ dynamic = ['version']
 dependencies = [
   "loguru",
 ]
+ 
+[project.optional-dependencies]
+# Install the optional docs tooling with: pip install "django-trim[docs]"
+docs = [
+  "trimdocs>=0.1.0a0",
+]
 # dynamic
 # entry-points
 # gui-scripts

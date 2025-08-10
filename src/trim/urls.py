@@ -81,8 +81,7 @@ def favicon_path(ingress_path='favicon.ico', static_path='images/{ingress_path}'
             favicon_path('favicon.ico'),
         ]
     """
-    import pdb; pdb.set_trace()  # breakpoint 2d6a262ax //
-    print('\n\nStatic files', staticfiles_storage)
+    # Debug prints/breakpoints removed for test stability
     static_path = static_path.format(ingress_path=ingress_path)
     return static_redirect_path(ingress_path, static_path)
 

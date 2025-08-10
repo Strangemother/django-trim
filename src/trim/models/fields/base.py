@@ -7,8 +7,9 @@ def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
     if nil_sub:
         # nil subtract, or substitution
         #  Nil. being blank+null - where nil=True
-        if ('nil' in kw) or ('nil' in params):
-            val = kw.get('nil', None) or params.get('nil', None)
+        if (nil_key in kw) or (nil_key in params):
+            # Fetch the value without treating False as missing.
+            val = kw.get(nil_key) if (nil_key in kw) else params.get(nil_key)
 
             if isinstance(val, bool):
                 # if the given value is a single bool,
@@ -17,7 +18,7 @@ def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
                 val = [val] * 2
                 kw.update(**blank_null(*val))
 
-    for k,v in kw.items():
+    for k, v in kw.items():
         if k == nil_key:
             continue
         params.setdefault(k, v)
