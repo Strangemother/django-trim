@@ -2,6 +2,12 @@
 title: Alpha File
 ---
 
-The alpha file is imported by the primary docer.
+This demo-dev-docs serves as a test and example for the trim docs tools.
 
-{% include "./footer-info.md" %}
+---
+
+This file serves as a static note for the source docs. I've chosen to split out the dev-demo-docs and the _real_ docs under this srcdocs.
+
+The origin directory is irrelevant (it can be anywhere) - so this file is generally ignored by any renderer.
+
+
