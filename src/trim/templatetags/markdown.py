@@ -44,6 +44,11 @@ class MarkdownContentNode(template.Node):
             # Context({'source': content}, autoescape=context.autoescape)
             ## This is markdown plain - convert to rendered markdown
             django_markdown_text = self.nodelist.render(context)
+            django_markdown_text = '\n'.join([m.lstrip() for m in django_markdown_text.split('\n')])
+
+            if django_markdown_text[0] == '\n':
+                django_markdown_text = django_markdown_text[1:]
+
             plain_markdown_text = textwrap.dedent(django_markdown_text)
             return md.convert(plain_markdown_text)
 

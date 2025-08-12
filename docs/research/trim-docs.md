@@ -5,7 +5,7 @@ A method to convert "partial" or pre-markdown into fully formatted markdown.
 **TL:DR;**
 
 I want to be able to write markdown files, with django addons, press save and push to github.
-This is because I want automated _TOCs_, thumbnailing, file references and custom rendering bits (that are DRY) 
+This is because I want automated _TOCs_, thumbnailing, file references and custom rendering bits (that are DRY)
 
 This same content should be useful for django (normal pages), Hugo, github pages, the _docs/_ directory. All of them render slightly differently, so a _frame_ is needed to wrap the content for any destination.
 
@@ -26,24 +26,24 @@ When compiling:
 
 ```bash
 # minimal example
-python manage.py trimdoc compile . 
+python manage.py trimdoc compile .
 python manage.py trimdoc compile --dest docs/
 # or with output format
-python manage.py trimdoc compile --dest hugo/src/ --frame hugo 
-python manage.py trimdoc compile --dest .pages/ --frame github-pages 
+python manage.py trimdoc compile --dest hugo/src/ --frame hugo
+python manage.py trimdoc compile --dest .pages/ --frame github-pages
 ```
 
 ## Reasoning
 
 When working with markdown I'd like to use jinja templating - such as includes and _image_ tags.
-In addition I wanted to be able to compile the markdown, or review it in the browser during dev. 
+In addition I wanted to be able to compile the markdown, or review it in the browser during dev.
 There's no reason why Django can't do that. And with the bonus of using the same stack as the project.
 
 ### Easy to Use
 
 This should be a fire-and-forget solution to convert markdown files into fully formatted markdown. The developer can work in a _srcdocs_ directory, and the output will be in a _docs_ directory.
 
-Fundamentally if the developer wants to ignore the tool, they're writing pure markdown. 
+Fundamentally if the developer wants to ignore the tool, they're writing pure markdown.
 Personally I want to be able to write markdown, and then use django templating to perform hard parts (e.g. image include with thumbnailing), but I still want _just markdown_.
 
 ---
@@ -51,8 +51,8 @@ Personally I want to be able to write markdown, and then use django templating t
 The output can be markdown (default), browser viewable HTML, or compiled into an alternative format.
 The destination is key, such as github docs, Hugo docs, or github pages etc.
 
-For this the doc tool should allow _rendering_ markdown, with a _frame_ for the output. 
-This frame can be changed per compilation. 
+For this the doc tool should allow _rendering_ markdown, with a _frame_ for the output.
+This frame can be changed per compilation.
 
 
 ## Usage
@@ -87,7 +87,7 @@ Things I want to be able to do with this tool:
 
 ### Core Functionality
 
-+ Markdown to Markdown 
++ Markdown to Markdown
 + Markdown, with a "frame" (for browser or HTML flats)
 + Compile feature for flat result
 + Command line interface (django command)
@@ -126,7 +126,7 @@ For this the Django _view_ of a file should be overloadable. I think the django 
 
 ## Configuration
 
-The configuration for the tool can be done through a settings file or command line arguments. Key configurations include. 
+The configuration for the tool can be done through a settings file or command line arguments. Key configurations include.
 
 Django settings seems a great place to put the configuration, as it allows for easy overrides and extensions. These settings can be overridden on the cli, and some in the markdown file itself (e.g. the frame).
 
@@ -140,7 +140,7 @@ To render a markdown file with a specific frame, you can use the following comma
 
 ```bash
 trim-docs --srcdocs srcdocs --destdocs docs --destformat html --frame default
-``` 
+```
 
 This will take the markdown file from the `srcdocs` directory, process it, and save the output in the `docs` directory using the specified frame.
 
@@ -158,15 +158,15 @@ The processed files will be ready for use in documentation, websites, or any oth
 + It seems prudent to ignore anything with a leading underscore, such as `_file.md` or `_dir/`.
     + But can be referenced in the markdown.
     + Can be exposed in the meta data with `expose:true` in the front matter.
-        + Exposure should always be explicit. So every parent should have `expose: true`. 
+        + Exposure should always be explicit. So every parent should have `expose: true`.
 + Links are relative to the source directory, so they can be used in the markdown files.
     + e.g. `[Link](./file.md)` will link to `srcdocs/file.md`.
-+ Will naturally read the `docs/` directory 
++ Will naturally read the `docs/` directory
 + The tool should be able to handle nested directories, so `srcdocs/dir/file.md` will be processed correctly.
-+ Automated `_contents.md` generation 
++ Automated `_contents.md` generation
     + This will be a file that contains the Table of Contents for the directory.
     + It can be generated automatically or manually.
-+ `_index.md` can override default `readme.md` 
++ `_index.md` can override default `readme.md`
 + An _internal_ endpoint can be with our without the `.md` extension.
 + A file or directory can be bound to a django view:
 
@@ -180,22 +180,39 @@ The processed files will be ready for use in documentation, websites, or any oth
     + It can include links to all the files in the `srcdocs` directory.
     + It can be generated automatically or manually.
 
-Notes on a readme
+### Notes on URLS
+
+Unlike a standard site, this is designed to iterate directories as top-level. Therefore the URL is built through the existing file structure - not a predefined URL structure.
+
+
+### Notes on a readme
 
 A readme file is special. A directory expectes a `readme.md` file. If it doesn't exist, it will look for `_index.md` or `_contents.md`.
 
-+ readme.md 
-+ _index.md
++ readme.md
++ \_index.md
 
 If they dont exist, a readme will be generated with the contents of the directory.
 
+### Special Vars
 
+Some variables require a large stack, e.g. the page url. It should be pulled from:
+
++ The markdown meta slug: `slug: my-page-slug`
++ The markdown meta title: `title: My Page Title`
++ The `# Markdown Title` as the `title`
++ The filename, `my-page-filename.md`
+
+In all cases slugified for the specified URL format (probably dashes `-`)
+
+
+Somehow this may need to be a config file.
 
 
 ## View Tagging
 
 A markdown file can be tagged with a view, which allows for custom processing of the file.
-However, sometimes a view is needed, of which isn't a markdown file such as an index or contents file. 
+However, sometimes a view is needed, of which isn't a markdown file such as an index or contents file.
 
 
 
@@ -212,7 +229,7 @@ Some content
 
 {% TOC . %}
 
-Let's get started ... 
+Let's get started ...
 ```
 
 This should generate the file, But also allow me to edit the file, and the TOC will be updated automatically.
@@ -228,7 +245,7 @@ Some content
 - [Let's get started](#lets-get-started)
 <!-- endtrimdocs: 0x2093f3 -->
 
-Let's get started ... 
+Let's get started ...
 ```
 
 This way, the tool can detect the TOC location, and resuse the command within the comment. The placeholders within `<$ TOC . $>` can be anything - but I feel `{% .. %}` is stressful for accidental parsing.
@@ -237,14 +254,14 @@ This way, the tool can detect the TOC location, and resuse the command within th
 
 I think two ways:
 
-1. A regex parser, to undo the changes before parsing. 
-2. A django template node designed for this custom language. 
+1. A regex parser, to undo the changes before parsing.
+2. A django template node designed for this custom language.
     + Capturing the comment, parsing the partial, then returning the rendered result.
-    + And replace the existing. 
+    + And replace the existing.
 3. The _key_ is a unique identifier, but also a hash of the content. This way, if the content changes, the identifier will change, and the tool can detect it.
 
 The tool can also detect the `<!-- trim-docs: ... -->` comment, and replace it with the rendered result.
-Therefore a user can opt for the partials instead. 
+Therefore a user can opt for the partials instead.
 
 something like this:
 
@@ -253,6 +270,6 @@ Some content
 
 <!-- trimdocs TOC . -->
 
-Let's get started ... 
+Let's get started ...
 ```
 

@@ -97,6 +97,22 @@ Populate a template `markdown` node with content to render as markdown:
 
 Indentation is de-indented when parsed.
 
+##### Django Tags
+
+The markdown field will process tags as expected:
+
+```jinja
+{% markdown %}
+    # Markdown Includes
+
+    This content is pure markdown.
+
+    {% include "trimdocs/srcdocs/index.md" %}
+{% endmarkdown %}
+```
+
+
+
 
 #### `markdown.file`
 
