@@ -1,3 +1,36 @@
+"""Auth tooling, and convenient imports
+
+Creating a login view:
+
+    from trim import views
+
+    class LoginView(views.LoginView):
+        pass
+
+URL Can be minimal:
+
+    from trim.urls import paths_named
+    from . import views
+
+    app_name = 'userprofile'
+
+    urlpatterns = [] + paths_named(views,
+        login=('LoginView', '',),
+    )
+
+
+The template needs a form: `templates/userprofile/templates/registration/login.html`
+
+    {% extends "home/base.html" %}
+    {% load link quickforms %}
+
+    {% block content.body %}
+        {% quickform.form form %}
+    {% endblock content.body %}
+
+
+"""
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin
 
 def is_staff_or_admin(user):

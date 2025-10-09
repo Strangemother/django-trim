@@ -36,7 +36,7 @@ class MarkdownContentNode(template.Node):
         print('rendering markdown')
 
         wrap = {}
-        md = get_markdown_object()
+        md = get_markdown_object(context, **self.extra_context)
 
         # Make a resolved dict of values given through the init.
         values = {key: val.resolve(context) for key, val in self.extra_context.items()}
@@ -44,7 +44,7 @@ class MarkdownContentNode(template.Node):
             # Context({'source': content}, autoescape=context.autoescape)
             ## This is markdown plain - convert to rendered markdown
             django_markdown_text = self.nodelist.render(context)
-            django_markdown_text = '\n'.join([m.lstrip() for m in django_markdown_text.split('\n')])
+            # django_markdown_text = '\n'.join([m.lstrip() for m in django_markdown_text.split('\n')])
 
             if django_markdown_text[0] == '\n':
                 django_markdown_text = django_markdown_text[1:]
@@ -231,7 +231,7 @@ def src_code_content_template(context, part_a=None, part_b=None, *args, **kwargs
     info = get_file_contents(filename, base_dir)
     if info['exists']:
         content = info['content']
-        md = get_markdown_object()
+        md = get_markdown_object(context, **kwargs)
         info['html'] = md.convert(content)
         info['metadata'] = md.Meta
     else:
@@ -258,8 +258,7 @@ def src_code_content_text(context, *args, **kwargs):
         'content': content,
     }
 
-
-    md = get_markdown_object()
+    md = get_markdown_object(context, **kwargs)
     info['html'] = md.convert(content)
     info['metadata'] = md.Meta
 
@@ -268,9 +267,17 @@ def src_code_content_text(context, *args, **kwargs):
     }
 
 
-def get_markdown_object():
+def get_markdown_object(context, **kwargs):
     # context['view']
 
+    md = kwargs.get('markdown_object')
+    if md is None:
+        md = context.get('get_markdown_object')
+        if hasattr(context.get('view', {}), 'get_markdown_object'):
+            md = context['view'].get_markdown_object()
+
+    if md:
+        return md
     # meta into the context.
     # HTML is the raw
     # https://python-markdown.github.io/extensions/
@@ -313,3 +320,4 @@ def get_file_contents(path, parent=None, safe=True):
         'exists': exists,
         'content': content,
     }
+
