@@ -11,33 +11,51 @@ register = template.Library()
 
 @register.simple_tag(takes_context=False)
 def functional(name, *args, **kwargs):
-    """ Call a function by its name with positional and keyword arguments.
-    This tag allows you to call a function dynamically by its name,
-    passing any positional and keyword arguments to it.
-    It uses `pydoc.locate` to find the function in the current Python environment.
-
-    If the function cannot be found or is not callable, it returns an empty string.
-
-
-    Usage:
-        
-        {% load functional %}   
-        {% functional 'module.function_name' arg1 arg2 kwarg1=value1 %}
-
+    """Dynamically call any Python function by its fully qualified name.
+    
+    This powerful template tag allows you to execute any accessible Python
+    function directly from your templates by providing its module path and name.
+    Uses `pydoc.locate` to find and execute the function with provided arguments.
+    
     Args:
-        name (str): The fully qualified name of the function to call.
-        *targs: Positional arguments to pass to the function.
-        **kwargs: Keyword arguments to pass to the function.
+        name (str): Fully qualified function name (e.g., 'os.path.join', 'math.sqrt')
+        *args: Positional arguments to pass to the function
+        **kwargs: Keyword arguments to pass to the function
     
     Returns:
-        The result of the function call, or an empty string if the function
-        could not be located or is not callable.
+        Result of the function call, or empty string if function not found,
+        or string representation if the located object is not callable
     
-    Important 
-
-    Use this tag with caution, as it executes arbitrary code.
-    and can lead to security issues if the function name is not controlled.
-
+    Examples:
+        {% load functional %}
+        
+        {# Call math functions #}
+        {% functional 'math.sqrt' 16 %}
+        {# Returns: 4.0 #}
+        
+        {# Call string methods #}
+        {% functional 'str.upper' 'hello world' %}
+        {# Returns: 'HELLO WORLD' #}
+        
+        {# Call custom module functions #}
+        {% functional 'myapp.utils.format_price' product.price currency='USD' %}
+        
+        {# Call datetime functions #}
+        {% functional 'datetime.datetime.now' %}
+        
+        {# Access module constants #}
+        {% functional 'math.pi' %}
+        {# Returns: 3.141592653589793 #}
+    
+    Security Warning:
+        Use this tag with extreme caution in production environments.
+        It can execute arbitrary code and poses security risks if the
+        function name comes from untrusted sources. Only use with
+        controlled, whitelisted function names in production.
+    
+    Note:
+        If the located object is not callable (e.g., a constant or variable),
+        it will be converted to a string and returned.
     """
     # Note: This is a simple tag, not a filter, so it does not take
     # the context or return a string to be rendered in the template.

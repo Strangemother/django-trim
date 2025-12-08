@@ -2,6 +2,7 @@
 
 > Reduce typing on forms! Use the `fields` to quickly flesh out your form fields.
 
++ [Form Fields Reference](./fields-auto.md) - Complete list of all form field shortcuts
 + ["All Field" form](./all-fields-form.md)
 + [quickforms](./quickforms.md)
 

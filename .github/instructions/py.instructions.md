@@ -44,5 +44,10 @@ def is_valid_user(user):
     return True
 ```
 
+---
+
+- Django class-based views should follow standard patterns.
+
+
 # For more, see `src/trim/`, `docs/`, and code comments for usage patterns.
 

@@ -19,6 +19,7 @@ Django Trim reduces the amount of text, imports and general congantive overload 
     + [Authed Views](./views/authed-views.md): Fast mixing for user authentication
     + [Markdown](./markdown.md): Markdown template views, and responses classes
 + [Forms](./forms)
+    + [Form Fields](./forms/fields-auto.md): Complete reference of all form field shortcuts
     + [Quick Forms](./forms/quickforms.md): Apply your prepared form on any view
     + [Hidden Widget](./widgets/hidden.md): easily apply _hidden_ to form fields
 + [URLs](./urls): less typing for includes and patterns
@@ -32,6 +33,9 @@ Django Trim reduces the amount of text, imports and general congantive overload 
             + [slots](./templates/tags/wrap-slots.md): Extend `{% wrap %}` with _slot_ for multiple body definitions.
         + [quickform](./templates/tags/quickform.md): Use a single view tag to import a ready-to-go `FormView` form.
         + [strings](./templates/tags/strings.md): Utilities for string management within a template.
+        + [updated_params](./templates/tags/updated_params.md): Update URL query parameters while preserving existing ones.
+        + [functional](./templates/tags/functional.md): Dynamically call any Python function by its fully qualified name.
+        + [datetime](./templates/tags/datetime.md): Calculate and display time differences in human-readable format.
         + [markdown](./markdown.md): Template tags for rendering Markdown in the view
 + Apps
     + [Live Import](./apps.md): Live import special named files across all apps at _boot-time_

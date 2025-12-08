@@ -30,7 +30,7 @@ Some of our favourite components to quickly trim your code:
 | [Forms](./docs/forms/)     | [quickforms](./docs/forms/quickforms.md) \| [`{% quickform %}` tag](./docs/templates/tags/quickform.md) |
 | [URLs](./docs/urls/)      | [named urls](./docs/urls)  |
 | Admin     | [`register_models`](./docs/admin.md)  |
-| [Templates](./docs/templates/) | [`{% link %}` tag](./docs/templates/tags/link/readme.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) |
+| [Templates](./docs/templates/) | [`{% link %}` tag](./docs/templates/tags/link/readme.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) \| [`{% updated_params %}` tag](./docs/templates/tags/updated_params.md) \| [`{% functional %}` tag](./docs/templates/tags/functional.md) \| [`{% timedelta %}` tag](./docs/templates/tags/datetime.md) |
 | _Execute_ | [`read_one`](./docs/execute.md)
 
 
@@ -228,7 +228,8 @@ Django Trim offers a markdown block and some tags - for instant markdown:
 
 Forms can be tedious. Django Trim offers functional fields, site-wide form template tags and more.
 
-+ Quickform: Zero Config, Any Time, Plugged Correctly. Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`
++ **[Form Fields](./docs/forms/fields-auto.md)**: Functional shortcuts for all Django form fields - less typing, same functionality
++ **Quickform**: Zero Config, Any Time, Plugged Correctly. Instantly install prepared forms into a view, utilising the form built-into the class-based `FormView`
 
 ```jinja
 {% load quickforms %}
