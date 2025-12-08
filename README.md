@@ -28,7 +28,7 @@ Some of our favourite components to quickly trim your code:
 | [Models](./docs/models/)    | [Auto Model Mixin](./docs/models/auto_model_mixin.md) \| [Fields](./docs/models/fields.md) \| [Live String](./docs/models/live.md) |
 | [Views](./docs/views/)     | [Authed Views](./docs/views/authed-views.md) \| [List View](./docs/views/list-views.md) \| [JSON Views](./docs/views/serialized.md) |
 | [Forms](./docs/forms/)     | [quickforms](./docs/forms/quickforms.md) \| [`{% quickform %}` tag](./docs/templates/tags/quickform.md) |
-| [URLs](./docs/urls/)      | [named urls](./docs/urls)  |
+| [URLs](./docs/urls/)      | [Functions](./docs/urls/functions.md) \| [Overview](./docs/urls/readme.md)  |
 | Admin     | [`register_models`](./docs/admin.md)  |
 | [Templates](./docs/templates/) | [`{% link %}` tag](./docs/templates/tags/link/readme.md) \| [`{% wrap %}` tag](./docs/templates/tags/wrap.md) \| [`{% slot %}` Tag](./docs/templates/tags/wrap-slots.md) \| [`{% updated_params %}` tag](./docs/templates/tags/updated_params.md) \| [`{% functional %}` tag](./docs/templates/tags/functional.md) \| [`{% timedelta %}` tag](./docs/templates/tags/datetime.md) |
 | _Execute_ | [`read_one`](./docs/execute.md)

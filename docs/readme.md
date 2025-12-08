@@ -29,6 +29,8 @@ Django Trim reduces the amount of text, imports and general congantive overload 
     + [Quick Forms](./forms/quickforms.md): Apply your prepared form on any view
     + [Hidden Widget](./widgets/hidden.md): easily apply _hidden_ to form fields
 + [URLs](./urls): less typing for includes and patterns
+    + [Functions](./urls/functions.md): Comprehensive reference of all URL helper functions
+    + [Overview](./urls/readme.md): Getting started with trim URLs
 + [Admin](./admin.md): Register all models in your django admin with one function call.
 + [Templates](./templates)
     + [Theming](./theming/readme.md): Centralise template import names with your own theming package

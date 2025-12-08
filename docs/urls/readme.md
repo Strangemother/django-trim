@@ -1,14 +1,26 @@
 # `trim.urls`
 
+Simplify Django URL configuration with helper functions that reduce boilerplate and improve readability.
+
+> [!TIP]
+> For comprehensive documentation of all URL functions, see [URL Functions Reference](./functions.md).
+
+## Quick Reference
+
 | Tool | Description |
 | ---  |  --- |
-| paths_named | Apply patterns using the _view name_ as the keyword |
-| paths_dict |  A pattern using the _class name_ as the keyword |
-| path_includes | Create many _include_ patterns, using the _appname_ |
-| path_includes_pair | Perform _includes_ with a tuple of _appname_, and _url_ |
-| absolute_reverse | a `reverse(name)` with the request host prefix |
-| absolutify | convert any url-like string to a fully resolved url  |
-| favicon_path | create a general favicon url |
+| [paths_named](./functions.md#paths_named) | Apply patterns using the _view name_ as the keyword |
+| [paths_dict](./functions.md#paths_dict) |  A pattern using the _class name_ as the keyword |
+| [paths_tuple](./functions.md#paths_tuple) | Build patterns from tuple definitions |
+| [path_includes](./functions.md#path_includes) | Create many _include_ patterns, using the _appname_ |
+| [path_includes_pair](./functions.md#path_includes_pair) | Perform _includes_ with a tuple of _appname_, and _url_ |
+| [path_include](./functions.md#path_include) | Single app include with smart inference |
+| [template_view](./functions.md#template_view) | Create a single template-only view |
+| [as_templates](./functions.md#as_templates) | Create multiple template-only views |
+| [absolute_reverse](./functions.md#absolute_reverse) | a `reverse(name)` with the request host prefix |
+| [absolutify](./functions.md#absolutify) | convert any url-like string to a fully resolved url  |
+| [favicon_path](./functions.md#favicon_path) | create a general favicon url |
+| [error_handlers](./functions.md#error_handlers) | Set up custom error page handlers |
 
 
 
