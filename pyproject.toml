@@ -83,8 +83,6 @@ markers = [
 ]
 # Django settings for pytest-django
 DJANGO_SETTINGS_MODULE = "tests.settings"
-# Ensure Django setup happens before tests
-django_find_project = false
 
 # ============================================================================
 # Coverage Configuration
