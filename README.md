@@ -35,6 +35,9 @@ Some of our favourite components to quickly trim your code:
 
 
 > [!TIP]
+> New to Django or django-trim? Start with [Building a Contact Form](./docs/recipes/basic-page.md) - a complete beginner-friendly guide.
+
+> [!TIP]
 > Head to the [docs/ for a list of components](./docs/)!
 
 ## Setup

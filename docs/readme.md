@@ -9,6 +9,12 @@ Django Trim reduces the amount of text, imports and general congantive overload 
 + Leverage conventions for faster prototyping
 + 100% compatible with existing django components.
 
+## Quick Start
+
++ [Recipes](./recipes) - Step-by-step guides for building common features
+    + [Building a Contact Form](./recipes/basic-page.md) - Complete guide for beginners
+    + [Building a ListView](./recipes/listview.md) - Display data in tables
+
 ## Trim
 
 + [Models](./models)
