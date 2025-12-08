@@ -1,0 +1,271 @@
+#!/usr/bin/env bash
+# quicktest - Fast testing script for django-trim
+#
+# Usage:
+#   ./quicktest               # Run all tests with current environment
+#   ./quicktest -f test_name  # Run specific test
+#   ./quicktest -c            # Run with coverage report
+#   ./quicktest -m            # Run multi-version tests (all Django versions)
+#   ./quicktest -v 4.2        # Test specific Django version
+#   ./quicktest -p            # Run in parallel
+#   ./quicktest --help        # Show help
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Default options
+COVERAGE=false
+MULTI_VERSION=false
+PARALLEL=false
+SPECIFIC_TEST=""
+DJANGO_VERSION=""
+PYTEST_ARGS=""
+
+# Project paths
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SRC_PATH="${PROJECT_ROOT}/src"
+TESTS_PATH="${PROJECT_ROOT}/tests"
+
+print_header() {
+    echo -e "${BLUE}=====================================${NC}"
+    echo -e "${BLUE}  django-trim Test Runner${NC}"
+    echo -e "${BLUE}=====================================${NC}"
+}
+
+print_success() {
+    echo -e "${GREEN}✓ $1${NC}"
+}
+
+print_error() {
+    echo -e "${RED}✗ $1${NC}"
+}
+
+print_info() {
+    echo -e "${YELLOW}→ $1${NC}"
+}
+
+show_help() {
+    cat << EOF
+django-trim Quick Test Script
+
+Usage: ./quicktest [OPTIONS]
+
+Options:
+    -h, --help          Show this help message
+    -c, --coverage      Run with coverage report
+    -m, --multi         Run tests across all Django versions (uses tox)
+    -v, --version VER   Test specific Django version (e.g., 4.2, 5.0, 5.1, 5.2, 6.0)
+    -f, --filter TEST   Run specific test(s) matching pattern
+    -p, --parallel      Run tests in parallel (faster)
+    -k, --keyword EXPR  Run tests matching keyword expression
+    -x, --exitfirst     Exit on first test failure
+    -s, --stdout        Show print statements (no capture)
+    --lf                Run last failed tests only
+    --ff                Run failures first, then remaining tests
+
+Supported Django Versions:
+    4.2   Django 4.2 LTS (Long Term Support until Apr 2026)
+    5.0   Django 5.0
+    5.1   Django 5.1
+    5.2   Django 5.2 (Current stable)
+    6.0   Django 6.0 (Latest)
+
+Examples:
+    ./quicktest                          # Run all tests
+    ./quicktest -c                       # Run with coverage
+    ./quicktest -f test_mixin_order      # Run specific test
+    ./quicktest -m                       # Test all Django versions
+    ./quicktest -v 4.2                   # Test Django 4.2 LTS
+    ./quicktest -v 5.2                   # Test Django 5.2 (current)
+    ./quicktest -v 6.0                   # Test Django 6.0 (latest)
+    ./quicktest -p -c                    # Parallel tests with coverage
+    ./quicktest -k "mixin and not slow"  # Run tests matching keyword
+
+Environment Variables:
+    DJANGO_VERSION    Override Django version (e.g., DJANGO_VERSION=5.2)
+    PYTEST_ARGS       Additional pytest arguments
+
+EOF
+}
+
+setup_environment() {
+    export PYTHONPATH="${SRC_PATH}:${PYTHONPATH}"
+    export DJANGO_SETTINGS_MODULE="tests.settings"
+    
+    print_info "Python path: ${PYTHONPATH}"
+    print_info "Django settings: ${DJANGO_SETTINGS_MODULE}"
+}
+
+check_dependencies() {
+    print_info "Checking dependencies..."
+    
+    if ! command -v python3 &> /dev/null; then
+        print_error "Python 3 not found"
+        exit 1
+    fi
+    
+    if ! python3 -c "import pytest" 2>/dev/null; then
+        print_error "pytest not installed. Install with: pip install -e '.[test]'"
+        exit 1
+    fi
+    
+    if ! python3 -c "import django" 2>/dev/null; then
+        print_error "Django not installed. Install with: pip install Django"
+        exit 1
+    fi
+    
+    DJANGO_VER=$(python3 -c "import django; print(django.get_version())")
+    print_success "Django ${DJANGO_VER} found"
+    print_success "pytest found"
+}
+
+run_simple_tests() {
+    print_info "Running tests with current environment..."
+    
+    local cmd="python3 -m pytest ${TESTS_PATH}"
+    
+    if [ "$COVERAGE" = true ]; then
+        cmd="${cmd} --cov=trim --cov-report=term-missing --cov-report=html --cov-report=xml"
+    fi
+    
+    if [ "$PARALLEL" = true ]; then
+        cmd="${cmd} -n auto"
+    fi
+    
+    if [ -n "$SPECIFIC_TEST" ]; then
+        cmd="${cmd} -k ${SPECIFIC_TEST}"
+    fi
+    
+    cmd="${cmd} ${PYTEST_ARGS}"
+    
+    print_info "Command: ${cmd}"
+    echo ""
+    
+    eval $cmd
+    
+    if [ "$COVERAGE" = true ]; then
+        echo ""
+        print_success "Coverage report generated in htmlcov/index.html"
+    fi
+}
+
+run_multi_version_tests() {
+    print_info "Running tests across multiple Django versions..."
+    
+    if ! command -v tox &> /dev/null; then
+        print_error "tox not installed. Install with: pip install tox"
+        exit 1
+    fi
+    
+    tox
+}
+
+run_specific_version() {
+    local version=$1
+    print_info "Running tests with Django ${version}..."
+    
+    # Create temporary virtual environment
+    local venv_dir=".venv_django_${version}"
+    
+    if [ ! -d "$venv_dir" ]; then
+        print_info "Creating virtual environment for Django ${version}..."
+        python3 -m venv "$venv_dir"
+    fi
+    
+    # Activate and install dependencies
+    source "${venv_dir}/bin/activate"
+    
+    print_info "Installing Django ${version}..."
+    pip install -q "Django~=${version}.0" pytest pytest-django pytest-cov loguru
+    
+    print_info "Installing django-trim..."
+    pip install -q -e "${PROJECT_ROOT}"
+    
+    # Run tests in this environment
+    export PYTHONPATH="${SRC_PATH}"
+    export DJANGO_SETTINGS_MODULE="tests.settings"
+    
+    python3 -m pytest "${TESTS_PATH}" -v
+    
+    deactivate
+    
+    print_success "Tests completed for Django ${version}"
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -c|--coverage)
+            COVERAGE=true
+            shift
+            ;;
+        -m|--multi)
+            MULTI_VERSION=true
+            shift
+            ;;
+        -v|--version)
+            DJANGO_VERSION="$2"
+            shift 2
+            ;;
+        -f|--filter)
+            SPECIFIC_TEST="$2"
+            shift 2
+            ;;
+        -p|--parallel)
+            PARALLEL=true
+            shift
+            ;;
+        -k|--keyword)
+            PYTEST_ARGS="${PYTEST_ARGS} -k $2"
+            shift 2
+            ;;
+        -x|--exitfirst)
+            PYTEST_ARGS="${PYTEST_ARGS} -x"
+            shift
+            ;;
+        -s|--stdout)
+            PYTEST_ARGS="${PYTEST_ARGS} -s"
+            shift
+            ;;
+        --lf)
+            PYTEST_ARGS="${PYTEST_ARGS} --lf"
+            shift
+            ;;
+        --ff)
+            PYTEST_ARGS="${PYTEST_ARGS} --ff"
+            shift
+            ;;
+        *)
+            PYTEST_ARGS="${PYTEST_ARGS} $1"
+            shift
+            ;;
+    esac
+done
+
+# Main execution
+print_header
+echo ""
+
+if [ "$MULTI_VERSION" = true ]; then
+    run_multi_version_tests
+elif [ -n "$DJANGO_VERSION" ]; then
+    run_specific_version "$DJANGO_VERSION"
+else
+    setup_environment
+    check_dependencies
+    echo ""
+    run_simple_tests
+fi
+
+echo ""
+print_success "All tests completed!"

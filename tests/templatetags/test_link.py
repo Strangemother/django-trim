@@ -24,7 +24,7 @@ class TestLinkTemplateTags(unittest.TestCase):
             mock_link.return_value = {'url': url}
             res = link_tags.link_info('url', 'text', foo='bar')
             mock_link.assert_called_once_with('url', 'text', foo='bar')
-            self.assertEqual(res, url)
+            self.assertEqual(res, {"url": url})
 
     @patch('trim.templatetags.link.absolutify', return_value='http://example.com')
     @patch('trim.templatetags.link.gen_link')

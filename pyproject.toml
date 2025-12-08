@@ -29,6 +29,14 @@ dependencies = [
 docs = [
   "trimdocs>=0.1.0a0",
 ]
+# Install test dependencies with: pip install "django-trim[test]"
+test = [
+  "pytest>=7.0.0",
+  "pytest-django>=4.5.0",
+  "pytest-cov>=4.0.0",
+  "pytest-xdist>=3.0.0",  # parallel testing
+  "coverage[toml]>=7.0.0",
+]
 # dynamic
 # entry-points
 # gui-scripts
@@ -53,3 +61,61 @@ build-backend = "setuptools.build_meta"
 [project.urls]
 "Homepage" = "http://github.com/strangemother/django-trim"
 "Bug Tracker" = "http://github.com/strangemother/django-trim/issues"
+
+# ============================================================================
+# Pytest Configuration
+# ============================================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--disable-warnings",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+# Django settings for pytest-django
+DJANGO_SETTINGS_MODULE = "tests.settings"
+
+# ============================================================================
+# Coverage Configuration
+# ============================================================================
+[tool.coverage.run]
+source = ["src/trim"]
+omit = [
+    "*/tests/*",
+    "*/test_*.py",
+    "*/__pycache__/*",
+    "*/migrations/*",
+    "*/management/commands/*",
+]
+branch = true
+parallel = true
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+    "@abc.abstractmethod",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+[tool.coverage.xml]
+output = "coverage.xml"
