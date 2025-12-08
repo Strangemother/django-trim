@@ -2,6 +2,12 @@
 
 `trim.tests` provides utilities to validate your view configurations, ensuring best practices and catching common mistakes during development.
 
+## Testing Documentation
+
++ **[Django Version Compatibility](../DJANGO_VERSIONS.md)** - Supported Django versions and testing matrix
++ **[Troubleshooting Guide](./TESTING_TROUBLESHOOTING.md)** - Solutions for common testing issues
++ **[Testing Setup](../TESTING_SETUP_COMPLETE.md)** - Initial test environment setup
+
 ## Table of Contents
 
 + [Quick Start](#quick-start)
