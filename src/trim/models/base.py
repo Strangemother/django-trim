@@ -27,7 +27,7 @@ def grab_models(_models, ignore=None):
 
     igs = ()
     for ig in ignore:
-        if ig.endswith('.admin'):
+        if isinstance(ig, str) and ig.endswith('.admin'):
             # filter for any cached model, starting with the
             # same key
             a = ig.split('.')[0]

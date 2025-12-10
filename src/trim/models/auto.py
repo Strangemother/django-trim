@@ -14,6 +14,7 @@ def hook_model_mixin_class(cls):
         model_name = f"{_m.model.__module__}{_m.object_name}"
     classes[model_name] += (cls, )
 
+
 def get_classes():
     return classes
 
