@@ -50,12 +50,11 @@ def text(*a, **kw):
 
 def chars(first_var=None, *a, **kw):
     """A standard `models.CharField` passing the standard fields.
-    The first value may be a length `int` or `function`
+    The first value may be a callable `function` for the default value.
     """
 
-    # Rearrange the params, if the first var is callable, it's the default func,
-    # if an int, it's the max_length
-    # If the default= exists, raise an error
+    # If the first var is callable, it's the default func.
+    # If the default= kwarg also exists, raise an error.
     default_max_length = 255
     max_length = default_max_length
 
@@ -63,16 +62,15 @@ def chars(first_var=None, *a, **kw):
         # Set as default
         max_length = kw.get('max_length', None)
         if kw.get('default', None) is not None:
-            s = ('trims.chars(*default_or_max_length, **params) accepts a'
+            s = ('trims.chars(default_func, **params) accepts a'
                 ' "default" keyword argument or a function as the first'
                 ' argument. Not both.')
-            # chars(255)
+            # Valid patterns:
             # chars(max_length=255)
-            # chars(255, default=default_func)
             # chars(default_func)
             # chars(default=default_func)
             # chars(max_length=255, default=default_func)
-            # not:
+            # Invalid:
             # chars(func, default=default_func)
 
             raise Exception(s)
