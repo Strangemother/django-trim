@@ -3,6 +3,7 @@ Pytest configuration and fixtures for django-trim tests.
 
 This file is automatically loaded by pytest and sets up Django for testing.
 """
+
 import os
 import sys
 import django
@@ -30,6 +31,7 @@ def django_db_setup():
     Uses in-memory SQLite for speed.
     """
     from django.conf import settings
+
     settings.DATABASES["default"] = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": ":memory:",
@@ -40,9 +42,7 @@ def django_db_setup():
 def user(db, django_user_model):
     """Create a test user."""
     return django_user_model.objects.create_user(
-        username="testuser",
-        email="test@example.com",
-        password="testpass123"
+        username="testuser", email="test@example.com", password="testpass123"
     )
 
 
@@ -53,7 +53,7 @@ def staff_user(db, django_user_model):
         username="staffuser",
         email="staff@example.com",
         password="staffpass123",
-        is_staff=True
+        is_staff=True,
     )
 
 
@@ -65,7 +65,8 @@ def admin_user(db, django_user_model):
         email="admin@example.com",
         password="adminpass123",
         is_staff=True,
-        is_superuser=True
+        is_superuser=True,
     )
+
 
 django.setup()

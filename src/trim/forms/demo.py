@@ -1,6 +1,7 @@
 from django import forms
 from trim.forms import fields
 
+
 class AllFieldsForm(forms.Form):
     boolean = fields.boolean()
     boolean_false = fields.boolean_false()

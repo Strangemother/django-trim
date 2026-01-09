@@ -1,8 +1,7 @@
-
 DEFAULT_NIL = True
 
 
-def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
+def defaults(args, params, nil_sub=True, nil_key="nil", **kw):
 
     if nil_sub:
         # nil subtract, or substitution
@@ -22,9 +21,9 @@ def defaults(args, params, nil_sub=True, nil_key='nil', **kw):
         if k == nil_key:
             continue
         params.setdefault(k, v)
-    params.pop('nil', None)
+    params.pop("nil", None)
     return params
 
 
 def blank_null(b=True, n=True):
-    return {'blank':b, 'null': n}
+    return {"blank": b, "null": n}

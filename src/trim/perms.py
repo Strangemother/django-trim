@@ -10,6 +10,7 @@ class SlofTuple(tuple):
         ('c', 'g',)
 
     """
+
     def slof(self, index):
         return self.__class__(x[index] for x in self)
 
@@ -28,12 +29,18 @@ class EasyPermissionString(object):
         # strs = self.strs + tuple((index, x,) for x in items)
         copy = self.__class__(self.strs, index, self.positions)
         copy.positions[index].update(items)
-        print('Copied', copy.positions)
+        print("Copied", copy.positions)
         return copy
 
     @property
     def crud(self):
-        return self.push(2, 'add', 'view', 'change', 'delete',)
+        return self.push(
+            2,
+            "add",
+            "view",
+            "change",
+            "delete",
+        )
 
     def __add__(self, other):
         if isinstance(other, str):
@@ -41,7 +48,7 @@ class EasyPermissionString(object):
         if isinstance(other, (tuple, list)):
             return self.push(self.index, *other)
 
-        raise Exception('Cannot add type', type(other))
+        raise Exception("Cannot add type", type(other))
         return self
 
     def as_tuple(self):
@@ -49,7 +56,7 @@ class EasyPermissionString(object):
         count = 2
         if len(self.positions) > 0:
             count = max(self.positions.keys()) + 1
-        print('count', count)
+        print("count", count)
         for i in range(count):
             try:
                 self.positions[i].add(self.strs[i][1])
@@ -57,10 +64,10 @@ class EasyPermissionString(object):
                 pass
             # for index, key in self.strs:
             pos = self.positions[i].copy()
-            print(' ', pos)
+            print(" ", pos)
 
     def flat(self):
-        return '.'.join([x[1] for x in self.strs])
+        return ".".join([x[1] for x in self.strs])
 
     def __str__(self):
         return self.flat()
@@ -77,5 +84,5 @@ def test():
     # assert v == ('stocks.add_stockcount',)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     test()

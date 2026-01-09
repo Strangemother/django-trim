@@ -7,14 +7,12 @@ from .. import models, forms, dispatch
 class EmailInviteCreateView(views.CreateView):
     model = models.EmailInvite
     fields = (
-            'email_address',
-            # 'user',
-        )
+        "email_address",
+        # 'user',
+    )
 
     def get_initial(self):
-        return {
-            'user': self.request.user
-        }
+        return {"user": self.request.user}
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -23,7 +21,7 @@ class EmailInviteCreateView(views.CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return views.reverse('account:profile')
+        return views.reverse("account:profile")
 
 
 class EmailInviteListView(views.ListView):

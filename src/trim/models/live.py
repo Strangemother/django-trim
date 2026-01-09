@@ -22,16 +22,18 @@ after:
             owner=owner, deleted=False
         )
 """
+
 from django.apps import apps
 
 
 class MagicModelApp(object):
     """The top level 'live' model import, expecting a string caller:
 
-        live = MagicModelApp()
-        live.appname
+    live = MagicModelApp()
+    live.appname
 
     """
+
     def __getattr__(self, k):
         return MagicModelModel(k)
 
@@ -43,10 +45,11 @@ class MagicModelModel(object):
         live.appname.ModelName
         <appname.ModelName>
     """
+
     def __init__(self, appname):
         self.appname = appname
 
-    def __getattr__(self, k):        
+    def __getattr__(self, k):
         return apps.get_model(self.appname, k)
 
 

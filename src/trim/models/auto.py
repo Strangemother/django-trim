@@ -2,6 +2,7 @@ from collections import defaultdict
 
 classes = defaultdict(tuple)
 
+
 def hook_model_mixin_class(cls):
     """Given an autoloaded AutoModelMixin, stash the model against the target
     parent model. These mixings are applied at loadout.
@@ -12,7 +13,7 @@ def hook_model_mixin_class(cls):
     if not isinstance(model_name, str):
         _m = model_name._meta
         model_name = f"{_m.model.__module__}{_m.object_name}"
-    classes[model_name] += (cls, )
+    classes[model_name] += (cls,)
 
 
 def get_classes():
@@ -23,17 +24,18 @@ class AutoModelMixin(object):
     """Apply to a class, as an extension of the target class:
 
 
-        from trim.models import AutoModelMixin
+    from trim.models import AutoModelMixin
 
-        class HyperlinkList(AutoModelMixin):
+    class HyperlinkList(AutoModelMixin):
 
-            def get_hyperlinks(self):
-                return Hyperlink.get_user_models(self)
+        def get_hyperlinks(self):
+            return Hyperlink.get_user_models(self)
 
-            class Meta:
-                # The target app 'baskets' and its model 'Cart'
-                model_name = fields.get_user_model() #  'otherapp.Person'
+        class Meta:
+            # The target app 'baskets' and its model 'Cart'
+            model_name = fields.get_user_model() #  'otherapp.Person'
     """
+
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         hook_model_mixin_class(cls)
@@ -59,7 +61,7 @@ def hook_init_model_mixins(sender):
 def bind_mixins(sender, lists):
     for _class in lists:
         for k in dir(_class):
-            if k.startswith('_'):
+            if k.startswith("_"):
                 continue
             v = getattr(_class, k)
             setattr(sender, k, v)

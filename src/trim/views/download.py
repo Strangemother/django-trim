@@ -13,15 +13,15 @@ from django.utils.encoding import smart_str
 
 import re
 
-range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)
+range_re = re.compile(r"bytes\s*=\s*(\d+)\s*-\s*(\d*)", re.I)
 
 
 def stream(request, path):
-    range_header = request.META.get('HTTP_RANGE', '').strip()
+    range_header = request.META.get("HTTP_RANGE", "").strip()
     range_match = range_re.match(range_header)
     size = os.path.getsize(path)
     content_type, encoding = mimetypes.guess_type(path)
-    content_type = content_type or 'application/octet-stream'
+    content_type = content_type or "application/octet-stream"
     if range_match:
         first_byte, last_byte = range_match.groups()
         first_byte = int(first_byte) if first_byte else 0
@@ -30,28 +30,27 @@ def stream(request, path):
             last_byte = size - 1
         length = last_byte - first_byte + 1
         resp = StreamingHttpResponse(
-                RangeFileWrapper(
-                    open(path, 'rb'),
-                    offset=first_byte,
-                    length=length
-                ),
-                status=206,
-                content_type=content_type)
-        resp['Content-Length'] = str(length)
-        resp['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
+            RangeFileWrapper(open(path, "rb"), offset=first_byte, length=length),
+            status=206,
+            content_type=content_type,
+        )
+        resp["Content-Length"] = str(length)
+        resp["Content-Range"] = "bytes %s-%s/%s" % (first_byte, last_byte, size)
     else:
-        resp = StreamingHttpResponse(FileWrapper(open(path, 'rb')), content_type=content_type)
-        resp['Content-Length'] = str(size)
-    resp['Accept-Ranges'] = 'bytes'
+        resp = StreamingHttpResponse(
+            FileWrapper(open(path, "rb")), content_type=content_type
+        )
+        resp["Content-Length"] = str(size)
+    resp["Accept-Ranges"] = "bytes"
     return resp
 
 
 def stream(request, path):
-    range_header = request.META.get('HTTP_RANGE', '').strip()
+    range_header = request.META.get("HTTP_RANGE", "").strip()
     range_match = range_re.match(range_header)
     size = os.path.getsize(path)
     content_type, encoding = mimetypes.guess_type(path)
-    content_type = content_type or 'application/octet-stream'
+    content_type = content_type or "application/octet-stream"
     if range_match:
         first_byte, last_byte = range_match.groups()
         first_byte = int(first_byte) if first_byte else 0
@@ -60,19 +59,18 @@ def stream(request, path):
             last_byte = size - 1
         length = last_byte - first_byte + 1
         resp = StreamingHttpResponse(
-                RangeFileWrapper(
-                    open(path, 'rb'),
-                    offset=first_byte,
-                    length=length
-                ),
-                status=206,
-                content_type=content_type)
+            RangeFileWrapper(open(path, "rb"), offset=first_byte, length=length),
+            status=206,
+            content_type=content_type,
+        )
         # resp['Content-Length'] = str(length)
-        resp['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
+        resp["Content-Range"] = "bytes %s-%s/%s" % (first_byte, last_byte, size)
     else:
-        resp = StreamingHttpResponse(FileWrapper(open(path, 'rb')), content_type=content_type)
+        resp = StreamingHttpResponse(
+            FileWrapper(open(path, "rb")), content_type=content_type
+        )
         # resp['Content-Length'] = str(size)
-    resp['Accept-Ranges'] = 'bytes'
+    resp["Accept-Ranges"] = "bytes"
     return resp
 
 
@@ -84,7 +82,7 @@ class RangeFileWrapper(object):
         self.chunk_size = chunk_size
 
     def close(self):
-        if hasattr(self.stream, 'close'):
+        if hasattr(self.stream, "close"):
             self.stream.close()
 
     def __iter__(self):
@@ -109,20 +107,26 @@ class RangeFileWrapper(object):
         return data
 
 
-def streamfile_response(real_filepath, output_filename, chunk_size=8192, content_type=None, range_header=None):
+def streamfile_response(
+    real_filepath,
+    output_filename,
+    chunk_size=8192,
+    content_type=None,
+    range_header=None,
+):
     """Generate a StreamingHttpResponse for the given `real_filepath`. Return
-        directly to the client as the response object, e.g: from `get()`.
+    directly to the client as the response object, e.g: from `get()`.
 
-            response = streamfile_response('/real/path.zip', 'output_name.zip')
+        response = streamfile_response('/real/path.zip', 'output_name.zip')
 
-        Elements applied:
+    Elements applied:
 
-        + A wsgi FileWrapper
-        + Auto content_type
-        + StreamingHttpResponse response object
-        + Content-Length
-        + Content-Disposition
-        + X-Sendfile
+    + A wsgi FileWrapper
+    + Auto content_type
+    + StreamingHttpResponse response object
+    + Content-Length
+    + Content-Disposition
+    + X-Sendfile
     """
     filename = os.path.basename(real_filepath)
     size = os.path.getsize(real_filepath)
@@ -135,17 +139,17 @@ def streamfile_response(real_filepath, output_filename, chunk_size=8192, content
     # You can also set any other required headers: Cache-Control, etc.
     response_pv = {
         # for bytes ranging partial downloads
-        'Accept-Ranges': 'bytes',
-        'Content-Disposition': f'attachment; filename={safe_filename}',
-        'X-Sendfile': smart_str(real_filepath),
+        "Accept-Ranges": "bytes",
+        "Content-Disposition": f"attachment; filename={safe_filename}",
+        "X-Sendfile": smart_str(real_filepath),
     }
 
     status_ref = {}
     # range_header = request.META.get('HTTP_RANGE', '').strip()
-    range_match = range_re.match(range_header or '')
+    range_match = range_re.match(range_header or "")
     if range_match:
         status_ref = {
-            'status': 206,
+            "status": 206,
         }
 
         first_byte, last_byte = range_match.groups()
@@ -154,20 +158,21 @@ def streamfile_response(real_filepath, output_filename, chunk_size=8192, content
         if last_byte >= size:
             last_byte = size - 1
         length = last_byte - first_byte + 1
-        response_pv['Content-Range'] = 'bytes %s-%s/%s' % (first_byte, last_byte, size)
+        response_pv["Content-Range"] = "bytes %s-%s/%s" % (first_byte, last_byte, size)
 
         size = length
         wrapper = RangeFileWrapper(handle, offset=first_byte, length=length)
 
     # response = HttpResponse(mimetype='application/force-download')
-    response = StreamingHttpResponse(wrapper,
-                    **status_ref, content_type=content_type,
-                    # mimetype='application/force-download',
-                    )
+    response = StreamingHttpResponse(
+        wrapper,
+        **status_ref,
+        content_type=content_type,
+        # mimetype='application/force-download',
+    )
 
     response["Content-Length"] = str(size)
 
-    for k,v in response_pv.items():
+    for k, v in response_pv.items():
         response[k] = v
     return response
-

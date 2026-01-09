@@ -1,4 +1,3 @@
-
 from django import template
 from .slots.wrap_node import do_wrap
 

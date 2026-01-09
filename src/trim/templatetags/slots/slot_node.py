@@ -1,19 +1,20 @@
-
-
 from django import template
 from .base import parse_until, SlotList
 
 from loguru import logger
+
 log = logger.debug
 
 
-def slot_into_parent(parser, slotnode, slotlist_name, parent_node_name='wrap'):
+def slot_into_parent(parser, slotnode, slotlist_name, parent_node_name="wrap"):
     for node_name, token_node in parser.command_stack[::-1]:
         # push this into the wrap above.
         if node_name == parent_node_name:
             log(f'Pushing "{slotnode}" into parent "{node_name}".{slotlist_name}')
-            if slotlist_name == 'slotdefine':
-                import pdb; pdb.set_trace()  # breakpoint 5ae4487e //
+            if slotlist_name == "slotdefine":
+                import pdb
+
+                pdb.set_trace()  # breakpoint 5ae4487e //
 
             getattr(token_node, slotlist_name).add(slotnode)
 
@@ -22,19 +23,19 @@ def slot_into_parent(parser, slotnode, slotlist_name, parent_node_name='wrap'):
 def do_define_slot(parser, token):
     """A definition slot to apply within the wrap target
 
-            {% slot.define "name" %}content will be replaced{% endslot %}
+        {% slot.define "name" %}content will be replaced{% endslot %}
 
-        The wrap targets this slot
+    The wrap targets this slot
 
-            {% wrap 'foo.html' %}
-                {% slot "name" %}
-                    Content to replace the slot.
-                {% endslot %}
-            {% endwrap %}
+        {% wrap 'foo.html' %}
+            {% slot "name" %}
+                Content to replace the slot.
+            {% endslot %}
+        {% endwrap %}
     """
-    nodelist, splits, extra = parse_until(parser, token, ('endslot',))
+    nodelist, splits, extra = parse_until(parser, token, ("endslot",))
     res = DefineSlotNode(nodelist, splits, **extra)
-    slot_into_parent(parser, res, 'slotdefine')
+    slot_into_parent(parser, res, "slotdefine")
     return res
 
     # for node_name, token_node in parser.command_stack[::-1]:
@@ -67,10 +68,11 @@ def do_slot(parser, token):
     as the target _wrap_ node may not exist yet (being a currently unrendered
     token).
     """
-    nodelist, tokens, extra = parse_until(parser, token, ('endslot',))
+    nodelist, tokens, extra = parse_until(parser, token, ("endslot",))
     res = SlotNode(nodelist, tokens, **extra)
-    slot_into_parent(parser, res, 'slotinfo')
+    slot_into_parent(parser, res, "slotinfo")
     return res
+
 
 from django.template.base import VariableDoesNotExist
 
@@ -86,10 +88,12 @@ class DefineSlotNode(template.Node):
         self.tokens = tokens
         self.extra_context = kw
         self.args = a
-        log(f' _cre_ DefineSlotNode({self.first_token}), {self.tokens} {self.args} {self.extra_context}')
+        log(
+            f" _cre_ DefineSlotNode({self.first_token}), {self.tokens} {self.args} {self.extra_context}"
+        )
 
     def get_default_name(self):
-        return 'default'
+        return "default"
 
     def get_slot_names(self, context=None):
         """
@@ -98,7 +102,7 @@ class DefineSlotNode(template.Node):
         v = self.token_slot_name
         if context:
             try:
-                v = v.resolve(context) if hasattr(v, 'resolve') else v
+                v = v.resolve(context) if hasattr(v, "resolve") else v
             except VariableDoesNotExist:
                 # the given string is not a variable. It could be a
                 # const type (e.g. default) or a bad var.
@@ -107,19 +111,18 @@ class DefineSlotNode(template.Node):
         return v
 
     def apply_parent(self, wrap_node):
-        """set the parent wrapper.
-        """
-        self.extra_context['parent_wrap'] = wrap_node
+        """set the parent wrapper."""
+        self.extra_context["parent_wrap"] = wrap_node
 
     def resolve_extra_context(self, context):
         values = {}
         for key, val in self.extra_context.items():
-            values[key] = val.resolve(context) if hasattr(val, 'resolve') else val
+            values[key] = val.resolve(context) if hasattr(val, "resolve") else val
         return values
 
     def get_slots(self, token, context):
         ## Grab 'name' from the wrap slots.
-        parent_slots = self.extra_context['parent_wrap'].token.slotinfo
+        parent_slots = self.extra_context["parent_wrap"].token.slotinfo
         matches = parent_slots.get_nodes(token, context)
         return matches
 
@@ -128,7 +131,7 @@ class DefineSlotNode(template.Node):
         #
         # template_name = self.token_template_name.resolve(context)
         # t = context.template.engine.get_template(template_name)
-        log(f'   _ren_ DefineSlotNode: {self.first_token}')
+        log(f"   _ren_ DefineSlotNode: {self.first_token}")
 
         # content applied within the definition,
         # before the parent slot implements any changes.
@@ -136,29 +139,29 @@ class DefineSlotNode(template.Node):
         content = default_slot_content
 
         matches = self.get_slots(self.first_token, context)
-        log(f' . _ren_ Found: {len(matches)} matches during slot search for "{self.first_token}"')
+        log(
+            f' . _ren_ Found: {len(matches)} matches during slot search for "{self.first_token}"'
+        )
 
         if len(matches) > 0:
             ## The parent has a given a slot matching this definition name.
-            #The content from the slot should be stripped from the wrap render
-            #and applied here; replacing the `default_slot_content`
+            # The content from the slot should be stripped from the wrap render
+            # and applied here; replacing the `default_slot_content`
             ks = tuple(x[0] for x in matches)
-            log(f'Found matches {ks}')
+            log(f"Found matches {ks}")
             # content = f'Found matches {ks}'
             vv = self.nodelist.render(context)
             for name, node in matches:
                 # pump out first detection
                 return node.nodelist.render(context)
         else:
-            log('No matches')
+            log("No matches")
         # we extend the original context; allowing this unit to be overwitten
         # if required.
         sub_ctx = {
-                # Given to the definition slot
-                'slot': {
-                    'rendered_content': content
-                }
-            }
+            # Given to the definition slot
+            "slot": {"rendered_content": content}
+        }
 
         values = self.resolve_extra_context(context)
         with context.push(**sub_ctx, **values):
@@ -180,6 +183,7 @@ class SlotNode(template.Node):
     Functionally this doesn't render its content - as that task is managed by
     the definition slot.
     """
+
     def __init__(self, nodelist, tokens, *a, **kw):
         self.nodelist = nodelist
         first_token = tokens[0] if len(tokens) > 0 else self.get_default_name()
@@ -188,10 +192,10 @@ class SlotNode(template.Node):
         self.tokens = tokens
         self.extra_context = kw
         self.args = a
-        log(f' _cre_ SlotNode, {self.tokens} {self.args} {self.extra_context}')
+        log(f" _cre_ SlotNode, {self.tokens} {self.args} {self.extra_context}")
 
     def get_default_name(self):
-        return 'default'
+        return "default"
 
     def get_slot_names(self, context=None):
         """
@@ -200,7 +204,7 @@ class SlotNode(template.Node):
         v = self.token_slot_name
         if context:
             try:
-                v = v.resolve(context) if hasattr(v, 'resolve') else v
+                v = v.resolve(context) if hasattr(v, "resolve") else v
             except VariableDoesNotExist:
                 # the given string is not a variable. It could be a
                 # const type (e.g. default) or a bad var.
@@ -213,7 +217,7 @@ class SlotNode(template.Node):
         # t = context.template.engine.get_template(template_name)
         names = self.get_slot_names(context)
         # self.default_render(self, context)
-        log(f'   _ren_ SlotNode, {names}')
+        log(f"   _ren_ SlotNode, {names}")
         return f'<div class="color-gray">cut slot {names}</div>'
 
     def default_render(self, context):
@@ -221,14 +225,12 @@ class SlotNode(template.Node):
         # we extend the original context; allowing this unit to e overbwitten
         # if required.
         wrap = {
-                'content': content,
-            }
+            "content": content,
+        }
         #  Dynamic key for the root context, static key for the 'wrap' object.
-        content_key = 'content'
-        sub_ctx = {}# = {'wrap':wrap, content_key:content}
+        content_key = "content"
+        sub_ctx = {}  # = {'wrap':wrap, content_key:content}
         values = {key: val.resolve(context) for key, val in self.extra_context.items()}
         with context.push(**sub_ctx, **values):
             # Context({'source': content}, autoescape=context.autoescape)
             return self.nodelist.render(context)
-
-

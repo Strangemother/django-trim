@@ -4,8 +4,9 @@
 from django.db import models as django_models
 import inspect
 
+
 def is_model(name, unit):
-    if name.startswith('__'):
+    if name.startswith("__"):
         return False
 
     if inspect.isclass(unit):
@@ -13,7 +14,9 @@ def is_model(name, unit):
 
     return False
 
+
 MODEL_CACHE = {}
+
 
 def cache_known(*_models):
     for m in _models:
@@ -27,12 +30,12 @@ def grab_models(_models, ignore=None):
 
     igs = ()
     for ig in ignore:
-        if isinstance(ig, str) and ig.endswith('.admin'):
+        if isinstance(ig, str) and ig.endswith(".admin"):
             # filter for any cached model, starting with the
             # same key
-            a = ig.split('.')[0]
-            a_dot = f'{a}.'
-            keep = {y for x,y in MODEL_CACHE.items() if x.startswith(a_dot)}
+            a = ig.split(".")[0]
+            a_dot = f"{a}."
+            keep = {y for x, y in MODEL_CACHE.items() if x.startswith(a_dot)}
             igs += tuple(keep)
     ignore += igs
 
@@ -40,13 +43,11 @@ def grab_models(_models, ignore=None):
 
     for name in dir(_models):
         unit = getattr(_models, name)
-        meta = getattr(unit, '_meta', None)
-        if ((name in ignore)
-             or (unit in ignore)
-             or (meta and (meta.abstract is True))):
+        meta = getattr(unit, "_meta", None)
+        if (name in ignore) or (unit in ignore) or (meta and (meta.abstract is True)):
             continue
         if is_model(name, unit):
-            items += (unit, )
+            items += (unit,)
     return items
 
 

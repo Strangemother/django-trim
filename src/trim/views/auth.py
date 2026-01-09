@@ -30,17 +30,20 @@ The template needs a form: `templates/userprofile/templates/registration/login.h
 
 
 """
+
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin
 
+
 def is_staff_or_admin(user):
-     return user.is_superuser or user.is_staff
+    return user.is_superuser or user.is_staff
 
 
 class IsStaffMixin(UserPassesTestMixin):
     """
     Allow if the user is staff or admin.
     """
+
     def test_func(self):
         uu = self.request.user
         active_staff = uu.is_active and is_staff_or_admin(uu)
@@ -62,7 +65,8 @@ class UserOwnedMixin(UserPassesTestMixin):
             user_allow_staff = True
             template_name = 'locality/address_detail.html'
     """
-    user_field = 'user'
+
+    user_field = "user"
     user_allow_staff = False
 
     def test_func(self):

@@ -10,7 +10,6 @@ from . import models
 #     print('Post Login event', request.session.get('cart_id'))
 
 
-
 @receiver(post_save, sender=User)
 def create_user_account(sender, instance, created, **kwargs):
     if created:

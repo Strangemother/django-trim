@@ -5,9 +5,9 @@ from . import quickforms
 
 
 def inject_node(parser):
-    T=parser.tokens[0].__class__
+    T = parser.tokens[0].__class__
     tr = "{{ slotplot }}"
-    parser.prepend_token( T(parser.tokens[0].token_type, tr))
+    parser.prepend_token(T(parser.tokens[0].token_type, tr))
 
 
 register = template.Library()
@@ -21,14 +21,14 @@ def parse_until(parser, token, ends, delete_first=True):
     splits = token.split_contents()[1:]
     extra = {}
     for i, word in enumerate(splits):
-        if word == 'with':
-            extra = token_kwargs(splits[i+1:], parser)
+        if word == "with":
+            extra = token_kwargs(splits[i + 1 :], parser)
     return nodelist, splits, extra
 
 
 @register.tag(name="wrap")
 def do_wrap(parser, token):
-    """ Wrap the contents given to the nodem with another template given through
+    """Wrap the contents given to the nodem with another template given through
     the tag token:
 
         {% wrap "stocks/wrap_form.html" with button_text="Next"  action="/fo/bar" %}
@@ -53,7 +53,7 @@ def do_wrap(parser, token):
             {% csrf_token %}
         </form>
     """
-    nodelist, splits, extra = parse_until(parser, token, ('endwrap',))
+    nodelist, splits, extra = parse_until(parser, token, ("endwrap",))
     return WrappedContentNode(nodelist, splits, **extra)
 
 
@@ -64,20 +64,17 @@ class WrappedContentNode(template.Node):
         self.extra_context = kw
 
     def render(self, context):
-        print('rendering wrap')
+        print("rendering wrap")
         template_name = self.token_template_name.resolve(context)
         t = context.template.engine.get_template(template_name)
         content = self.nodelist.render(context)
 
         # we extend the original context; allowing this unit to be overwitten
         # if required.
-        wrap = {
-                'content': content,
-                'template_name': template_name
-            }
+        wrap = {"content": content, "template_name": template_name}
         #  Dynamic key for the root context, static key for the 'wrap' object.
-        content_key = 'content'
-        sub_ctx = {'wrap':wrap, content_key:content}
+        content_key = "content"
+        sub_ctx = {"wrap": wrap, content_key: content}
         values = {key: val.resolve(context) for key, val in self.extra_context.items()}
         with context.push(**sub_ctx, **values):
             # Context({'source': content}, autoescape=context.autoescape)
@@ -86,7 +83,7 @@ class WrappedContentNode(template.Node):
 
 @register.tag(name="slot")
 def do_slot(parser, token):
-    nodelist, splits, extra = parse_until(parser, token, ('endslot',))
+    nodelist, splits, extra = parse_until(parser, token, ("endslot",))
     return SlotNode(nodelist, splits, **extra)
 
 
@@ -99,21 +96,20 @@ class SlotNode(template.Node):
     def render(self, context):
         # template_name = self.token_template_name.resolve(context)
         # t = context.template.engine.get_template(template_name)
-        print('rendering slot')
+        print("rendering slot")
         content = self.nodelist.render(context)
         # we extend the original context; allowing this unit to e overbwitten
         # if required.
         wrap = {
-                'content': content,
-            }
+            "content": content,
+        }
         #  Dynamic key for the root context, static key for the 'wrap' object.
-        content_key = 'content'
-        sub_ctx = {}# = {'wrap':wrap, content_key:content}
+        content_key = "content"
+        sub_ctx = {}  # = {'wrap':wrap, content_key:content}
         values = {key: val.resolve(context) for key, val in self.extra_context.items()}
         with context.push(**sub_ctx, **values):
             # Context({'source': content}, autoescape=context.autoescape)
             return self.nodelist.render(context)
-
 
 
 # @register.simple_tag(takes_context=True)

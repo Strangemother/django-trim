@@ -26,16 +26,19 @@ def hidden(*a, **kw):
     """A standard `widgets.HiddenInput` widget."""
     return widgets.HiddenInput(*a, **kw)
 
+
 def checkbox(*a, **kw):
     """CheckboxInput"""
     return widgets.CheckboxInput(*a, **kw)
 
 
-checkbox_select_multiple =checkboxes
+checkbox_select_multiple = checkboxes
+
 
 def choice(*a, **kw):
     """ChoiceWidget"""
     return widgets.ChoiceWidget(*a, **kw)
+
 
 class MultipleFileInput(widgets.ClearableFileInput):
     allow_multiple_selected = True
@@ -130,14 +133,18 @@ def text(*a, **kw):
     """TextInput"""
     return widgets.TextInput(*a, **kw)
 
+
 input = text
 chars = text
+
 
 def textarea(*a, **kw):
     """Textarea"""
     return widgets.Textarea(*a, **kw)
 
+
 area = textarea
+
 
 def time(*a, **kw):
     """TimeInput"""

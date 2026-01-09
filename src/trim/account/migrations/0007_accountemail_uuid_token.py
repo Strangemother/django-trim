@@ -7,13 +7,15 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0006_alter_accountemail_user'),
+        ("account", "0006_alter_accountemail_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='accountemail',
-            name='uuid_token',
-            field=models.CharField(blank=True, default=uuid.uuid4, max_length=255, null=True),
+            model_name="accountemail",
+            name="uuid_token",
+            field=models.CharField(
+                blank=True, default=uuid.uuid4, max_length=255, null=True
+            ),
         ),
     ]

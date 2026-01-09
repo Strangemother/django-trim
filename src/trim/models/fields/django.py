@@ -7,6 +7,7 @@ from django.db import models
 from trim import rand
 from django.contrib.auth import get_user_model as orig_get_user_model
 from uuid import uuid4 as orig_uuid4
+
 # from django.contrib.contenttypes.fields import GenericForeignKey
 # from django.contrib.contenttypes.models import ContentType
 from django.apps import apps
@@ -41,8 +42,7 @@ def url(*a, **kw):
 
 
 def text(*a, **kw):
-    """A standard `models.TextField` passing the standard arguments.
-    """
+    """A standard `models.TextField` passing the standard arguments."""
     # defaults(kw, **blank_null())
     kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.TextField(*a, **kw)
@@ -60,11 +60,13 @@ def chars(first_var=None, *a, **kw):
 
     if callable(first_var):
         # Set as default
-        max_length = kw.get('max_length', None)
-        if kw.get('default', None) is not None:
-            s = ('trims.chars(default_func, **params) accepts a'
+        max_length = kw.get("max_length", None)
+        if kw.get("default", None) is not None:
+            s = (
+                "trims.chars(default_func, **params) accepts a"
                 ' "default" keyword argument or a function as the first'
-                ' argument. Not both.')
+                " argument. Not both."
+            )
             # Valid patterns:
             # chars(max_length=255)
             # chars(default_func)
@@ -75,13 +77,13 @@ def chars(first_var=None, *a, **kw):
 
             raise Exception(s)
 
-        kw.setdefault('default', first_var)
+        kw.setdefault("default", first_var)
 
     if max_length is None:
         max_length = default_max_length
 
     kw = defaults(a, kw, max_length=max_length, nil=DEFAULT_NIL)
-    return models.CharField(*a,**kw)
+    return models.CharField(*a, **kw)
 
 
 def rand_str(*a, **kw):
@@ -132,30 +134,26 @@ def boolean(*a, **kw):
 
 
 def blank_dt(*a, **kw):
-    """A standard `DateTimeField` with default `null=True`
-    """
+    """A standard `DateTimeField` with default `null=True`"""
     kw = defaults(a, kw, nil=DEFAULT_NIL)
     return datetime(*a, **kw)
 
 
 def date(*a, **kw):
-    """A standard `DateTimeField` passing all arguments
-    """
+    """A standard `DateTimeField` passing all arguments"""
     kw = defaults(a, kw)
     return models.DateField(*a, **kw)
 
 
 def dt_created(*a, **kw):
-    """A standard `DateTimeField` with default `auto_now_add=True`
-    """
-    kw.setdefault('auto_now_add', True)
+    """A standard `DateTimeField` with default `auto_now_add=True`"""
+    kw.setdefault("auto_now_add", True)
     return datetime(*a, **kw)
 
 
 def dt_updated(*a, **kw):
-    """A standard `DateTimeField` with default `auto_now=True`
-    """
-    kw.setdefault('auto_now', True)
+    """A standard `DateTimeField` with default `auto_now=True`"""
+    kw.setdefault("auto_now", True)
     return datetime(*a, **kw)
 
 
@@ -176,8 +174,7 @@ def dt_cu_pair(*a, **kw):
 
 
 def datetime(*a, **kw):
-    """A standard `DateTimeField` passing all arguments
-    """
+    """A standard `DateTimeField` passing all arguments"""
     kw = defaults(a, kw)
     return models.DateTimeField(*a, **kw)
 
@@ -192,7 +189,7 @@ def integer(*a, **kw):
         a = a[1:]
 
     if value is not None:
-        kw.setdefault('default', value)
+        kw.setdefault("default", value)
     kw = defaults(a, kw)
     return models.IntegerField(*a, **kw)
 
@@ -218,7 +215,7 @@ def fk(other, *a, on_delete=None, **kw):
     return models.ForeignKey(other, *a, **kw)
 
 
-def user_fk(*a,**kw):
+def user_fk(*a, **kw):
     """A standard `ForeignKey` with the _other_ model as the `get_user_model()`
     result (the standard django auth user model).
     """
@@ -226,11 +223,10 @@ def user_fk(*a,**kw):
     return fk(get_user_model(), *a, **kw)
 
 
-def self_fk(*a,**kw):
-    """A standard `ForeignKey` with the _other_ model as the `"self"`
-    """
+def self_fk(*a, **kw):
+    """A standard `ForeignKey` with the _other_ model as the `"self"`"""
     kw = defaults(a, kw, nil=DEFAULT_NIL)
-    return fk('self', *a, **kw)
+    return fk("self", *a, **kw)
 
 
 def m2m(other, *a, **kw):
@@ -238,21 +234,19 @@ def m2m(other, *a, **kw):
     to model type.
     """
     kw = defaults(a, kw, blank=True)
-    if 'null' in kw:
+    if "null" in kw:
         # (fields.W340) null has no effect on ManyToManyField.
-        kw.setdefault('blank', kw.pop('null'))
+        kw.setdefault("blank", kw.pop("null"))
     return models.ManyToManyField(other, *a, **kw)
 
 
 def self_m2m(*a, **kw):
-    """A many to many field (through `m2m`) refering to _self_
-    """
-    return m2m('self', *a, **kw)
+    """A many to many field (through `m2m`) refering to _self_"""
+    return m2m("self", *a, **kw)
 
 
 def o2o(other, *a, on_delete=None, **kw):
-    """A standard `OneToOneField` with the _other_ model as the first argument
-    """
+    """A standard `OneToOneField` with the _other_ model as the first argument"""
     kw = defaults(a, kw, on_delete=on_delete or models.CASCADE)
     return models.OneToOneField(other, *a, **kw)
 
@@ -272,8 +266,7 @@ def user_m2m(*a, **kw):
 
 
 def image(*a, **kw):
-    """A standard `ImageField` passing all arguments
-    """
+    """A standard `ImageField` passing all arguments"""
     kw = defaults(a, kw, blank=True)
     return models.ImageField(*a, **kw)
 
@@ -295,7 +288,7 @@ def auto(*a, **kw):
 
 
 def big_auto(*a, **kw):
-    """ A 64-bit integer, much like an AutoField except that it is guaranteed to
+    """A 64-bit integer, much like an AutoField except that it is guaranteed to
     fit numbers from 1 to 9223372036854775807.
 
         class BigAutoField(**options)
@@ -317,19 +310,18 @@ def big_int(*a, **kw):
 
 
 def binary(*a, bytes=2_097_152, **kw):
-    """A standard `BinaryField` with the first argument as the target byte max
-    """
-    #class BinaryField(max_length=None, **options)
+    """A standard `BinaryField` with the first argument as the target byte max"""
+    # class BinaryField(max_length=None, **options)
     # A field to store raw binary data. It can be assigned bytes, bytearray, or memoryview.
 
     # By default, BinaryField sets editable to False, in which case it can’t be included in a ModelForm.
 
     # BinaryField has one extra optional argument:
-        # BinaryField.max_length
-        # The maximum length (in bytes) of the field.
-        # The maximum length is enforced in Django’s validation using
-        # MaxLengthValidator.
-    kw = defaults((bytes, ) + a, kw, nil=DEFAULT_NIL)
+    # BinaryField.max_length
+    # The maximum length (in bytes) of the field.
+    # The maximum length is enforced in Django’s validation using
+    # MaxLengthValidator.
+    kw = defaults((bytes,) + a, kw, nil=DEFAULT_NIL)
     return models.BinaryField(*a, **kw)
 
 
@@ -398,7 +390,7 @@ def email(*a, **kw):
 def file(*a, **kw):
     """A file-upload field.
 
-        class FileField(upload_to=None, max_length=100, **options)
+    class FileField(upload_to=None, max_length=100, **options)
     """
     kw = defaults(a, kw, nil=DEFAULT_NIL)
     return models.FileField(*a, **kw)
@@ -652,7 +644,7 @@ def uuid(*a, **kw):
     not an instance of UUID.
 
     """
-    kw  = defaults(a, kw, editable=False, default=orig_uuid4)
+    kw = defaults(a, kw, editable=False, default=orig_uuid4)
     return models.UUIDField(*a, **kw)
 
 
@@ -660,33 +652,33 @@ def str_uuid(*a, **kw):
     """Return a standard `CharField` through `chars()`, the default value
     as the function `uuid.uuid4()`.
     """
-    kw  = defaults(a, kw, default=orig_uuid4)
+    kw = defaults(a, kw, default=orig_uuid4)
     return chars(*a, **kw)
 
 
 class LazyImport:
     def get_GenericForeignKey(self):
         from django.contrib.contenttypes.fields import GenericForeignKey
+
         return GenericForeignKey
 
     def get_ContentType(self):
         from django.contrib.contenttypes.models import ContentType
+
         # from django.contrib.contenttypes.fields import GenericForeignKey
         return ContentType
 
     def __getitem__(self, name):
-        return getattr(self, f'get_{name}')()
+        return getattr(self, f"get_{name}")()
 
 
-GEN_C = {
-    'lazy': LazyImport()
-}
+GEN_C = {"lazy": LazyImport()}
 
 
 def get_cached(name):
     v = GEN_C.get(name, None)
     if v is None:
-        v = GEN_C[name] = GEN_C['lazy'][name]
+        v = GEN_C[name] = GEN_C["lazy"][name]
     return v
 
 
@@ -694,15 +686,15 @@ def contenttype_fk(content_type=None, *a, **kw):
 
     # content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     is_str = isinstance(content_type, sys_str)
-    ContentType = get_cached('ContentType')
+    ContentType = get_cached("ContentType")
     content_type = apps.get_model(content_type) if is_str else content_type
     content_type = ContentType if content_type is None else content_type
-    kw  = defaults(a, kw, on_delete=models.CASCADE)
+    kw = defaults(a, kw, on_delete=models.CASCADE)
     return fk(content_type, **kw)
 
 
-CONTENT_TYPE_FIELD = 'content_type'
-ID_FIELD = 'object_id'
+CONTENT_TYPE_FIELD = "content_type"
+ID_FIELD = "object_id"
 
 
 def generic_fk(content_type_field=CONTENT_TYPE_FIELD, id_field=ID_FIELD, **kw):
@@ -724,8 +716,8 @@ def generic_fk(content_type_field=CONTENT_TYPE_FIELD, id_field=ID_FIELD, **kw):
             content_object = generic_fk('content_type', 'object_id')
 
     """
-    kw  = defaults(None, kw)
-    GenericForeignKey = get_cached('GenericForeignKey')
+    kw = defaults(None, kw)
+    GenericForeignKey = get_cached("GenericForeignKey")
 
     return GenericForeignKey(content_type_field, id_field)
 
@@ -758,7 +750,7 @@ def any(prefix, content_type_field=None, id_field=None, **kw):
 
     """
     prefix = prefix or ""
-    pr_u = f"{prefix}_" if len(prefix) > 0 else ''
+    pr_u = f"{prefix}_" if len(prefix) > 0 else ""
     content_type_field = content_type_field or f"{pr_u}{CONTENT_TYPE_FIELD}"
     id_field = id_field or f"{pr_u}{ID_FIELD}"
 
@@ -814,11 +806,7 @@ def any_model_set(*a, nil=True, **kw):
         item.owner = Other.objects.get(id=200)
         item.save()
     """
-    return (
-            generic_fk(*a, nil=nil),
-            contenttype_fk(nil=nil),
-            pos_int(nil=nil)
-        )
+    return (generic_fk(*a, nil=nil), contenttype_fk(nil=nil), pos_int(nil=nil))
 
 
 float = float_

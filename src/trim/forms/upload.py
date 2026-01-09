@@ -4,7 +4,7 @@ from trim.forms import fields
 
 def file_upload_loc(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return "user_{0}/{1}".format('uploads/', filename)
+    return "user_{0}/{1}".format("uploads/", filename)
     # return "user_{0}/{1}".format(instance.user.id, filename)
 
 
@@ -15,11 +15,13 @@ def file_upload_loc(instance, filename):
     Each chunk response returns an update result
 """
 
+
 class FileForm(forms.Form):
     """A Meta form is served in parallel to the file upload
     The meta should receive an upload ID, stored with the
     asset to the temp location until required.
     """
+
     filename = fields.chars(max_length=255, required=False)
     file = fields.file(required=False)
     # files = fields.files(required=False)
@@ -31,11 +33,13 @@ class FileForm(forms.Form):
     # class Meta:
     #     fields = ('query',)
 
+
 class FilesForm(forms.Form):
     """A Meta form is served in parallel to the file upload
     The meta should receive an upload ID, stored with the
     asset to the temp location until required.
     """
+
     filename = fields.chars(max_length=255, required=False)
     # file = fields.file(required=False)
     files = fields.files(required=False)
@@ -54,6 +58,7 @@ class FileChunkForm(forms.Form):
 
     The JS slices the file into chunks, posting many chunks to this endpoint.
     """
+
     # chunk_id = forms.CharField()
 
     # The file_uuid is populated by the response from the FilesForm

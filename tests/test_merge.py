@@ -3,6 +3,7 @@ Test trim.merge module.
 
 Simple tests for file merging utility.
 """
+
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -15,27 +16,27 @@ class SplitITest(unittest.TestCase):
 
     def test_extracts_part_number(self):
         # Setup & Execute
-        result = split_i('filename.part_0')
-        
+        result = split_i("filename.part_0")
+
         # Assert
         self.assertEqual(result, 0)
 
     def test_extracts_higher_part_number(self):
         # Setup & Execute
-        result = split_i('filename.part_42')
-        
+        result = split_i("filename.part_42")
+
         # Assert
         self.assertEqual(result, 42)
 
     def test_sorts_correctly(self):
         # Setup
-        files = ['file.part_2', 'file.part_0', 'file.part_1']
-        
+        files = ["file.part_2", "file.part_0", "file.part_1"]
+
         # Execute
         sorted_files = sorted(files, key=split_i)
-        
+
         # Assert
-        self.assertEqual(sorted_files, ['file.part_0', 'file.part_1', 'file.part_2'])
+        self.assertEqual(sorted_files, ["file.part_0", "file.part_1", "file.part_2"])
 
 
 class FileExistsTest(unittest.TestCase):
@@ -44,15 +45,15 @@ class FileExistsTest(unittest.TestCase):
     def test_can_raise_exception(self):
         # Setup & Execute & Assert
         with self.assertRaises(FileExists):
-            raise FileExists('/some/path')
+            raise FileExists("/some/path")
 
     def test_stores_message(self):
         # Setup
-        path = '/test/path'
-        
+        path = "/test/path"
+
         # Execute
         exc = FileExists(path)
-        
+
         # Assert
         self.assertEqual(exc.args[0], path)
 
@@ -64,31 +65,31 @@ class RecombineTest(unittest.TestCase):
         # Setup
         with TemporaryDirectory() as tmpdir:
             tmppath = Path(tmpdir)
-            
+
             # Create test split files
-            (tmppath / 'testfile.part_0').write_bytes(b'Hello ')
-            (tmppath / 'testfile.part_1').write_bytes(b'World')
-            
+            (tmppath / "testfile.part_0").write_bytes(b"Hello ")
+            (tmppath / "testfile.part_1").write_bytes(b"World")
+
             # Execute
             output = recombine(tmppath)
-            
+
             # Assert
             self.assertTrue(output.exists())
-            self.assertEqual(output.read_bytes(), b'Hello World')
+            self.assertEqual(output.read_bytes(), b"Hello World")
 
     def test_raises_if_output_exists(self):
         # Setup
         with TemporaryDirectory() as tmpdir:
             tmppath = Path(tmpdir)
-            
+
             # Create split files and output file
-            (tmppath / 'testfile.part_0').write_bytes(b'data')
-            (tmppath / 'testfile').write_bytes(b'existing')
-            
+            (tmppath / "testfile.part_0").write_bytes(b"data")
+            (tmppath / "testfile").write_bytes(b"existing")
+
             # Execute & Assert
             with self.assertRaises(FileExists):
                 recombine(tmppath)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

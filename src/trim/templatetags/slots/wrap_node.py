@@ -1,4 +1,3 @@
-
 from django import template
 from django.template.base import token_kwargs
 
@@ -6,12 +5,13 @@ from .base import parse_until, SlotList
 from .slot_node import DefineSlotNode, SlotNode
 
 from loguru import logger
+
 log = logger.debug
 warn = logger.warning
 
 
 def do_wrap(parser, token):
-    """ Wrap the contents given to the nodem with another template given through
+    """Wrap the contents given to the nodem with another template given through
     the tag token:
 
         {% wrap "stocks/wrap_form.html" with button_text="Next"  action="/fo/bar" %}
@@ -36,7 +36,7 @@ def do_wrap(parser, token):
             {% csrf_token %}
         </form>
     """
-    log('   _def_ do wrap')
+    log("   _def_ do wrap")
 
     slotinfo = SlotList()
     slotdefine = SlotList()
@@ -44,7 +44,7 @@ def do_wrap(parser, token):
     token.slotinfo = slotinfo
     token.slotdefine = slotdefine
 
-    nodelist, splits, extra = parse_until(parser, token, ('endwrap',))
+    nodelist, splits, extra = parse_until(parser, token, ("endwrap",))
 
     res = WrappedContentNode(nodelist, splits, **extra)
     # res.slotinfo = slotinfo
@@ -58,7 +58,7 @@ class WrappedContentNode(template.Node):
     slotdefine = None
 
     def __init__(self, nodelist, tokens, *a, **kw):
-        log('  _cre_ __init__ wrap')
+        log("  _cre_ __init__ wrap")
         self.nodelist = nodelist
         self.tokens = tokens
         self.token_template_name = template.Variable(tokens[0])
@@ -73,16 +73,16 @@ class WrappedContentNode(template.Node):
         # to read this _parent_wrap_ when generating its content.
         for node in nodes:
             if isinstance(node, DefineSlotNode):
-                log(f' ! Found {type(node).__name__} slot {node.token_slot_name}')
+                log(f" ! Found {type(node).__name__} slot {node.token_slot_name}")
                 node.apply_parent(self)
-                res += (node, )
+                res += (node,)
 
         return res
 
     def render(self, context):
         slots = self.token.slotinfo
 
-        log(f'\n\n\n    _ren_ Wrap node rendering template with: {slots}')
+        log(f"\n\n\n    _ren_ Wrap node rendering template with: {slots}")
         ## The name supplied to the wrap object. {% wrap "name.html" %}
         ### Note (bug(: This doesn't work with relative paths.
         template_name = self.token_template_name.resolve(context)
@@ -92,11 +92,13 @@ class WrappedContentNode(template.Node):
         define_slots = self.announce_wrapper(wrap_templ)
 
         if len(define_slots) == 0:
-            log(' - rendering standard...')
+            log(" - rendering standard...")
             # No slot.define, generic render can proceed.
             return self.standard_render(context, wrap_templ)
-        log(f'Rendering with wrap slots: {define_slots}')
-        return self.slot_render(context, wrap_templ, define_slots, template_name=template_name)
+        log(f"Rendering with wrap slots: {define_slots}")
+        return self.slot_render(
+            context, wrap_templ, define_slots, template_name=template_name
+        )
 
     def slot_render(self, context, wrap_templ, define_slots, **extras):
         # slotdefine = self.token.slotdefine
@@ -127,14 +129,17 @@ class WrappedContentNode(template.Node):
         ## slots named "lost" in the define list.
 
         slotdefine = self.token.slotdefine
-        slot_types = (DefineSlotNode, SlotNode,)
+        slot_types = (
+            DefineSlotNode,
+            SlotNode,
+        )
         lost_nodes = self.filter_not(nodes, slot_types)
 
-        log(f'Found {len(lost_nodes)} lost nodes (without a wrap slot)')
+        log(f"Found {len(lost_nodes)} lost nodes (without a wrap slot)")
 
         slotinfo = self.token.slotinfo
 
-        target_slotname = 'lost'
+        target_slotname = "lost"
         if len(slotinfo) == 0:
             ## If the input slotcount is 0, everything into default.
             # If the output slots is 1, then it can only be that one slot.
@@ -146,24 +151,23 @@ class WrappedContentNode(template.Node):
             # then _lost_ if no _default_,
             # fail if no _lost_ or _default_
             # (the slot.define are named or no define slots exist.)
-            target_slotname = 'default'
+            target_slotname = "default"
 
         target_slotdefs = slotdefine.get_nodes(target_slotname, context)
 
-        log(f'Found {len(target_slotdefs)} slot.define for: {target_slotname}')
+        log(f"Found {len(target_slotdefs)} slot.define for: {target_slotname}")
 
         ## if the target was missing, then the default or lost is not available.
         # As such if we tested 'default', finally test lost. Else quit.
-        if len(target_slotdefs) == 0 and target_slotname == 'default':
+        if len(target_slotdefs) == 0 and target_slotname == "default":
             log(f"No target '{target_slotname}', using _lost_.")
-            target_slotname = 'lost'
+            target_slotname = "lost"
             target_slotdefs = slotdefine.get_nodes(target_slotname, context)
 
         if len(target_slotdefs) == 0:
             # No lost slot. Change the definition to another;
-            warn(f'No define slots for _lost_ or _default_ - this is truly lost data.')
+            warn(f"No define slots for _lost_ or _default_ - this is truly lost data.")
             return
-
 
         return
         # BUG: The lost slots are stacked into this for every request.
@@ -182,7 +186,6 @@ class WrappedContentNode(template.Node):
             ## Once applied, the next render sequence captures this
             #'slotinfo' stack similar to a named slot.
 
-
             # BUG: The lost slots are stacked into this for every request.
             # Likely due to this _add_ during the render phase.
             # And the SlotList is _sticky_ to the token, not this (fresh) Node.
@@ -200,16 +203,16 @@ class WrappedContentNode(template.Node):
         content = self.nodelist.render(context)
 
         sub_ctx = {
-            'wrap': {
-                'content': content,
+            "wrap": {
+                "content": content,
                 **extras,
             },
-            'content':content,
+            "content": content,
         }
 
         values = {}
         for key, val in self.extra_context.items():
-            values[key] = val.resolve(context) if hasattr(val, 'resolve') else val
+            values[key] = val.resolve(context) if hasattr(val, "resolve") else val
 
         with context.push(**sub_ctx, **values):
             return wrap_templ.render(context)

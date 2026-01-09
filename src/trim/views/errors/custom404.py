@@ -1,4 +1,3 @@
-
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -7,16 +6,17 @@ from django.urls import reverse
 class Missing404RedirectUrl(Exception):
     pass
 
+
 from django.views.generic import TemplateView
 
 
 class Custom404TemplateView(TemplateView):
     status_code = 404
-    template_name = 'trim/errors/404.html'
+    template_name = "trim/errors/404.html"
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
-        kwargs['status_code'] = self.status_code
+        kwargs["status_code"] = self.status_code
         return kwargs
 
 
@@ -35,6 +35,7 @@ class Custom404(object):
             ...
 
     """
+
     custom_404_redirect_url = None
     custom_404_redirect = None
     # custom_404_template_name
@@ -50,11 +51,13 @@ class Custom404(object):
         If the redirect url exists the user is redirected, if missing, the
         function returns Custom404TemplateView as_view
         """
-        if (self.custom_404_redirect_url is None) and (self.custom_404_redirect is False):
+        if (self.custom_404_redirect_url is None) and (
+            self.custom_404_redirect is False
+        ):
             raise Missing404RedirectUrl("custom_404_redirect_url not supplied.")
         custom_404_redirect = self.custom_404_redirect
         if custom_404_redirect is None:
-           if self.custom_404_redirect_url is not None:
+            if self.custom_404_redirect_url is not None:
                 custom_404_redirect = True
 
         if custom_404_redirect is True:
@@ -64,9 +67,9 @@ class Custom404(object):
 
     def custom_404_view(self, request, *args, **kwargs):
         props = {}
-        n = getattr(self, 'custom_404_template_name', None)
+        n = getattr(self, "custom_404_template_name", None)
         if n is not None:
-            props['template_name'] = self.custom_404_template_name
+            props["template_name"] = self.custom_404_template_name
 
         ct = Custom404TemplateView.as_view(**props)
         v = ct(request, *args, **kwargs)

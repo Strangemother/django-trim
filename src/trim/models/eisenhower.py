@@ -1,2 +1,1 @@
-"""A Trim tool to produce an eisenhower view
-"""
+"""A Trim tool to produce an eisenhower view"""

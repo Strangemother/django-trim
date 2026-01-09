@@ -1,12 +1,15 @@
 from django import template
 from django.urls import resolve, reverse
 from django.template.loader_tags import (
-        do_extends,
-        construct_relative_path,
-        BLOCK_CONTEXT_KEY,
-        BlockNode,
-        Node, Template, BlockContext, TextNode
-        )
+    do_extends,
+    construct_relative_path,
+    BLOCK_CONTEXT_KEY,
+    BlockNode,
+    Node,
+    Template,
+    BlockContext,
+    TextNode,
+)
 
 from django.template.base import TemplateSyntaxError
 
@@ -19,9 +22,11 @@ register = template.Library()
 def theme_string(context):
     pass
 
+
 from django.template.base import token_kwargs
 
-@register.tag('theme')
+
+@register.tag("theme")
 def do_theme_extends(parser, token):
     # replace the token with the string tokeniser.
     bits = token.split_contents()
@@ -34,9 +39,9 @@ def do_theme_extends(parser, token):
 
     parts = ()
     for i, word in enumerate(bits):
-        if word == 'with':
+        if word == "with":
             with_position = i
-            extra = token_kwargs(bits[i+1:], parser)
+            extra = token_kwargs(bits[i + 1 :], parser)
             break
         if i == 0:
             continue
@@ -58,16 +63,22 @@ def do_theme_extends(parser, token):
 
     nodelist = parser.parse()
     if nodelist.get_nodes_by_type(ThemeExtendsNode):
-        raise TemplateSyntaxError("'%s' cannot appear more than once in the same template" % bits[0])
+        raise TemplateSyntaxError(
+            "'%s' cannot appear more than once in the same template" % bits[0]
+        )
 
-    return ThemeExtendsNode(nodelist, template_vars, extra_context=extra, origin=parser.origin)
+    return ThemeExtendsNode(
+        nodelist, template_vars, extra_context=extra, origin=parser.origin
+    )
 
 
 class ThemeExtendsNode(Node):
     must_be_first = True
-    context_key = 'extends_context'
+    context_key = "extends_context"
 
-    def __init__(self, nodelist, template_vars, template_dirs=None, extra_context=None, **kw):
+    def __init__(
+        self, nodelist, template_vars, template_dirs=None, extra_context=None, **kw
+    ):
         self.nodelist = nodelist
         self.parent_name = None
         self.template_vars = template_vars
@@ -82,7 +93,7 @@ class ThemeExtendsNode(Node):
         return tuple(x.token for x in self.template_vars)
 
     def __repr__(self):
-        return '<%s: extends %s>' % (self.__class__.__name__, self.get_parent_token())
+        return "<%s: extends %s>" % (self.__class__.__name__, self.get_parent_token())
 
     def find_template(self, template_name, context):
         """
@@ -92,10 +103,12 @@ class ThemeExtendsNode(Node):
         without extending the same template twice.
         """
         history = context.render_context.setdefault(
-            self.context_key, [self.origin],
+            self.context_key,
+            [self.origin],
         )
         template, origin = context.template.engine.find_template(
-            template_name, skip=history,
+            template_name,
+            skip=history,
         )
         history.append(origin)
         return template
@@ -124,15 +137,15 @@ class ThemeExtendsNode(Node):
         parent = self.resolve_parent(context)
         if not parent:
             error_msg = "Invalid template name in 'extends' tag: %r." % parent
-            if self.parent_name.filters or\
-                    isinstance(self.parent_name.var, Variable):
-                error_msg += " Got this from the '%s' variable." %\
-                    self.parent_name.token
+            if self.parent_name.filters or isinstance(self.parent_name.var, Variable):
+                error_msg += (
+                    " Got this from the '%s' variable." % self.parent_name.token
+                )
             raise TemplateSyntaxError(error_msg)
         if isinstance(parent, Template):
             # parent is a django.template.Template
             return parent
-        if isinstance(getattr(parent, 'template', None), Template):
+        if isinstance(getattr(parent, "template", None), Template):
             # parent is a django.template.backends.django.Template
             return parent.template
         return self.find_template(parent, context)
@@ -153,24 +166,25 @@ class ThemeExtendsNode(Node):
             # The ThemeExtendsNode has to be the first non-text node.
             if not isinstance(node, TextNode):
                 if not isinstance(node, ThemeExtendsNode):
-                    blocks = {n.name: n for n in
-                              compiled_parent.nodelist.get_nodes_by_type(BlockNode)}
+                    blocks = {
+                        n.name: n
+                        for n in compiled_parent.nodelist.get_nodes_by_type(BlockNode)
+                    }
                     block_context.add_blocks(blocks)
                 break
 
         extra = self.extra_context
 
-
         # Call Template._render explicitly so the parser context stays
         # the same.
         with context.render_context.push_state(compiled_parent, isolated_context=False):
             extra = {key: val.resolve(context) for key, val in extra.items()}
-            print('Extra', extra)
+            print("Extra", extra)
             context.push(extra)
             return compiled_parent._render(context)
 
 
-@register.filter(name='attr')
+@register.filter(name="attr")
 def get_attr(value, arg):
     """Return the _attribute_ of the given object, such as a model field from a
     model instance.
@@ -186,4 +200,4 @@ def get_attr(value, arg):
         {% endwith %}
 
     """
-    return getattr(value,arg)
+    return getattr(value, arg)

@@ -6,17 +6,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('account', '0003_alter_account_user'),
+        ("account", "0003_alter_account_user"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ForgotPasswordRecord',
+            name="ForgotPasswordRecord",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email_address', models.EmailField(blank=True, max_length=254, null=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "email_address",
+                    models.EmailField(blank=True, max_length=254, null=True),
+                ),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
             ],
         ),
     ]

@@ -1,9 +1,7 @@
 from django.apps import apps
 
 
-__ALL__ = (
-    'get_model'
-)
+__ALL__ = "get_model"
 
 
 def get_model(*a, **kw):

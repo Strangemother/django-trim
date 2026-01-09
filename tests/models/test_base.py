@@ -1,34 +1,32 @@
 """Tests for trim.models.base module."""
+
 import pytest
 from django.db import models as django_models
 from unittest.mock import patch
 
-from trim.models.base import (
-    is_model,
-    cache_known,
-    grab_models,
-    get_model,
-    MODEL_CACHE
-)
+from trim.models.base import is_model, cache_known, grab_models, get_model, MODEL_CACHE
 
 
 # Test fixtures
 class RegularClass:
     """A regular non-model class."""
+
     pass
 
 
 class MockModel(django_models.Model):
     """A proper Django model for testing."""
+
     class Meta:
-        app_label = 'tests'
+        app_label = "tests"
 
 
 class AbstractModel(django_models.Model):
     """An abstract Django model."""
+
     class Meta:
         abstract = True
-        app_label = 'tests'
+        app_label = "tests"
 
 
 @pytest.fixture(autouse=True)
@@ -44,7 +42,7 @@ class TestIsModel:
 
     def test_returns_true_for_django_model(self):
         # setup
-        name = 'MockModel'
+        name = "MockModel"
         unit = MockModel
         # execute
         result = is_model(name, unit)
@@ -53,7 +51,7 @@ class TestIsModel:
 
     def test_returns_false_for_dunder_names(self):
         # setup
-        name = '__builtins__'
+        name = "__builtins__"
         unit = MockModel
         # execute
         result = is_model(name, unit)
@@ -62,7 +60,7 @@ class TestIsModel:
 
     def test_returns_false_for_non_class(self):
         # setup
-        name = 'some_function'
+        name = "some_function"
         unit = lambda x: x
         # execute
         result = is_model(name, unit)
@@ -71,7 +69,7 @@ class TestIsModel:
 
     def test_returns_false_for_regular_class(self):
         # setup
-        name = 'RegularClass'
+        name = "RegularClass"
         unit = RegularClass
         # execute
         result = is_model(name, unit)
@@ -80,8 +78,8 @@ class TestIsModel:
 
     def test_returns_false_for_string(self):
         # setup
-        name = 'test'
-        unit = 'not a class'
+        name = "test"
+        unit = "not a class"
         # execute
         result = is_model(name, unit)
         # assert
@@ -89,7 +87,7 @@ class TestIsModel:
 
     def test_returns_true_for_abstract_model(self):
         # setup
-        name = 'AbstractModel'
+        name = "AbstractModel"
         unit = AbstractModel
         # execute
         result = is_model(name, unit)
@@ -112,11 +110,11 @@ class TestCacheKnown:
         # setup
         class Model1(django_models.Model):
             class Meta:
-                app_label = 'app1'
+                app_label = "app1"
 
         class Model2(django_models.Model):
             class Meta:
-                app_label = 'app2'
+                app_label = "app2"
 
         # execute
         cache_known(Model1, Model2)
@@ -126,11 +124,11 @@ class TestCacheKnown:
 
     def test_overwrites_existing_cache(self):
         # setup
-        MODEL_CACHE['tests.MockModel'] = 'old_value'
+        MODEL_CACHE["tests.MockModel"] = "old_value"
         # execute
         cache_known(MockModel)
         # assert
-        assert MODEL_CACHE['tests.MockModel'] == MockModel
+        assert MODEL_CACHE["tests.MockModel"] == MockModel
 
 
 class TestGrabModels:
@@ -139,10 +137,11 @@ class TestGrabModels:
     @pytest.fixture
     def mock_module(self):
         """Create a mock module with mixed members."""
+
         class Module:
             MockModel = MockModel
             RegularClass = RegularClass
-            __dunder__ = 'value'
+            __dunder__ = "value"
             some_var = 42
 
         return Module()
@@ -157,7 +156,7 @@ class TestGrabModels:
 
     def test_ignores_string_name(self, mock_module):
         # execute
-        result = grab_models(mock_module, ignore='MockModel')
+        result = grab_models(mock_module, ignore="MockModel")
         # assert
         assert MockModel not in result
         assert len(result) == 0
@@ -166,11 +165,11 @@ class TestGrabModels:
         # setup
         class AnotherModel(django_models.Model):
             class Meta:
-                app_label = 'tests'
+                app_label = "tests"
 
         mock_module.AnotherModel = AnotherModel
         # execute
-        result = grab_models(mock_module, ignore=('MockModel',))
+        result = grab_models(mock_module, ignore=("MockModel",))
         # assert
         assert MockModel not in result
         assert AnotherModel in result
@@ -178,7 +177,7 @@ class TestGrabModels:
     def test_ignore_accepts_tuple_of_strings(self, mock_module):
         # setup - ignore expects strings, not model classes
         # execute
-        result = grab_models(mock_module, ignore=('MockModel',))
+        result = grab_models(mock_module, ignore=("MockModel",))
         # assert
         assert MockModel not in result
 
@@ -193,11 +192,11 @@ class TestGrabModels:
         # setup
         class AnotherModel(django_models.Model):
             class Meta:
-                app_label = 'tests'
+                app_label = "tests"
 
         mock_module.AnotherModel = AnotherModel
         # execute - mix of strings and classes
-        result = grab_models(mock_module, ignore=('MockModel', AnotherModel))
+        result = grab_models(mock_module, ignore=("MockModel", AnotherModel))
         # assert
         assert MockModel not in result
         assert AnotherModel not in result
@@ -215,9 +214,9 @@ class TestGrabModels:
     def test_ignores_admin_pattern(self, mock_module):
         # setup
         cache_known(MockModel)
-        MODEL_CACHE['tests.admin'] = MockModel
+        MODEL_CACHE["tests.admin"] = MockModel
         # execute
-        result = grab_models(mock_module, ignore='tests.admin')
+        result = grab_models(mock_module, ignore="tests.admin")
         # assert
         assert MockModel not in result
 
@@ -231,43 +230,36 @@ class TestGrabModels:
 class TestGetModel:
     """Tests for get_model function."""
 
-    @patch('trim.models.base.apps.get_model')
+    @patch("trim.models.base.apps.get_model")
     def test_forwards_args_to_django_apps(self, mock_get_model):
         # setup
         mock_get_model.return_value = MockModel
         # execute
-        result = get_model('tests', 'MockModel')
+        result = get_model("tests", "MockModel")
         # assert
-        mock_get_model.assert_called_once_with('tests', 'MockModel')
+        mock_get_model.assert_called_once_with("tests", "MockModel")
         assert result == MockModel
 
-    @patch('trim.models.base.apps.get_model')
+    @patch("trim.models.base.apps.get_model")
     def test_forwards_kwargs_to_django_apps(self, mock_get_model):
         # setup
         mock_get_model.return_value = MockModel
         # execute
         result = get_model(
-            app_label='tests',
-            model_name='MockModel',
-            require_ready=False
+            app_label="tests", model_name="MockModel", require_ready=False
         )
         # assert
         mock_get_model.assert_called_once_with(
-            app_label='tests',
-            model_name='MockModel',
-            require_ready=False
+            app_label="tests", model_name="MockModel", require_ready=False
         )
         assert result == MockModel
 
-    @patch('trim.models.base.apps.get_model')
+    @patch("trim.models.base.apps.get_model")
     def test_forwards_mixed_args_and_kwargs(self, mock_get_model):
         # setup
         mock_get_model.return_value = MockModel
         # execute
-        result = get_model('tests', model_name='MockModel')
+        result = get_model("tests", model_name="MockModel")
         # assert
-        mock_get_model.assert_called_once_with(
-            'tests',
-            model_name='MockModel'
-        )
+        mock_get_model.assert_called_once_with("tests", model_name="MockModel")
         assert result == MockModel

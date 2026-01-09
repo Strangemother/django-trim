@@ -1,4 +1,3 @@
-
 from django.template.base import token_kwargs
 
 
@@ -30,18 +29,18 @@ def extract_with_statement(token, parser, splits=None):
     extra = {}
     splits = splits or token.split_contents()[1:]
     for i, word in enumerate(splits):
-        if word == 'with':
-            extra = token_kwargs(splits[i+1:], parser)
+        if word == "with":
+            extra = token_kwargs(splits[i + 1 :], parser)
     return extra
 
+
 from django.template.loader_tags import (
-        TemplateSyntaxError,
-    )
+    TemplateSyntaxError,
+)
 
 
 def parse_tag(parser, token):
-    """REturn bits, the _with_ context,
-    """
+    """REturn bits, the _with_ context,"""
 
     bits = token.split_contents()
 

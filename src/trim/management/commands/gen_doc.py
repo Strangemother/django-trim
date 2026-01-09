@@ -1,14 +1,15 @@
 from django.core.management.base import BaseCommand, CommandError
+
 # from polls.models import Question as Poll
 
 from trim.models import django
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = "Closes the specified poll for voting"
 
     # def add_arguments(self, parser):
-        # parser.add_argument('poll_ids', nargs='+', type=int)
+    # parser.add_argument('poll_ids', nargs='+', type=int)
 
     # def handle(self, *args, **options):
     #     for poll_id in options['poll_ids']:
@@ -23,7 +24,7 @@ class Command(BaseCommand):
     #         self.stdout.write(self.style.SUCCESS('Successfully closed poll "%s"' % poll_id))
 
     def handle(self, *args, **options):
-        self.out('Handle gen doc')
+        self.out("Handle gen doc")
 
     def out(self, *a):
-        self.stdout.write(self.style.SUCCESS(' '.join(map(str, a))))
+        self.stdout.write(self.style.SUCCESS(" ".join(map(str, a))))

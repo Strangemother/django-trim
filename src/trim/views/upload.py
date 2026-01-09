@@ -46,33 +46,31 @@ def unlink_dir_files(dir_path):
         c += len(dirs)
 
     return {
-        'files': res,
-        'old_count': len(res),
-        'new_count': c,
+        "files": res,
+        "old_count": len(res),
+        "new_count": c,
     }
 
 
 def verify_file(asset):
-    res = {
-        'size': asset['output']['size'] == asset['bytesize']
-    }
+    res = {"size": asset["output"]["size"] == asset["bytesize"]}
 
     return res
 
 
 class AssetMixin(object):
 
-    upload_dir_settings_key = 'CHUNK_UPLOAD_DIR'
+    upload_dir_settings_key = "CHUNK_UPLOAD_DIR"
 
     def get_uuid(self):
-        return self.kwargs['uuid']
+        return self.kwargs["uuid"]
 
     def get_asset(self):
         return cache[self.get_uuid()]
 
     def ensure_dir(self, location):
         fullpath = location
-        print('Destination', fullpath)
+        print("Destination", fullpath)
 
         if fullpath.exists() is False:
             fullpath.mkdir(parents=True)
@@ -92,49 +90,49 @@ class AssetMixin(object):
     def get_current_username(self):
         username = self.request.user.username
         if len(username) == 0 and self.request.user.is_anonymous:
-            username = 'anonymous'
+            username = "anonymous"
         return username
 
     def get_parts_dir(self):
         file_uuid = self.get_uuid()
         info = cache[file_uuid]
-        name = info['internal_name']
-        suffix = info['suffix']
+        name = info["internal_name"]
+        suffix = info["suffix"]
         username = self.get_current_username()
         make_name = Path(username) / file_uuid
         return make_name
 
 
 class UploadAssetView(FormView, AssetMixin):
-    """An upload file form view, with two forms.
-    """
+    """An upload file form view, with two forms."""
+
     form_class = FileForm
     template_name = "trim/upload/upload_view.html"
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
-        kwargs['file_chunk_form'] = FileChunkForm
+        kwargs["file_chunk_form"] = FileChunkForm
         return kwargs
 
     def save_asset(self, data):
         file_uuid = str(uuid.uuid4())
-        filename = data['filename']
+        filename = data["filename"]
         if len(filename) == 0:
             filename = "foo.unknown"
 
-        suffix = Path(data['filepath']).suffix
-        name = Path(data['filename']).stem
+        suffix = Path(data["filepath"]).suffix
+        name = Path(data["filename"]).stem
         cache = get_cache()
         cache[file_uuid] = {
-            'filetype': data['filetype'],
-            'bytesize': data['byte_size'],
-            'filepath': data['filepath'],
-            'suffix': suffix,
-            'internal_name': name,
-            'done': False,
+            "filetype": data["filetype"],
+            "bytesize": data["byte_size"],
+            "filepath": data["filepath"],
+            "suffix": suffix,
+            "internal_name": name,
+            "done": False,
         }
 
-        cache[file_uuid]['filename'] = filename
+        cache[file_uuid]["filename"] = filename
         return file_uuid
 
     def form_valid(self, form):
@@ -144,18 +142,20 @@ class UploadAssetView(FormView, AssetMixin):
         data = form.cleaned_data
         file_uuid = self.save_asset(data)
 
-        return JsonResponse({
-                'ok': True,
-                'file_uuid': file_uuid,
-        })
+        return JsonResponse(
+            {
+                "ok": True,
+                "file_uuid": file_uuid,
+            }
+        )
 
 
 class UploadAssetSuccessView(TemplateView, AssetMixin):
-    template_name = 'trim/file/upload_success.html'
+    template_name = "trim/file/upload_success.html"
 
     def get_context_data(self, **kwargs):
         kwargs = super().get_context_data(**kwargs)
-        kwargs['asset'] = self.get_asset()
+        kwargs["asset"] = self.get_asset()
         return kwargs
 
 
@@ -169,8 +169,8 @@ class UploadChunkView(FormView, AssetMixin):
         location = Path(fs.location)
         fullpath = location / filename
 
-        print('Location', location)
-        print('Destination', fullpath)
+        print("Location", location)
+        print("Destination", fullpath)
 
         if fullpath.parent.exists() is False:
             if location.exists():
@@ -183,7 +183,7 @@ class UploadChunkView(FormView, AssetMixin):
     def save_file_part(self, data):
         store_path = self.generate_store_path(data)
         # The stream chunk of file
-        filepart = data['filepart']
+        filepart = data["filepart"]
         ok = self.write_file(filepart, store_path)
         return ok
 
@@ -192,18 +192,17 @@ class UploadChunkView(FormView, AssetMixin):
 
         info = cache.get(file_uuid)
         # The mapped name given to the form before the main upload
-        name = info['internal_name']
-        suffix = info['suffix']
-
+        name = info["internal_name"]
+        suffix = info["suffix"]
 
         # returned from the upload asset initial view.
-        file_uuid = data['file_uuid']
+        file_uuid = data["file_uuid"]
         # The int chunk index
-        index = data['chunk_index']
+        index = data["chunk_index"]
         # The 'part' defines an extended suffix,
         # to flag this is a partial file.
         part = f".part_{index}"
-        filename = f"{name}{suffix}{part}" # received file name
+        filename = f"{name}{suffix}{part}"  # received file name
         make_name = Path(username) / file_uuid / filename
         # fs.location is enforced.
         store_path = self.ensure_fullpath(make_name)
@@ -213,15 +212,13 @@ class UploadChunkView(FormView, AssetMixin):
         data = form.cleaned_data
         ok = self.save_file_part(data)
 
-        return JsonResponse({
-                'ok': True
-            })
+        return JsonResponse({"ok": True})
 
     def write_file(self, file, store_path, storage=None):
-        print('Writing', store_path)
+        print("Writing", store_path)
         storage = storage or self.get_fs()
         # with fs.open(store_path, 'wb+') as stream:
-        with storage.open(store_path, 'wb+') as stream:
+        with storage.open(store_path, "wb+") as stream:
             for chunk in file.chunks():
                 stream.write(chunk)
         return store_path.exists()
@@ -241,25 +238,25 @@ class MergeAssetView(FormView, AssetMixin):
             # Perform auto valid form
             # form = ctx['form']
             form_class = self.get_form_class()
-            form = form_class({"delete_cache": True, 'confirm_merge': True})
+            form = form_class({"delete_cache": True, "confirm_merge": True})
             assert form.is_valid()
             return self.form_valid(form)
         return self.render_to_response(ctx)
 
     def get_success_url(self):
         args = (self.get_uuid(),)
-        return reverse('file:upload_success', args=args)
+        return reverse("file:upload_success", args=args)
 
     def get_out_dir(self):
         fs = self.get_fs()
-        out_path = Path(fs.location) / 'finished' / self.get_current_username()
+        out_path = Path(fs.location) / "finished" / self.get_current_username()
         return out_path
 
     def form_valid(self, form):
         # Confirm post to merge the attached asset
         data = form.cleaned_data
-        accept = data['confirm_merge']
-        delete_cache = data['delete_cache']
+        accept = data["confirm_merge"]
+        delete_cache = data["delete_cache"]
 
         if not accept:
             return super().form_valid(form)
@@ -269,19 +266,19 @@ class MergeAssetView(FormView, AssetMixin):
         if ok:
             return super().form_valid(form)
 
-        print('Bad Path.')
+        print("Bad Path.")
         return super().form_valid(form)
 
     def perform_all(self, delete_cache=False):
         asset = self.get_asset()
         perform_asset = self.resolve_paths()
-        asset['input'] = perform_asset
+        asset["input"] = perform_asset
 
-        dir_path = perform_asset['path']
+        dir_path = perform_asset["path"]
 
         if dir_path.exists():
             output = self.perform(asset, dir_path, out_path)
-            asset['output'] = output
+            asset["output"] = output
             if delete_cache:
                 self.delete_cache(asset)
             return True
@@ -301,14 +298,14 @@ class MergeAssetView(FormView, AssetMixin):
 
     def delete_cache(self, asset):
         # delete the merge parts.
-        print('Delete')
-        p = Path(asset['input']['path'])
+        print("Delete")
+        p = Path(asset["input"]["path"])
         if p.exists() and p.is_dir():
             # scrub it
-            print('Delete', p)
+            print("Delete", p)
             deleted = unlink_dir_files(p)
-            asset['deletion'] = deleted
-            receipt = p / 'delete-receipt.json'
+            asset["deletion"] = deleted
+            receipt = p / "delete-receipt.json"
             receipt.write_text(json.dumps(deleted, indent=4))
         return p.exists() is False
 
@@ -325,13 +322,12 @@ class MergeAssetView(FormView, AssetMixin):
             "path": output_path.relative_to(fs.location).as_posix(),
             "exists": output_path.exists(),
             "size": os.path.getsize(output_path),
-            'sub_path': output_path.relative_to(out_path).as_posix(),
-            'uuid': self.get_uuid(),
+            "sub_path": output_path.relative_to(out_path).as_posix(),
+            "uuid": self.get_uuid(),
         }
 
-        result['output_path'] = Path(result['output']['path']).as_posix()
-        result['done'] = True
-        result['verification'] = verify_file(result)
+        result["output_path"] = Path(result["output"]["path"]).as_posix()
+        result["done"] = True
+        result["verification"] = verify_file(result)
 
         return result
-

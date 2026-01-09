@@ -20,11 +20,14 @@ class JSONResponseMixin(object):
     """
     A mixin that can be used to render a JSON response.
     """
+
     def render_to_json_response(self, context, **response_kwargs):
         """
         Returns a JSON response, transforming 'context' to make the payload.
         """
-        return JsonResponse(context,)
+        return JsonResponse(
+            context,
+        )
 
     def get_data(self):
         """
@@ -34,7 +37,7 @@ class JSONResponseMixin(object):
 
 
 class JsonView(JSONResponseMixin, TemplateView):
-    prop = 'object'
+    prop = "object"
 
     def get_serialiser(self):
         serial_data = JsonSerializer()
@@ -45,11 +48,10 @@ class JsonView(JSONResponseMixin, TemplateView):
         # serial = self.get_serialiser()
         result = self.get_data()
         # r = serial.serialize([result])
-        data = {
-            self.prop:result
-        } if self.prop is not None else result
+        data = {self.prop: result} if self.prop is not None else result
 
         return self.render_to_json_response(data, **kwargs)
+
 
 class JSONListResponseMixin(object):
     fields = None
@@ -61,15 +63,15 @@ class JSONListResponseMixin(object):
         return JsonResponse(context, **response_kwargs)
 
     def get_dump_object(self, obj):
-        keys = self.fields or '__all__'
+        keys = self.fields or "__all__"
 
-        if keys == '__all__':
+        if keys == "__all__":
             r = ()
             fields = obj.keys() if isinstance(obj, dict) else obj._meta.fields
             for field in fields:
-                r += (field.attname, )
+                r += (field.attname,)
             keys = r
-        return { x: getattr(obj, x) for x in keys}
+        return {x: getattr(obj, x) for x in keys}
 
     def get_serialiser(self):
         serial_data = JsonSerializer()
@@ -92,7 +94,7 @@ class JSONListResponseMixin(object):
 
 class JsonListView(JSONResponseMixin, JSONListResponseMixin, DetailView):
     model = None
-    prop = 'object_list'
+    prop = "object_list"
     # Apply any extra dictionary data to append into the response dictionary
     # _after_ serialisation.
     response_extra = None
@@ -101,22 +103,22 @@ class JsonListView(JSONResponseMixin, JSONListResponseMixin, DetailView):
         return self.model.objects.all()
 
     def get_response_extra(self, result):
-        return { 'count': len(result), **(self.response_extra or {})}
+        return {"count": len(result), **(self.response_extra or {})}
 
     def get(self, request, *args, **kwargs):
         result = self.get_results()
         data = {
             self.prop: self.serialize_result(result),
-            **self.get_response_extra(result)
+            **self.get_response_extra(result),
         }
         return self.render_to_json_response(data, **kwargs)
 
 
 class JsonDetailView(JsonListView):
-    prop = 'object'
+    prop = "object"
 
     def get_results(self):
-        return self.model.objects.get(id=self.kwargs['pk'])
+        return self.model.objects.get(id=self.kwargs["pk"])
 
     def get(self, request, *args, **kwargs):
         return self.json_response(**kwargs)
@@ -130,7 +132,5 @@ class JsonDetailView(JsonListView):
         # serial = self.get_serialiser()
         # r = serial.serialize([result])
         r = self.serialize_result([result])
-        data = {
-            self.prop:r[0]
-        }
+        data = {self.prop: r[0]}
         return data

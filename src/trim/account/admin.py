@@ -16,4 +16,3 @@ from trim import admin as tadmin
 
 
 tadmin.register_models(models, ignore=__name__)
-

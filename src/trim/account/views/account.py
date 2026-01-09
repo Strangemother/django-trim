@@ -12,13 +12,12 @@ from django.contrib.auth import update_session_auth_hash
 from .. import models
 
 
-
 class PasswordChangeView(LoginRequiredMixin, shorts.FormView):
     model = shorts.get_user_model()
     form_class = PasswordChangeForm
-    success_url = reverse_lazy('account:profile')
+    success_url = reverse_lazy("account:profile")
 
-    template_name = 'account/user_password_change.html'
+    template_name = "account/user_password_change.html"
 
     def form_valid(self, form):
         form.save()
@@ -27,15 +26,15 @@ class PasswordChangeView(LoginRequiredMixin, shorts.FormView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
-        if self.request.method == 'POST':
-            kwargs['data'] = self.request.POST
+        kwargs["user"] = self.request.user
+        if self.request.method == "POST":
+            kwargs["data"] = self.request.POST
         return kwargs
 
 
 class ProfilePasswordUpdateView(PasswordChangeView):
     # model = CustomUser
-    template_name = 'account/password_update_form.html'
+    template_name = "account/password_update_form.html"
 
 
 def logout_view(request):
@@ -43,39 +42,41 @@ def logout_view(request):
 
 
 class ProfileLogout(LogoutView):
-    template_name = 'account/logged-out.html'
+    template_name = "account/logged-out.html"
+
 
 class ProfileLogin(LoginView):
-    template_name = 'account/login.html'
+    template_name = "account/login.html"
 
 
 class ProfileInactiveAccount(shorts.TemplateView):
-    template_name = 'account/inactive.html'
+    template_name = "account/inactive.html"
+
 
 from django.contrib.auth import views as auth_views
 
 
 class PasswordResetView(auth_views.PasswordResetView):
-    template_name='account/forgotpasswordrecord_form.html'
+    template_name = "account/forgotpasswordrecord_form.html"
 
     def form_valid(self, form):
-        email = form.cleaned_data['email']
+        email = form.cleaned_data["email"]
         # If the email address is a registered user, send the email.
         U = shorts.get_user_model()
         email_field_name = U.get_email_field_name()
         # exists = U.objects.filter(email__iexact=email).exists()
-        active_users = U._default_manager.filter(**{
-            '%s__iexact' % email_field_name: email,
-            'is_active': True,
-        })
+        active_users = U._default_manager.filter(
+            **{
+                "%s__iexact" % email_field_name: email,
+                "is_active": True,
+            }
+        )
 
-        models.ForgotPasswordRecord.objects.create(
-            email_address=email
-            )
+        models.ForgotPasswordRecord.objects.create(email_address=email)
 
         for u in active_users:
             hup = u.has_usable_password()
-            s = f'PasswordResetView::Requested email exists? has_usable_password: {hup}'
+            s = f"PasswordResetView::Requested email exists? has_usable_password: {hup}"
             print(s, u, email)
 
         return super().form_valid(form)
@@ -102,4 +103,4 @@ class PasswordResetView(auth_views.PasswordResetView):
 
 
 class ProfileForgotPasswordSuccessView(shorts.TemplateView):
-    template_name = 'account/password-reset-success-view.html'
+    template_name = "account/password-reset-success-view.html"

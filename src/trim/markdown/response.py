@@ -1,4 +1,3 @@
-
 from django.template.base import Template
 from django.template.response import TemplateResponse
 
@@ -14,12 +13,14 @@ __all__ = [
     "MarkdownTemplateResponse",
     "MarkdownDoubleTemplateResponse",
     "MarkdownReponseMixin",
-    ]
+]
+
 
 class MissingImportError(ImportError):
     """The trim.markdown.MarkdownTemplateResponse required a markdown
     renderer. If missing (at execution time), raise this import error.
     """
+
     pass
 
 
@@ -46,7 +47,7 @@ class MarkdownTemplateResponse(TemplateResponse):
         html = md.convert(source_text)
 
         meta = md.Meta
-        context['metadata'] = meta
+        context["metadata"] = meta
 
         old_inner = template.template
         inner = Template(html, old_inner.origin, old_inner.name, old_inner.engine)
@@ -57,19 +58,19 @@ class MarkdownTemplateResponse(TemplateResponse):
     def get_markdown_object(self, context):
         # context['view']
 
-        if 'view' in context:
-            if hasattr(context['view'], 'get_markdown_object'):
-                return context['view'].get_markdown_object()
+        if "view" in context:
+            if hasattr(context["view"], "get_markdown_object"):
+                return context["view"].get_markdown_object()
         # meta into the context.
         # HTML is the raw
         # https://python-markdown.github.io/extensions/
-        extensions=[
-            'meta',
-            'extra',
+        extensions = [
+            "meta",
+            "extra",
         ]
 
         if markdown_orig is None:
-            raise MissingImportError('markdown module is not installed.')
+            raise MissingImportError("markdown module is not installed.")
 
         md = markdown_orig.Markdown(extensions=extensions)
         return md
@@ -92,7 +93,9 @@ class MarkdownToMarkdownTemplateResponse(MarkdownTemplateResponse):
 
         source_text = template.template.source
         old_inner = template.template
-        inner = Template(source_text, old_inner.origin, old_inner.name, old_inner.engine)
+        inner = Template(
+            source_text, old_inner.origin, old_inner.name, old_inner.engine
+        )
         template.template = inner
         res = template.render(context, self._request)
         return res
@@ -124,24 +127,22 @@ class MarkdownDoubleTemplateResponse(MarkdownTemplateResponse):
         md = self.get_markdown_object(context)
         markdown_html = md.convert(view_source)
         # The markdown template is considered incomplete view template
-        md_inner = Template(markdown_html,
-                            view_inner.origin,
-                            view_inner.name,
-                            view_inner.engine
-                        )
+        md_inner = Template(
+            markdown_html, view_inner.origin, view_inner.name, view_inner.engine
+        )
         view_template.template = md_inner
         meta = md.Meta
 
-        context['metadata'] = meta
-        context['markdown'] = {
+        context["metadata"] = meta
+        context["markdown"] = {
             # render the incomplete markdown HTML to finished HTML
-            'html': view_template.render(context, self._request),
-            'object': md,
-            'meta': meta,
+            "html": view_template.render(context, self._request),
+            "object": md,
+            "meta": meta,
         }
 
         # grab the template name from the meta data within the markdown.
-        layout_template = self.resolve_template(meta['template_name'])
+        layout_template = self.resolve_template(meta["template_name"])
         # The layout (the template_name from the meta of the original view markdown file)
         return layout_template.render(context, self._request)
 

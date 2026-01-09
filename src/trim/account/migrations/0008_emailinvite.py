@@ -10,21 +10,48 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('account', '0007_accountemail_uuid_token'),
+        ("account", "0007_accountemail_uuid_token"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='EmailInvite',
+            name="EmailInvite",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('email_address', models.EmailField(blank=True, help_text='The target user email address', max_length=254, null=True)),
-                ('uuid_token', models.CharField(blank=True, default=uuid.uuid4, max_length=255, null=True)),
-                ('accepted', models.DateTimeField(blank=True, null=True)),
-                ('expires', models.DateTimeField(blank=True, null=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "email_address",
+                    models.EmailField(
+                        blank=True,
+                        help_text="The target user email address",
+                        max_length=254,
+                        null=True,
+                    ),
+                ),
+                (
+                    "uuid_token",
+                    models.CharField(
+                        blank=True, default=uuid.uuid4, max_length=255, null=True
+                    ),
+                ),
+                ("accepted", models.DateTimeField(blank=True, null=True)),
+                ("expires", models.DateTimeField(blank=True, null=True)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

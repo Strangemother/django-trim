@@ -10,17 +10,17 @@ from collections import defaultdict
 import textwrap
 
 
-register = { 'functions': defaultdict(tuple)}
+register = {"functions": defaultdict(tuple)}
 # # create the parser for the "a" command
 # parser_a = subparsers.add_parser('add', help='a help', aliases=['a'])
 # parser_a.add_argument('bar', type=int, help='bar help')
 
+
 class Help:
     primary = "Application primary help"
-    scripts = 'Work with the loaded trim scripts'
-    add = 'Add a script to the loadout'
-    add_filename = 'Provide the file for loading.'
-
+    scripts = "Work with the loaded trim scripts"
+    add = "Add a script to the loadout"
+    add_filename = "Provide the file for loading."
 
 
 class SubHelpFormatter(argparse.HelpFormatter):
@@ -30,11 +30,12 @@ class SubHelpFormatter(argparse.HelpFormatter):
         self._level += 2
 
 
-
 def get_subactions(parser):
     return [
-            action for action in parser._actions if isinstance(action, argparse._SubParsersAction)
-        ]
+        action
+        for action in parser._actions
+        if isinstance(action, argparse._SubParsersAction)
+    ]
 
 
 def print_help(parser, less=False):
@@ -47,21 +48,22 @@ def print_help(parser, less=False):
         for choice, subparser in subparsers_action.choices.items():
             print_sub_help((choice,), subparser, less=less)
 
-DEFAULT_PREFIX ='-'
+
+DEFAULT_PREFIX = "-"
+
 
 def print_sub_help(choices, subparser, depth=0, add_spaces=0, prefix=None, less=False):
     d = 1
     dashes = (DEFAULT_PREFIX if prefix is None else prefix) * (depth + d)
-    spaces = ' ' * (depth + add_spaces)
+    spaces = " " * (depth + add_spaces)
 
-
-    print("{}{} $ APP {}".format(spaces, dashes, ' '.join(choices)))
+    print("{}{} $ APP {}".format(spaces, dashes, " ".join(choices)))
 
     subparser.formatter_class = SubHelpFormatter
 
     if less is False:
         vv = subparser.format_help()
-        spaces = ' ' * (depth + d +3)
+        spaces = " " * (depth + d + 3)
         vv = textwrap.indent(vv, spaces)
         print(vv)
 
@@ -70,11 +72,13 @@ def print_sub_help(choices, subparser, depth=0, add_spaces=0, prefix=None, less=
     for subparsers_action in subparsers_actions:
         # get all subparsers and print help
         for choice, _subparser in subparsers_action.choices.items():
-            print_sub_help(choices + (choice,),
+            print_sub_help(
+                choices + (choice,),
                 _subparser,
-                depth=depth+1 if less is False else d,
+                depth=depth + 1 if less is False else d,
                 less=less,
-                prefix=prefix or '')
+                prefix=prefix or "",
+            )
 
 
 class ConfigMixin(object):
@@ -101,18 +105,18 @@ class ConfigMixin(object):
         return data
 
     def get_conf_path(self):
-        info_point = appdirs.user_data_dir('v1', 'django-trim')
+        info_point = appdirs.user_data_dir("v1", "django-trim")
         # look at base location
-        init_path = Path(info_point) / 'trim-config.json'
+        init_path = Path(info_point) / "trim-config.json"
         conf_path = init_path
 
         if conf_path.exists():
             # load as json, test for pointer.
-            print('Loading path.', conf_path)
+            print("Loading path.", conf_path)
             data = json.loads(conf_path.read_text())
-            pointer = data.get('pointer', None)
+            pointer = data.get("pointer", None)
             if pointer is not None:
-                print('Pointer path.', pointer)
+                print("Pointer path.", pointer)
                 conf_path = Path(pointer)
         return conf_path
 
@@ -136,65 +140,66 @@ class ConfigMixin(object):
 
 class AppFunction(ConfigMixin):
     """The AppFunction loadout helps to build attachments to the argparser.
-     Apply this class to the AppActions app_functions to insanstiate during a prep.
+    Apply this class to the AppActions app_functions to insanstiate during a prep.
 
-     The class is ran against the AppActions to manipulate the argparser options.
-     For convenience a few functions abstract the cli argument. The 'prep' function
-     assumes a `hook` and `setup_args` function exist
+    The class is ran against the AppActions to manipulate the argparser options.
+    For convenience a few functions abstract the cli argument. The 'prep' function
+    assumes a `hook` and `setup_args` function exist
 
-        class ScriptAdd(AppFunction):
-            # parent_name = 'scripts'
-            parent_name = None
-            name = 'add'
-            help = Help.add
+       class ScriptAdd(AppFunction):
+           # parent_name = 'scripts'
+           parent_name = None
+           name = 'add'
+           help = Help.add
 
-            def setup_args(self, parser):
-                parser.add_argument('filename', type=Path, help=Help.add_filename)
-                parser.add_argument('--name', type=str, default=None, )
+           def setup_args(self, parser):
+               parser.add_argument('filename', type=Path, help=Help.add_filename)
+               parser.add_argument('--name', type=str, default=None, )
 
-            def hook(self, parsed, *args, **kwargs):
-                print('hook', parsed)
-                data = self.get_conf()
-                name = parsed.name or parsed.filename.stem
-                data[name] = parsed.filename.absolute().as_posix()
-                self.write_conf_data(data)
+           def hook(self, parsed, *args, **kwargs):
+               print('hook', parsed)
+               data = self.get_conf()
+               name = parsed.name or parsed.filename.stem
+               data[name] = parsed.filename.absolute().as_posix()
+               self.write_conf_data(data)
 
-                return 'res from hook'
+               return 'res from hook'
 
-     If the parent name is none, the function appends as a parser. If the parent
-     name exists, the function appends as a subparser of the positioned parent.
+    If the parent name is none, the function appends as a parser. If the parent
+    name exists, the function appends as a subparser of the positioned parent.
 
-        class Script(AppFunction):
-            name = 'scripts'
-            help = Help.scripts
+       class Script(AppFunction):
+           name = 'scripts'
+           help = Help.scripts
 
 
-        class ScriptAdd(AppFunction):
-            parent_name = 'scripts'
-            name = 'add'
-            help = Help.add
+       class ScriptAdd(AppFunction):
+           parent_name = 'scripts'
+           name = 'add'
+           help = Help.add
 
     """
+
     # parent_name = 'scripts'
     parent_name = None
     name = None
     help = None
     arguments = None
     auto_register = True
-    register_name = 'default'
+    register_name = "default"
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         # print('Register', cls)
         if cls.auto_register is True:
-            register['functions'][cls.register_name] += (cls, )
+            register["functions"][cls.register_name] += (cls,)
 
     def prep(self, app):
         """Prepare the tool with the pre-baked loadouts such as the help and
         scripts.
         """
         parser = self.hook_parser(app)
-        for A in (self.arguments or ()):
+        for A in self.arguments or ():
             A().prep(app)
         if parser:
             self.setup_args(parser)
@@ -203,7 +208,7 @@ class AppFunction(ConfigMixin):
     def hook_parser(self, app):
         pname = self.parent_name
         cname = self.name or self.__class__.__name__.lower()
-        mypath = f'{app.primary_name}.{pname}'
+        mypath = f"{app.primary_name}.{pname}"
         if pname is not None:
             return app.add_sub_to(mypath, self.hook, cname, help=self.help)
         return app.add_sub(self.hook, cname, help=self.help)
@@ -219,20 +224,21 @@ class AppArgument(AppFunction):
     """Append an agument in the form of a switch to an existing parser.
 
 
-        class ScriptsAddFilenameArg(AppArgument):
+    class ScriptsAddFilenameArg(AppArgument):
 
-            target ='scripts.add'
+        target ='scripts.add'
 
-            def setup_args(self, parser):
-                parser.add_argument('filename', type=Path)
-                parser.add_argument('-n', '--name')
+        def setup_args(self, parser):
+            parser.add_argument('filename', type=Path)
+            parser.add_argument('-n', '--name')
 
-        AppArguments do not automatically register to the load lib as they
-        may optionally append to a parent manually.
+    AppArguments do not automatically register to the load lib as they
+    may optionally append to a parent manually.
     """
+
     target = None
     # auto_register = False
-    register_name = 'default'
+    register_name = "default"
 
     def hook_parser(self, app):
         parser = self.get_parser(app, self.target)
@@ -249,12 +255,14 @@ class AppArgument(AppFunction):
 class NoPosition(Exception):
     pass
 
+
 import argparse
 
+
 class AppActions(ConfigMixin):
-    prog_name = 'PROG'
-    primary_name = 'primary'
-    register_name = 'default'
+    prog_name = "PROG"
+    primary_name = "primary"
+    register_name = "default"
 
     def __init__(self):
         self._subparsers = {}
@@ -279,7 +287,7 @@ class AppActions(ConfigMixin):
             AppFuncClass().prep(self)
 
     def get_register_function(self):
-        return register['functions'][self.register_name]
+        return register["functions"][self.register_name]
 
     def get_subparser(self, parser=None, **kwargs):
         """Return the 'subparser' of a given parent parser;
@@ -288,14 +296,14 @@ class AppActions(ConfigMixin):
         """
 
         ## If add is False, the default (standard) cli printout occurs,
-        #if true, (default), the internal printout occurs.
+        # if true, (default), the internal printout occurs.
         ## By default it's on to allow both the default, and the optional
         ### $ appname [nothing]
         # kwargs.setdefault('add_help', False)
         parser = parser or self.get_primary_parser(**kwargs)
 
         if self._subparsers.get(parser) is None:
-            subparsers = parser.add_subparsers(help='sub-command help')
+            subparsers = parser.add_subparsers(help="sub-command help")
             subparsers._parent = parser._name
             self._subparsers[parser] = subparsers
         return self._subparsers[parser]
@@ -323,13 +331,13 @@ class AppActions(ConfigMixin):
     def add_sub_to(self, position_name, func, name, **kwargs):
         """Simplify the creation of a sub loader to an expected position:
 
-            self.add_sub(self.scripts_func, 'add', 'primary.scripts', help=Help.scripts)
+        self.add_sub(self.scripts_func, 'add', 'primary.scripts', help=Help.scripts)
         """
         return self.add_sub(func, name, self.positions[position_name], **kwargs)
 
     def default_caller(self, args):
         print_help(self.get_primary_parser(), less=True)
-        return 'res from default_caller'
+        return "res from default_caller"
 
     def get_primary_parser(self, **kwargs):
         """Return the primary parser for the program. If the internal self.parser
@@ -352,7 +360,7 @@ class AppActions(ConfigMixin):
         return nkw
 
     def get_parser(self, name=None):
-        if name in [None, 'primary', self.primary_name]:
+        if name in [None, "primary", self.primary_name]:
             return self.get_primary_parser()
         try:
             return self.positions[name]

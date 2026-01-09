@@ -3,6 +3,7 @@ Django settings for django-trim testing.
 
 This provides a minimal Django configuration for running tests.
 """
+
 import os
 from pathlib import Path
 

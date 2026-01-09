@@ -15,10 +15,9 @@ except ImportError:
 register = template.Library()
 
 
-
 @register.tag(name="markdown")
 def do_slot(parser, token):
-    nodelist, splits, extra = parse_until(parser, token, ('endmarkdown',))
+    nodelist, splits, extra = parse_until(parser, token, ("endmarkdown",))
     return MarkdownContentNode(nodelist, splits, **extra)
 
 
@@ -29,11 +28,11 @@ class MarkdownContentNode(template.Node):
 
         self.token_template_name = None
         if len(tokens) > 0:
-            self.token_template_name =  template.Variable(tokens[0])
+            self.token_template_name = template.Variable(tokens[0])
         self.extra_context = kw
 
     def render(self, context):
-        print('rendering markdown')
+        print("rendering markdown")
 
         wrap = {}
         md = get_markdown_object(context, **self.extra_context)
@@ -46,7 +45,7 @@ class MarkdownContentNode(template.Node):
             django_markdown_text = self.nodelist.render(context)
             # django_markdown_text = '\n'.join([m.lstrip() for m in django_markdown_text.split('\n')])
 
-            if django_markdown_text[0] == '\n':
+            if django_markdown_text[0] == "\n":
                 django_markdown_text = django_markdown_text[1:]
 
             plain_markdown_text = textwrap.dedent(django_markdown_text)
@@ -54,11 +53,11 @@ class MarkdownContentNode(template.Node):
 
 
 from django.template.loader_tags import (
-        TemplateSyntaxError,
-        construct_relative_path,
-        Node,
-        token_kwargs,
-    )
+    TemplateSyntaxError,
+    construct_relative_path,
+    Node,
+    token_kwargs,
+)
 
 
 @register.tag("markdown.file_2")
@@ -111,7 +110,6 @@ def do_markdown_file(parser, token):
 
     # namemap = options.get("with", {})
 
-
     bits, namemap, options = parse_tag(parser, token)
 
     # bits[1] = construct_relative_path(parser.origin.template_name, bits[1])
@@ -128,8 +126,9 @@ def do_markdown_file(parser, token):
 class IncludeNode(Node):
     context_key = "__include_context"
 
-    def __init__(self, template_bits, *args, extra_context=None,
-                 isolated_context=False, **kwargs):
+    def __init__(
+        self, template_bits, *args, extra_context=None, isolated_context=False, **kwargs
+    ):
         self.template_bits = template_bits
         self.extra_context = extra_context or {}
         self.isolated_context = isolated_context
@@ -152,7 +151,7 @@ class IncludeNode(Node):
         # path to a template. However here we have content to resolve.
         # (like a block...)
 
-        #engine.from_string(...)
+        # engine.from_string(...)
 
         # template = self.template.resolve(context)
         # Does this quack like a Template?
@@ -189,8 +188,11 @@ class IncludeNode(Node):
             return template.render(context)
 
 
-@register.inclusion_tag('trim/templatetags/markdown_file_content.html', takes_context=True,
-                        name='markdown.file')
+@register.inclusion_tag(
+    "trim/templatetags/markdown_file_content.html",
+    takes_context=True,
+    name="markdown.file",
+)
 def src_code_content_template(context, part_a=None, part_b=None, *args, **kwargs):
     """Load and process a markdown file.
 
@@ -227,69 +229,70 @@ def src_code_content_template(context, part_a=None, part_b=None, *args, **kwargs
         # dir, filename.
         filename = part_b
 
-
     info = get_file_contents(filename, base_dir)
-    if info['exists']:
-        content = info['content']
+    if info["exists"]:
+        content = info["content"]
         md = get_markdown_object(context, **kwargs)
-        info['html'] = md.convert(content)
-        info['metadata'] = md.Meta
+        info["html"] = md.convert(content)
+        info["metadata"] = md.Meta
     else:
-        print('Does not exist', info)
+        print("Does not exist", info)
 
     return {
-        'markdown_object': info,
+        "markdown_object": info,
     }
 
 
-@register.inclusion_tag('trim/templatetags/markdown_file_content.html', takes_context=True,
-                        name='markdown.text')
+@register.inclusion_tag(
+    "trim/templatetags/markdown_file_content.html",
+    takes_context=True,
+    name="markdown.text",
+)
 def src_code_content_text(context, *args, **kwargs):
     """Load and process markdown from a var or string.
 
-        {% markdown.text 'This _content_ is rendered through **Markdown**' %}
+    {% markdown.text 'This _content_ is rendered through **Markdown**' %}
     """
 
     content = "\n".join(args)
 
     info = {
-        'filepath': None,
-        'exists': True,
-        'content': content,
+        "filepath": None,
+        "exists": True,
+        "content": content,
     }
 
     md = get_markdown_object(context, **kwargs)
-    info['html'] = md.convert(content)
-    info['metadata'] = md.Meta
+    info["html"] = md.convert(content)
+    info["metadata"] = md.Meta
 
     return {
-        'markdown_object': info,
+        "markdown_object": info,
     }
 
 
 def get_markdown_object(context, **kwargs):
     # context['view']
 
-    md = kwargs.get('markdown_object')
+    md = kwargs.get("markdown_object")
     if md is None:
-        md = context.get('get_markdown_object')
-        if hasattr(context.get('view', {}), 'get_markdown_object'):
-            md = context['view'].get_markdown_object()
+        md = context.get("get_markdown_object")
+        if hasattr(context.get("view", {}), "get_markdown_object"):
+            md = context["view"].get_markdown_object()
 
     if md:
         return md
     # meta into the context.
     # HTML is the raw
     # https://python-markdown.github.io/extensions/
-    extensions=[
-        'meta',
+    extensions = [
+        "meta",
         # 'extra',
         "pymdownx.extra",
-
     ]
 
     if markdown_orig is None:
-        raise MissingImportError('markdown module is not installed.')
+        raise MissingImportError("markdown module is not installed.")
 
     md = markdown_orig.Markdown(extensions=extensions)
     return md
@@ -300,15 +303,15 @@ from pathlib import Path
 
 def get_file_contents(path, parent=None, safe=True):
     if parent is None and safe is True:
-        target = Path('.') / path
+        target = Path(".") / path
         exists = target.exists()
         return {
-            'filepath': target,
-            'exists': exists,
-            'error': 'no parent defined',
+            "filepath": target,
+            "exists": exists,
+            "error": "no parent defined",
         }
     target = Path(parent) / path
-    print('target', target)
+    print("target", target)
     exists = target.exists()
     content = None
     if exists and target.is_file():
@@ -316,8 +319,7 @@ def get_file_contents(path, parent=None, safe=True):
     else:
         exists = False
     return {
-        'filepath': target,
-        'exists': exists,
-        'content': content,
+        "filepath": target,
+        "exists": exists,
+        "content": content,
     }
-

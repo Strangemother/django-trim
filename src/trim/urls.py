@@ -62,24 +62,24 @@ def absolute_reverse(request, name, *args):
 
 
 def absolutify(request, path):
-    base_url =  "{0}://{1}{2}".format(
-            request.scheme,
-            request.get_host(),
-            path,
-            )
+    base_url = "{0}://{1}{2}".format(
+        request.scheme,
+        request.get_host(),
+        path,
+    )
     return base_url
 
 
-def favicon_path(ingress_path='favicon.ico', static_path='images/{ingress_path}'):
+def favicon_path(ingress_path="favicon.ico", static_path="images/{ingress_path}"):
     """Implement your favicon as a static redirect
 
-        # (primary) urls.py
-        from trim.urls import favicon_path
+    # (primary) urls.py
+    from trim.urls import favicon_path
 
-        urlpatterns = [
-            ...
-            favicon_path('favicon.ico'),
-        ]
+    urlpatterns = [
+        ...
+        favicon_path('favicon.ico'),
+    ]
     """
     # Debug prints/breakpoints removed for test stability
     static_path = static_path.format(ingress_path=ingress_path)
@@ -87,11 +87,9 @@ def favicon_path(ingress_path='favicon.ico', static_path='images/{ingress_path}'
 
 
 def static_redirect_path(ingress_path, static_path):
-    return path(ingress_path,
-            RedirectView.as_view(
-                url=staticfiles_storage.url(static_path)
-                )
-            )
+    return path(
+        ingress_path, RedirectView.as_view(url=staticfiles_storage.url(static_path))
+    )
 
 
 urlpatterns = [
@@ -101,34 +99,43 @@ urlpatterns = [
 
 def clean_str(variant):
 
-    if variant in (False, None,):
-        return ''
+    if variant in (
+        False,
+        None,
+    ):
+        return ""
     return variant
 
 
 def path_includes(*names):
     """
 
-        from trim.urls import path_includes_pair as includes
+    from trim.urls import path_includes_pair as includes
 
-        urlpatterns = [
-            path("django-admin/", admin.site.urls),
-        ] + includes(
-                'file',
-                'trim.account',
-            )
+    urlpatterns = [
+        path("django-admin/", admin.site.urls),
+    ] + includes(
+            'file',
+            'trim.account',
+        )
     """
     flat_names = ()
     r = ()
 
     for name in names:
-        if isinstance(name, (list,tuple)) is False:
-            name = (name, )
+        if isinstance(name, (list, tuple)) is False:
+            name = (name,)
         flat_names += name
 
     for fln in flat_names:
-        print('Making', fln)
-        d = (fln, (f'{fln}/', django_include(f'{fln}.urls'),))
+        print("Making", fln)
+        d = (
+            fln,
+            (
+                f"{fln}/",
+                django_include(f"{fln}.urls"),
+            ),
+        )
         r += (d,)
 
     return paths(r)
@@ -154,18 +161,28 @@ def path_includes_pair(*items):
     result = ()
 
     for item in items:
-        if isinstance(item, (list,tuple)) is False:
-                    # module, url.
-            item = (item, f"{item}/",)
+        if isinstance(item, (list, tuple)) is False:
+            # module, url.
+            item = (
+                item,
+                f"{item}/",
+            )
             pairs += (item,)
             continue
         pairs += (item,)
 
     for module, url in pairs:
-        entry = (module, (url, django_include(f'{module}.urls'),))
+        entry = (
+            module,
+            (
+                url,
+                django_include(f"{module}.urls"),
+            ),
+        )
         result += (entry,)
 
     return paths(result)
+
 
 include = path_includes
 
@@ -203,30 +220,37 @@ def path_include(url_name, url_module=None, path_name=None):
     """
     r = ()
     url = url_name
-    if not url.endswith('/'):
-        url = f'{url}/'
+    if not url.endswith("/"):
+        url = f"{url}/"
 
     name = path_name or url_name
-    if name.endswith('/'):
+    if name.endswith("/"):
         name = name[1:]
 
-    urlm = url_module or f'{name}.urls'
-    item = (name, (url, django_include(urlm), ))
+    urlm = url_module or f"{name}.urls"
+    item = (
+        name,
+        (
+            url,
+            django_include(urlm),
+        ),
+    )
     r += (item,)
-
 
     return paths(r)
 
 
-def paths_default(views_module, model_list, ignore_missing_views=True, views=None, **options):
+def paths_default(
+    views_module, model_list, ignore_missing_views=True, views=None, **options
+):
     """
-        from . import models
-        from trim.models import grab_models
+    from . import models
+    from trim.models import grab_models
 
-        urlpatterns = trims.paths_default(views, grab_models(models),
-            ignore_missing_views=True,
-            views=('list', 'create', 'update', 'delete', 'detail',),
-        )
+    urlpatterns = trims.paths_default(views, grab_models(models),
+        ignore_missing_views=True,
+        views=('list', 'create', 'update', 'delete', 'detail',),
+    )
     """
     patterns = {}
 
@@ -235,45 +259,64 @@ def paths_default(views_module, model_list, ignore_missing_views=True, views=Non
         patterns[name] = url
 
     return paths_less(
-            views=views_module,
-            model_list=model_list,
-            ignore_missing_views=ignore_missing_views,
-            **patterns)
+        views=views_module,
+        model_list=model_list,
+        ignore_missing_views=ignore_missing_views,
+        **patterns,
+    )
 
 
 def paths_less(views, model_list, ignore_missing_views=False, **patterns):
     """
-        from . import models
-        from trim.models import grab_models
+    from . import models
+    from trim.models import grab_models
 
-        urlpatterns = trims.paths_less(views, grab_models(models),
-            ignore_missing_views=True,
-            list='',
-            create='new/',
-            update='change/<str:pk>/',
-            delete='delete/<str:pk>/',
-            detail='<str:pk>/',
-        )
+    urlpatterns = trims.paths_less(views, grab_models(models),
+        ignore_missing_views=True,
+        list='',
+        create='new/',
+        update='change/<str:pk>/',
+        delete='delete/<str:pk>/',
+        detail='<str:pk>/',
+    )
 
     """
-    if isinstance(model_list, (list, tuple,)) is False:
+    if (
+        isinstance(
+            model_list,
+            (
+                list,
+                tuple,
+            ),
+        )
+        is False
+    ):
         model_list = (model_list,)
 
     r = []
     for m in model_list:
         name = m.__name__
         unp = name.lower()
-        url_pattern_prefix=f'{unp}/'
-        r += paths_named(views, name,
+        url_pattern_prefix = f"{unp}/"
+        r += paths_named(
+            views,
+            name,
             url_pattern_prefix=url_pattern_prefix,
             ignore_missing_views=ignore_missing_views,
-            url_name_prefix=f'{unp}-',
-            **patterns)
+            url_name_prefix=f"{unp}-",
+            **patterns,
+        )
     return r
 
 
-def paths_named(views, view_prefix=None, ignore_missing_views=False, url_pattern_prefix=None,
-        url_name_prefix=None, **patterns):
+def paths_named(
+    views,
+    view_prefix=None,
+    ignore_missing_views=False,
+    url_pattern_prefix=None,
+    url_name_prefix=None,
+    **patterns,
+):
     """
         urlpatterns = trims.paths_named(views,
             view_prefix='Product',
@@ -301,18 +344,34 @@ def paths_named(views, view_prefix=None, ignore_missing_views=False, url_pattern
     """
     new_patterns = {}
     for app_name, solution in patterns.items():
-        if isinstance(solution, (list, tuple,)) is False:
+        if (
+            isinstance(
+                solution,
+                (
+                    list,
+                    tuple,
+                ),
+            )
+            is False
+        ):
             # only a URL given.
             # convert the 'list' to 'ListView'
             solution = (MAPPED_NAMES.get(app_name), solution)
 
         class_name, url, *extra = solution
-        new_patterns[class_name] = (app_name, url,) + tuple(extra)
+        new_patterns[class_name] = (
+            app_name,
+            url,
+        ) + tuple(extra)
 
-    return paths_dict(views, new_patterns, view_prefix,
+    return paths_dict(
+        views,
+        new_patterns,
+        view_prefix,
         url_pattern_prefix=url_pattern_prefix,
         url_name_prefix=url_name_prefix,
-        ignore_missing_views=ignore_missing_views)
+        ignore_missing_views=ignore_missing_views,
+    )
 
 
 def paths_tuple(views, patterns, **kw):
@@ -349,13 +408,16 @@ def paths_tuple(views, patterns, **kw):
     return paths_dict(views, d_patt, **kw)
 
 
-def paths_dict(views, patterns=None, view_prefix=None,
+def paths_dict(
+    views,
+    patterns=None,
+    view_prefix=None,
     ignore_missing_views=False,
     url_pattern_prefix=None,
     url_name_prefix=None,
     safe_prefix=False,
     **kw,
-    ):
+):
     """Given the views module and the patterns,
     generate a short path list.
 
@@ -403,15 +465,36 @@ def paths_dict(views, patterns=None, view_prefix=None,
                 raise e
             continue
 
-        if isinstance(solution, (list, tuple,)) is False:
+        if (
+            isinstance(
+                solution,
+                (
+                    list,
+                    tuple,
+                ),
+            )
+            is False
+        ):
             current_name = class_name.lower()
             last_name = inspect.getmro(view)[1].__name__
             app_name = MAPPED_CLASS.get(last_name, current_name)
-            solution = (app_name, solution,)
+            solution = (
+                app_name,
+                solution,
+            )
 
         path_name, url, *extra = solution
         _urls = url
-        if isinstance(url, (tuple, list,)) is False:
+        if (
+            isinstance(
+                url,
+                (
+                    tuple,
+                    list,
+                ),
+            )
+            is False
+        ):
             _urls = (url,)
 
         # print('  > ', f'{path_name: <30}', _urls)
@@ -419,11 +502,14 @@ def paths_dict(views, patterns=None, view_prefix=None,
             """Unpack 1 or more URLS to produce a unique function name
             for each url.
             """
-            furl = f'{url_pattern_prefix}{_url}'
-            fname = f'{url_name_prefix}{path_name}'
+            furl = f"{url_pattern_prefix}{_url}"
+            fname = f"{url_name_prefix}{path_name}"
             if (fname in d) or (safe_prefix is True):
                 fname = f"{part_name.lower()}-{fname}"
-            entry = (furl, view,) + tuple(extra)
+            entry = (
+                furl,
+                view,
+            ) + tuple(extra)
             # d[fname] = entry
             d += ((fname, entry),)
 
@@ -432,7 +518,7 @@ def paths_dict(views, patterns=None, view_prefix=None,
     return r
 
 
-def template_view(url_string, html_path, name='template_view'):
+def template_view(url_string, html_path, name="template_view"):
 
     # urlpatterns += [
     #     trims.template_view('mockup/', 'mockup/crystal-geometries.html')
@@ -444,36 +530,36 @@ def template_view(url_string, html_path, name='template_view'):
 def as_templates(**props):
     """
 
-        urlpatterns += trims.as_templates(
-            geoms=('mockup/', 'mockup/crystal-geometries.html')
-        )
+    urlpatterns += trims.as_templates(
+        geoms=('mockup/', 'mockup/crystal-geometries.html')
+    )
 
     """
-    return [template_view(*v, name=k) for k,v in props.items()]
+    return [template_view(*v, name=k) for k, v in props.items()]
 
 
 def paths(path_dict):
     """
-        urlpatterns = trims.paths(
-            list=('', views.ProductListView,),
-            create=('new/', views.ProductCreateView,),
-            update=('change/<str:pk>/', views.ProductUpdateView,),
-            delete=('delete/<str:pk>/', views.ProductDeleteView,),
-            detail=('<str:pk>/', views.ProductDetailView,),
-        )
+    urlpatterns = trims.paths(
+        list=('', views.ProductListView,),
+        create=('new/', views.ProductCreateView,),
+        update=('change/<str:pk>/', views.ProductUpdateView,),
+        delete=('delete/<str:pk>/', views.ProductDeleteView,),
+        detail=('<str:pk>/', views.ProductDetailView,),
+    )
 
-        urlpatterns = [
-            path('', views.ProductListView.as_view(), name='list'),
-            path('new/', views.ProductCreateView.as_view(), name='create'),
-            path('change/<str:pk>/', views.ProductUpdateView.as_view(), name='update'),
-            path('delete/<str:pk>/', views.ProductDeleteView.as_view(), name='delete'),
-            path('<str:pk>/', views.ProductDetailView.as_view(), name='detail'),
-        ]
+    urlpatterns = [
+        path('', views.ProductListView.as_view(), name='list'),
+        path('new/', views.ProductCreateView.as_view(), name='create'),
+        path('change/<str:pk>/', views.ProductUpdateView.as_view(), name='update'),
+        path('delete/<str:pk>/', views.ProductDeleteView.as_view(), name='delete'),
+        path('<str:pk>/', views.ProductDetailView.as_view(), name='detail'),
+    ]
 
     """
     flag_class = View
     r = ()
-    for name, params in path_dict: # dict(path_dict).items():
+    for name, params in path_dict:  # dict(path_dict).items():
         (url, unit, *extra) = params
         func = unit
         if isinstance(func, tuple) is False:
@@ -482,7 +568,9 @@ def paths(path_dict):
                 try:
                     mros = inspect.getmro(unit)
                 except Exception as exc:
-                    import pdb; pdb.set_trace()  # breakpoint 2d6a262ax //
+                    import pdb
+
+                    pdb.set_trace()  # breakpoint 2d6a262ax //
                 if flag_class in mros:
                     view_params = {k: v for d in extra for k, v in d.items()}
                     func = unit.as_view(**view_params)
@@ -496,33 +584,33 @@ def paths(path_dict):
 def error_handlers(name, setup=None, template_dir=None):
     """Implement the urls for the given module name
 
-        error_handers(__name__)
-        error_handers(__name__, {
-                400: 'trims.views.errors.handler400',
-                403: 'trims.views.errors.handler403',
-                404: 'trims.views.errors.handler404',
-                500: 'trims.views.errors.handler500',
-            }, template_dir='trim/errors/'
-        )
+    error_handers(__name__)
+    error_handers(__name__, {
+            400: 'trims.views.errors.handler400',
+            403: 'trims.views.errors.handler403',
+            404: 'trims.views.errors.handler404',
+            500: 'trims.views.errors.handler500',
+        }, template_dir='trim/errors/'
+    )
 
     """
 
     defaults = {
-        400: 'trim.views.errors.handler400',
-        403: 'trim.views.errors.handler403',
-        404: 'trim.views.errors.handler404',
-        500: 'trim.views.errors.handler500',
+        400: "trim.views.errors.handler400",
+        403: "trim.views.errors.handler403",
+        404: "trim.views.errors.handler404",
+        500: "trim.views.errors.handler500",
     }
-    default_template_dir = 'trim/errors/'
+    default_template_dir = "trim/errors/"
     template_dir = template_dir or default_template_dir
     defaults.update(setup or {})
 
     # rebuild the handler function names and set into the target module.
-    _package, _module = name.split('.')
+    _package, _module = name.split(".")
     # class_module_name = f'{_package}.views'
     module = sys.modules[name]
 
     # Push the new handler name into the targt module (shoppinglist.urls)
     for error_num, handler_path in defaults.items():
-        handler_name = f'handler{error_num}'
+        handler_name = f"handler{error_num}"
         setattr(module, handler_name, handler_path)

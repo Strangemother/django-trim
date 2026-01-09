@@ -4,6 +4,7 @@ import unittest
 from django.db import models
 from trim.models import fields
 
+
 class DjangoFieldsTestCase(unittest.TestCase):
     def test_types(self):
         """Test that the URL field is correctly registered."""
@@ -69,5 +70,3 @@ class DjangoFieldsTestCase(unittest.TestCase):
             with self.subTest(name=name):
                 field = getattr(fields, name)()
                 self.assertIsInstance(field, field_type)
-        
-    

@@ -17,8 +17,8 @@ class AccountEmail(models.Model):
 
 
 class Account(models.Model):
-    """Assign a user to the internal system of assets.
-    """
+    """Assign a user to the internal system of assets."""
+
     user = fields.o2o_user()
 
     verified = fields.datetime(nil=True)
@@ -32,7 +32,7 @@ class Account(models.Model):
 class EmailInvite(models.Model):
     user = fields.fk_user()
 
-    email_address = fields.email(help_text='The target user email address')
+    email_address = fields.email(help_text="The target user email address")
     uuid_token = fields.str_uuid()
 
     accepted = fields.datetime(nil=True)
