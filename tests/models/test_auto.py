@@ -1,6 +1,6 @@
+import string
 import sys
 import unittest
-import string
 
 # The auto module is shadowed by the auto() function from fields.
 # Access it directly from sys.modules after importing.

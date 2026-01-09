@@ -9,9 +9,9 @@ from wagtail.api import APIField
 from wagtail.models import Page
 
 # from trim.wagtail import blocks as wbl
-from trim.wagtail.streamfield import (
+from trim.wagtail.streamfield import (  # FieldPanel,; APIField,; # as_fieldpanel_list,; # as_api_fields,
     prepared_streamfield,
-)  # FieldPanel,; APIField,; # as_fieldpanel_list,; # as_api_fields,
+)
 
 # from wagtail import blocks
 
