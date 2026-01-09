@@ -1,6 +1,7 @@
-from ..forms import list as forms
 from django.utils.functional import cached_property
 from django.views.generic import ListView
+
+from ..forms import list as forms
 
 
 class OrderPaginatedListView(ListView):

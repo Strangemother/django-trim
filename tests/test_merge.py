@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from trim.merge import split_i, FileExists, recombine
+from trim.merge import FileExists, recombine, split_i
 
 
 class SplitITest(unittest.TestCase):

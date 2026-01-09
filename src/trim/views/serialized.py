@@ -1,7 +1,7 @@
-from django.http import JsonResponse
-from django.views.generic import ListView, DetailView, TemplateView
 from django.core import serializers
 from django.core.serializers.python import Serializer
+from django.http import JsonResponse
+from django.views.generic import DetailView, ListView, TemplateView
 
 
 class JsonSerializer(Serializer):

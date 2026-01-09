@@ -41,18 +41,19 @@ Short URL to help lighten the load for dev urls
 
 """
 
-from functools import reduce
 import inspect
 import sys
+from functools import reduce
 
-from django.urls import path, include as django_include, reverse
-from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
-from django.views.generic import View, TemplateView
 from django.contrib import admin
-
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.urls import include as django_include
+from django.urls import path, reverse
+from django.views.generic import TemplateView, View
+from django.views.generic.base import RedirectView
 
 from trim.names import *
+
 from . import names as trim_names
 
 

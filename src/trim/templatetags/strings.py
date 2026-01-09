@@ -4,8 +4,9 @@
 {% human_timedelta cart.updated cart.created format="" %}
 """
 
-from django import template
 from datetime import timedelta
+
+from django import template
 from django.urls import reverse
 from django.utils.translation import ngettext
 

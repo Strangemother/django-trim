@@ -1,7 +1,6 @@
 from django import template
 from django.urls import resolve, reverse
 
-
 register = template.Library()
 
 quickform_kwargs = (

@@ -1,5 +1,6 @@
 from trim import views
-from .. import models, forms, dispatch
+
+from .. import dispatch, forms, models
 
 # __all__ = ['EmailInviteCreateView']
 

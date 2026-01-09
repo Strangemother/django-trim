@@ -34,7 +34,20 @@ class MagicModelApp(object):
 
     """
 
-    def __getattr__(self, k):
+    def __getattribute__(self, k):
+        # Use __getattribute__ to intercept all attribute access, not just missing ones
+        # This allows us to properly raise AttributeError for special attributes
+        # before __getattr__ is even called
+        if k.startswith("_") or k in (
+            "__class__",
+            "__dict__",
+            "__wrapped__",
+            "__name__",
+            "__qualname__",
+        ):
+            # Delegate to parent for special attributes
+            return object.__getattribute__(self, k)
+        # Return a MagicModelModel for app name lookups
         return MagicModelModel(k)
 
 
@@ -47,10 +60,25 @@ class MagicModelModel(object):
     """
 
     def __init__(self, appname):
-        self.appname = appname
+        object.__setattr__(self, "appname", appname)
 
-    def __getattr__(self, k):
-        return apps.get_model(self.appname, k)
+    def __getattribute__(self, k):
+        # Use __getattribute__ to intercept all attribute access
+        if k == "appname":
+            # Allow access to our internal appname attribute
+            return object.__getattribute__(self, k)
+        if k.startswith("_") or k in (
+            "__class__",
+            "__dict__",
+            "__wrapped__",
+            "__name__",
+            "__qualname__",
+        ):
+            # Delegate to parent for special attributes
+            return object.__getattribute__(self, k)
+        # Return the model from Django's registry
+        appname = object.__getattribute__(self, "appname")
+        return apps.get_model(appname, k)
 
 
 # class MagicModelProps(object):

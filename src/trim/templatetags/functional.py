@@ -4,8 +4,9 @@
 {% human_timedelta cart.updated cart.created format="" %}
 """
 
-from django import template
 from pydoc import locate
+
+from django import template
 
 register = template.Library()
 

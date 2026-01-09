@@ -1,7 +1,6 @@
 # https://blog.ovalerio.net/archives/1512
 from django import template
 
-
 register = template.Library()
 
 

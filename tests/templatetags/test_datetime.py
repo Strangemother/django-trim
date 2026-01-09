@@ -5,13 +5,10 @@ Simple tests for datetime template tags.
 """
 
 import unittest
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
-from trim.templatetags.datetime import (
-    localize_timedelta,
-    timedelta_tag,
-    str_timedelta_tag,
-)
+from trim.templatetags.datetime import (localize_timedelta, str_timedelta_tag,
+                                        timedelta_tag)
 
 
 class LocalizeTimedeltaTest(unittest.TestCase):

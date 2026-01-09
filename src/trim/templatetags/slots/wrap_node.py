@@ -1,10 +1,9 @@
 from django import template
 from django.template.base import token_kwargs
-
-from .base import parse_until, SlotList
-from .slot_node import DefineSlotNode, SlotNode
-
 from loguru import logger
+
+from .base import SlotList, parse_until
+from .slot_node import DefineSlotNode, SlotNode
 
 log = logger.debug
 warn = logger.warning

@@ -1,17 +1,10 @@
-import os
-import mimetypes
-
-from django.http import StreamingHttpResponse
-from wsgiref.util import FileWrapper
 import mimetypes
 import os
 import re
+from wsgiref.util import FileWrapper
 
 from django.http import StreamingHttpResponse
-from wsgiref.util import FileWrapper
 from django.utils.encoding import smart_str
-
-import re
 
 range_re = re.compile(r"bytes\s*=\s*(\d+)\s*-\s*(\d*)", re.I)
 

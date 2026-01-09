@@ -1,14 +1,11 @@
 from django.db import models
-
 from wagtail import blocks
+from wagtail.admin.panels import FieldPanel
+from wagtail.api import APIField
 from wagtail.fields import StreamField
 from wagtail.images.blocks import ImageChooserBlock
 
-from wagtail.admin.panels import FieldPanel
-from wagtail.api import APIField
-
 from trim.wagtail import blocks as wbl
-
 
 FIELDS_CACHE = {"pre": ()}
 

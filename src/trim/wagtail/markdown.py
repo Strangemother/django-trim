@@ -1,9 +1,9 @@
-from wagtail.core.blocks import StreamBlock
-
-from wagtailmarkdown.blocks import MarkdownBlock as WM_MarkdownBlock
-from trim.wagtail import blocks as t_blocks
-from django.forms.widgets import CheckboxSelectMultiple
 from django import forms
+from django.forms.widgets import CheckboxSelectMultiple
+from wagtail.core.blocks import StreamBlock
+from wagtailmarkdown.blocks import MarkdownBlock as WM_MarkdownBlock
+
+from trim.wagtail import blocks as t_blocks
 
 
 class Styles(t_blocks.StructBlock):

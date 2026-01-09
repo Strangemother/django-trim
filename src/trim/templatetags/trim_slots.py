@@ -1,12 +1,11 @@
 from collections import defaultdict
 
-from django.template import Context
 from django import template
+from django.template import Context
 from django.template.base import token_kwargs
 
 from . import quickforms
 from .shared_tools import parse_until
-
 
 slot_space = defaultdict(dict)
 

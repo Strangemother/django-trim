@@ -1,12 +1,11 @@
-from django.template import Context
 from django import template
+from django.template import Context
 from django.template.base import token_kwargs
-from . import quickforms
-
-# from .slots.base import inject_node
-from .slots.slot_node import parse_until, do_define_slot, do_slot
-
 from loguru import logger
+
+from . import quickforms
+# from .slots.base import inject_node
+from .slots.slot_node import do_define_slot, do_slot, parse_until
 
 log = logger.debug
 

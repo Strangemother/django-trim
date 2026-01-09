@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from django.http import FileResponse
 
 

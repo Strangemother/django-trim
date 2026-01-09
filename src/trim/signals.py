@@ -1,4 +1,5 @@
 from django.db.models import Model
+
 from .models.auto import hook_init_model_mixins
 
 

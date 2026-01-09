@@ -1,10 +1,10 @@
-from django import template
-from django.urls import resolve, reverse
-from django.conf import settings
-
-from .shared_tools import parse_until, parse_tag
-
 import textwrap
+
+from django import template
+from django.conf import settings
+from django.urls import resolve, reverse
+
+from .shared_tools import parse_tag, parse_until
 
 try:
     import markdown as markdown_orig
@@ -52,12 +52,8 @@ class MarkdownContentNode(template.Node):
             return md.convert(plain_markdown_text)
 
 
-from django.template.loader_tags import (
-    TemplateSyntaxError,
-    construct_relative_path,
-    Node,
-    token_kwargs,
-)
+from django.template.loader_tags import (Node, TemplateSyntaxError,
+                                         construct_relative_path, token_kwargs)
 
 
 @register.tag("markdown.file_2")

@@ -1,7 +1,7 @@
-from django.urls import include, path, re_path
 from django.contrib.auth import views as auth_views
-from trim import urls as t_urls
+from django.urls import include, path, re_path
 
+from trim import urls as t_urls
 
 from . import views
 

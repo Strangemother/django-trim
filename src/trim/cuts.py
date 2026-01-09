@@ -1,6 +1,5 @@
 from django.apps import apps
 
-
 __ALL__ = "get_model"
 
 

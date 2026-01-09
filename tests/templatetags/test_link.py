@@ -1,9 +1,9 @@
 import unittest
+from unittest.mock import patch
 
 # from django.test import RequestFactory
 # from django.template import Context
 from trim.templatetags import link as link_tags
-from unittest.mock import patch
 
 
 class TestLinkTemplateTags(unittest.TestCase):

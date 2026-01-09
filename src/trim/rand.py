@@ -1,5 +1,5 @@
-import string
 import random
+import string
 
 
 def rand_str(length=6):

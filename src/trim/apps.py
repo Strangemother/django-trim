@@ -1,6 +1,7 @@
 from django.apps import AppConfig
-from .models.auto import hook_waiting_model_mixins
 from django.db.models.signals import pre_init
+
+from .models.auto import hook_waiting_model_mixins
 
 
 class ShortConfig(AppConfig):
@@ -16,8 +17,9 @@ class ShortConfig(AppConfig):
         pre_init.connect(signals.model_pre_init)
 
 
-from django import apps
 import importlib
+
+from django import apps
 from django.conf import settings
 
 

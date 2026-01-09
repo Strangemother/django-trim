@@ -1,8 +1,8 @@
-from django.template import Context
 from django import template
+from django.forms.boundfield import BoundField
+from django.template import Context
 from django.template.base import token_kwargs
 
-from django.forms.boundfield import BoundField
 from trim import get_model
 
 register = template.Library()

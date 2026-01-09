@@ -6,9 +6,10 @@ This file is automatically loaded by pytest and sets up Django for testing.
 
 import os
 import sys
+from pathlib import Path
+
 import django
 import pytest
-from pathlib import Path
 
 # Add src to path so we can import trim
 BASE_DIR = Path(__file__).resolve().parent.parent

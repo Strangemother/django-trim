@@ -1,6 +1,6 @@
 from django import template
-from .slots.wrap_node import do_wrap
 
+from .slots.wrap_node import do_wrap
 
 register = template.Library()
 

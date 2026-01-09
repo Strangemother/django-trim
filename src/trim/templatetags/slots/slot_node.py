@@ -1,7 +1,7 @@
 from django import template
-from .base import parse_until, SlotList
-
 from loguru import logger
+
+from .base import SlotList, parse_until
 
 log = logger.debug
 

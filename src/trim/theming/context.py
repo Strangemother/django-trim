@@ -1,4 +1,5 @@
 from pathlib import Path
+
 from django.template.base import TemplateSyntaxError
 
 # from django.conf import settings

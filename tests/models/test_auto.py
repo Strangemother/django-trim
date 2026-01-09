@@ -1,5 +1,5 @@
-import unittest
 import string
+import unittest
 
 from trim.models import auto
 

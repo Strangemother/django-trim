@@ -3,9 +3,10 @@ Unit tests for src/trim/models/live.py
 """
 
 import unittest
-from trim.models.live import MagicModelApp, MagicModelModel
-from trim.models import live
 from unittest.mock import patch
+
+from trim.models import live
+from trim.models.live import MagicModelApp, MagicModelModel
 
 
 class TestMagicModelApp(unittest.TestCase):

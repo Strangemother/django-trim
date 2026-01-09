@@ -1,13 +1,11 @@
+from django.contrib.auth import logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import render
 from django.urls import reverse_lazy
 
-from django.shortcuts import render
-from django.contrib.auth import logout
-from django.contrib.auth.views import LogoutView, LoginView
 from trim import views as shorts
-
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
 
 from .. import models
 

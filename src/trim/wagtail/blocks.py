@@ -12,12 +12,12 @@ try:
         from wagtail.core.blocks import *
         from wagtail.core.fields import StreamField
 
-    from wagtail.embeds.blocks import EmbedBlock
-    from wagtail.snippets.blocks import SnippetChooserBlock
-    from wagtail.images.blocks import ImageChooserBlock
-    from wagtail.documents.blocks import DocumentChooserBlock
     from wagtail.admin.panels import FieldPanel
     from wagtail.api import APIField
+    from wagtail.documents.blocks import DocumentChooserBlock
+    from wagtail.embeds.blocks import EmbedBlock
+    from wagtail.images.blocks import ImageChooserBlock
+    from wagtail.snippets.blocks import SnippetChooserBlock
 
     # StreamField
     PREPARED = True

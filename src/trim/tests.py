@@ -17,15 +17,11 @@ Example usage in your tests:
             trim_tests.assert_views_mixin_order(views)
 """
 
+from django.contrib.auth.mixins import (AccessMixin, LoginRequiredMixin,
+                                        PermissionRequiredMixin,
+                                        UserPassesTestMixin)
 from django.test import TestCase
 from django.views.generic.base import View
-from django.contrib.auth.mixins import (
-    AccessMixin,
-    LoginRequiredMixin,
-    PermissionRequiredMixin,
-    UserPassesTestMixin,
-)
-
 
 # Authentication/permission mixins that should come before view classes
 AUTH_MIXINS = (

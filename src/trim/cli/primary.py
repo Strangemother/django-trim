@@ -1,19 +1,13 @@
-from .base import (
-    AppActions,
-    Help as BHelp,
-    AppFunction,
-    AppArgument,
-    ConfigMixin,
-    print_help,
-    SubHelpFormatter,
-)
-from pathlib import Path
-from functools import partial
+import argparse
 import shlex
+from functools import partial
+from pathlib import Path
+
 from trim import execute
 
-import argparse
-
+from .base import AppActions, AppArgument, AppFunction, ConfigMixin
+from .base import Help as BHelp
+from .base import SubHelpFormatter, print_help
 
 # def print_help(parser):
 

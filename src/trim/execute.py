@@ -1,4 +1,5 @@
-import shlex, subprocess
+import shlex
+import subprocess
 import sys
 
 

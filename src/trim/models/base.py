@@ -1,8 +1,9 @@
 # from django.db import models
 
 # Create your models here.
-from django.db import models as django_models
 import inspect
+
+from django.db import models as django_models
 
 
 def is_model(name, unit):

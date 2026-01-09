@@ -1,8 +1,9 @@
 from django.apps import AppConfig
-from trim.apps import live_import
-from . import context
-
 from django.conf import settings
+
+from trim.apps import live_import
+
+from . import context
 
 
 class ThemingConfig(AppConfig):

@@ -1,6 +1,7 @@
 # from wagtail.admin.edit_handlers import StreamFieldPanel
+from wagtail.admin.edit_handlers import (FieldPanel, InlinePanel,
+                                         MultiFieldPanel)
 from wagtail.images.edit_handlers import ImageChooserPanel
-from wagtail.admin.edit_handlers import FieldPanel, MultiFieldPanel, InlinePanel
 
 # from wagtail.snippets.edit_handlers import SnippetChooserPanel
 

@@ -13,7 +13,7 @@ Register your models in the admin -
 from django.contrib import admin
 
 # Register your models here.
-from .models import grab_models, cache_known
+from .models import cache_known, grab_models
 
 
 def register_models(models, ignore=None):

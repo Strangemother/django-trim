@@ -1,8 +1,9 @@
 from django.http import Http404
 
-from .profile import ProfileUpdateView
 from trim import views
-from .. import models, forms
+
+from .. import forms, models
+from .profile import ProfileUpdateView
 
 try:
     from mailroom import mail

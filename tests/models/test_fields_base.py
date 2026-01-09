@@ -3,7 +3,8 @@ Test trim.models.fields.base module.
 """
 
 import pytest
-from trim.models.fields.base import defaults, blank_null
+
+from trim.models.fields.base import blank_null, defaults
 
 
 class TestBlankNull:

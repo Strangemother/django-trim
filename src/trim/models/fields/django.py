@@ -3,15 +3,15 @@
 Django model fields as functions.
 """
 
-from django.db import models
-from trim import rand
-from django.contrib.auth import get_user_model as orig_get_user_model
 from uuid import uuid4 as orig_uuid4
 
 # from django.contrib.contenttypes.fields import GenericForeignKey
 # from django.contrib.contenttypes.models import ContentType
 from django.apps import apps
+from django.contrib.auth import get_user_model as orig_get_user_model
+from django.db import models
 
+from trim import rand
 
 sys_bool = bool
 sys_int = int

@@ -8,7 +8,8 @@ import unittest
 from unittest.mock import patch
 
 from django.db.models import Model
-from trim.signals import str_printer, repr_printer, model_pre_init
+
+from trim.signals import model_pre_init, repr_printer, str_printer
 
 
 class StrPrinterTest(unittest.TestCase):

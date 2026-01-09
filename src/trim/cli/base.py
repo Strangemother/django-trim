@@ -1,14 +1,11 @@
-import os
-
-import json
 import argparse
+import json
+import os
+import textwrap
+from collections import defaultdict
 from pathlib import Path
 
 import appdirs
-
-from collections import defaultdict
-import textwrap
-
 
 register = {"functions": defaultdict(tuple)}
 # # create the parser for the "a" command

@@ -1,10 +1,12 @@
 """Tests for trim.models.base module."""
 
-import pytest
-from django.db import models as django_models
 from unittest.mock import patch
 
-from trim.models.base import is_model, cache_known, grab_models, get_model, MODEL_CACHE
+import pytest
+from django.db import models as django_models
+
+from trim.models.base import (MODEL_CACHE, cache_known, get_model, grab_models,
+                              is_model)
 
 
 # Test fixtures

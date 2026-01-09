@@ -31,8 +31,8 @@ The template needs a form: `templates/userprofile/templates/registration/login.h
 
 """
 
-from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.views import LoginView, LogoutView
 
 
 def is_staff_or_admin(user):

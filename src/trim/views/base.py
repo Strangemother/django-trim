@@ -1,39 +1,23 @@
-import sys
 import inspect
+import sys
 from pathlib import Path
 
 from django.apps import apps
-from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
-from django.views.generic import (
-    ListView,
-    TemplateView,
-    CreateView,
-    UpdateView,
-    DeleteView,
-    DetailView,
-    FormView,
-    View,
-)
-
-from django.views.generic.dates import (
-    ArchiveIndexView,
-    DateDetailView,
-    DayArchiveView,
-    MonthArchiveView,
-    TodayArchiveView,
-    WeekArchiveView,
-    YearArchiveView,
-)
-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import (CreateView, DeleteView, DetailView, FormView,
+                                  ListView, TemplateView, UpdateView, View)
+from django.views.generic.dates import (ArchiveIndexView, DateDetailView,
+                                        DayArchiveView, MonthArchiveView,
+                                        TodayArchiveView, WeekArchiveView,
+                                        YearArchiveView)
 
 Permissioned = PermissionRequiredMixin
 
 
 from trim import names as trim_names
-
 
 ALL = "__ALL__"
 

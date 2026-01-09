@@ -1,17 +1,14 @@
-from wagtail.images import get_image_model_string
-from wagtail.core.fields import StreamField
-
-from wagtail.core.models import Orderable
 from modelcluster.fields import ParentalKey
-
 from wagtail.core import blocks
+from wagtail.core.fields import StreamField
+from wagtail.core.models import Orderable
+from wagtail.images import get_image_model_string
 from wagtail.images.blocks import ImageChooserBlock
-
-from .django import fk
-from .base import defaults
+from wagtail.snippets.models import register_snippet
 
 from .. import panels
-from wagtail.snippets.models import register_snippet
+from .base import defaults
+from .django import fk
 
 register = register_snippet
 

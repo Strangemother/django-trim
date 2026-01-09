@@ -1,19 +1,18 @@
-from pathlib import Path
+import json
+import os
 import uuid
+from pathlib import Path
 
 from django.conf import settings
-from django.core.files.storage import default_storage, FileSystemStorage
+from django.core.files.storage import FileSystemStorage, default_storage
 from django.http import JsonResponse
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
-from ..forms.upload import FileChunkForm, FilesForm, FileForm, MergeConfirmForm
+from ..forms.upload import FileChunkForm, FileForm, FilesForm, MergeConfirmForm
+from ..merge import FileExists, recombine
 from .base import FormView, TemplateView
-
-import os
-import json
-from django.urls import reverse
-from ..merge import recombine, FileExists
 
 HERE = Path(__file__).parent
 ROOT = HERE.parent.parent.parent

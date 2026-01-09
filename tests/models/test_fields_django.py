@@ -14,6 +14,7 @@ from unittest.mock import Mock
 from uuid import UUID
 
 from django.db import models
+
 from trim.models import fields
 
 

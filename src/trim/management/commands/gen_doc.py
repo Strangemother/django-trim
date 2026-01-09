@@ -1,8 +1,9 @@
 from django.core.management.base import BaseCommand, CommandError
 
+from trim.models import django
+
 # from polls.models import Question as Poll
 
-from trim.models import django
 
 
 class Command(BaseCommand):

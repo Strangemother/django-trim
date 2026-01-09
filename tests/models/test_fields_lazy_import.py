@@ -12,18 +12,13 @@ Tests for:
 
 import unittest
 
-from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.db import models
 
 from trim.models import fields
-from trim.models.fields.django import (
-    LazyImport,
-    get_cached,
-    GEN_C,
-    CONTENT_TYPE_FIELD,
-    ID_FIELD,
-)
+from trim.models.fields.django import (CONTENT_TYPE_FIELD, GEN_C, ID_FIELD,
+                                       LazyImport, get_cached)
 
 
 class LazyImportTest(unittest.TestCase):

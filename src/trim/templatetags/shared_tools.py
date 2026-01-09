@@ -34,9 +34,7 @@ def extract_with_statement(token, parser, splits=None):
     return extra
 
 
-from django.template.loader_tags import (
-    TemplateSyntaxError,
-)
+from django.template.loader_tags import TemplateSyntaxError
 
 
 def parse_tag(parser, token):

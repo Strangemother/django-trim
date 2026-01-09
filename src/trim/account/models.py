@@ -1,6 +1,7 @@
 from django.db import models
-from trim.models import fields
+
 from trim import models as trims
+from trim.models import fields
 
 
 class AccountEmail(models.Model):
