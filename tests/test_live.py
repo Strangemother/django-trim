@@ -15,7 +15,7 @@ class TestMagicModelApp(unittest.TestCase):
     def setUp(self):
         self.magic_app = live
 
-    @patch("trim.models.live.apps.get_model")
+    @patch("django.apps.apps.get_model")
     def test_getattr_returns_magic_model_model(self, mock_get_model):
         # Setup: Access an app name attribute
         # Expected: Should return a MagicModelModel instance

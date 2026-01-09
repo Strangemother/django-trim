@@ -231,7 +231,7 @@ class TestGrabModels:
 class TestGetModel:
     """Tests for get_model function."""
 
-    @patch("trim.models.base.apps.get_model")
+    @patch("django.apps.apps.get_model")
     def test_forwards_args_to_django_apps(self, mock_get_model):
         # setup
         mock_get_model.return_value = MockModel
@@ -241,7 +241,7 @@ class TestGetModel:
         mock_get_model.assert_called_once_with("tests", "MockModel")
         assert result == MockModel
 
-    @patch("trim.models.base.apps.get_model")
+    @patch("django.apps.apps.get_model")
     def test_forwards_kwargs_to_django_apps(self, mock_get_model):
         # setup
         mock_get_model.return_value = MockModel
@@ -255,7 +255,7 @@ class TestGetModel:
         )
         assert result == MockModel
 
-    @patch("trim.models.base.apps.get_model")
+    @patch("django.apps.apps.get_model")
     def test_forwards_mixed_args_and_kwargs(self, mock_get_model):
         # setup
         mock_get_model.return_value = MockModel
