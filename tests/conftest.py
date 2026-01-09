@@ -13,6 +13,9 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(BASE_DIR / "src"))
 
+# Add project root to path so tests module can be imported
+sys.path.insert(0, str(BASE_DIR))
+
 # Configure Django settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tests.settings")
 
