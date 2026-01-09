@@ -42,7 +42,10 @@ class AutoModuleTestCase(unittest.TestCase):
         """Test that AutoModelMixin.__init_subclass__ calls hook_model_mixin_class."""
         from unittest.mock import patch
 
-        with patch("trim.models.auto.hook_model_mixin_class") as mock_hook:
+        # Patch using the actual module from sys.modules, not via trim.models.auto
+        # which resolves to the auto() function from fields
+        auto_module = sys.modules["trim.models.auto"]
+        with patch.object(auto_module, "hook_model_mixin_class") as mock_hook:
 
             class TestMixin(auto.AutoModelMixin):
                 class Meta:
