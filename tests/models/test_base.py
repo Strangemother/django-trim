@@ -5,8 +5,7 @@ from unittest.mock import patch
 import pytest
 from django.db import models as django_models
 
-from trim.models.base import (MODEL_CACHE, cache_known, get_model, grab_models,
-                              is_model)
+from trim.models.base import MODEL_CACHE, cache_known, get_model, grab_models, is_model
 
 
 # Test fixtures

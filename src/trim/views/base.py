@@ -7,12 +7,25 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import (CreateView, DeleteView, DetailView, FormView,
-                                  ListView, TemplateView, UpdateView, View)
-from django.views.generic.dates import (ArchiveIndexView, DateDetailView,
-                                        DayArchiveView, MonthArchiveView,
-                                        TodayArchiveView, WeekArchiveView,
-                                        YearArchiveView)
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    FormView,
+    ListView,
+    TemplateView,
+    UpdateView,
+    View,
+)
+from django.views.generic.dates import (
+    ArchiveIndexView,
+    DateDetailView,
+    DayArchiveView,
+    MonthArchiveView,
+    TodayArchiveView,
+    WeekArchiveView,
+    YearArchiveView,
+)
 
 Permissioned = PermissionRequiredMixin
 

@@ -1,4 +1,5 @@
 from django.http import Http404
+
 # from django.utils.translation import ugettext_lazy  as _
 from django.utils.translation import gettext as _
 

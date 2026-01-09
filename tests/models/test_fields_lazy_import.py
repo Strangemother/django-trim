@@ -17,8 +17,13 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from trim.models import fields
-from trim.models.fields.django import (CONTENT_TYPE_FIELD, GEN_C, ID_FIELD,
-                                       LazyImport, get_cached)
+from trim.models.fields.django import (
+    CONTENT_TYPE_FIELD,
+    GEN_C,
+    ID_FIELD,
+    LazyImport,
+    get_cached,
+)
 
 
 class LazyImportTest(unittest.TestCase):

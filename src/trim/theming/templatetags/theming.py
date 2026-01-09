@@ -1,8 +1,15 @@
 from django import template
 from django.template.base import TemplateSyntaxError
-from django.template.loader_tags import (BLOCK_CONTEXT_KEY, BlockContext,
-                                         BlockNode, Node, Template, TextNode,
-                                         construct_relative_path, do_extends)
+from django.template.loader_tags import (
+    BLOCK_CONTEXT_KEY,
+    BlockContext,
+    BlockNode,
+    Node,
+    Template,
+    TextNode,
+    construct_relative_path,
+    do_extends,
+)
 from django.urls import resolve, reverse
 
 from ..context import theming

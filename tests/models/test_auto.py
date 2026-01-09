@@ -1,7 +1,12 @@
-import string
+import sys
 import unittest
+import string
 
-from trim.models import auto
+# The auto module is shadowed by the auto() function from fields.
+# Access it directly from sys.modules after importing.
+import trim.models.auto
+
+auto = sys.modules["trim.models.auto"]
 
 
 class TestModel:

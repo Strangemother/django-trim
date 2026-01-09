@@ -52,8 +52,12 @@ class MarkdownContentNode(template.Node):
             return md.convert(plain_markdown_text)
 
 
-from django.template.loader_tags import (Node, TemplateSyntaxError,
-                                         construct_relative_path, token_kwargs)
+from django.template.loader_tags import (
+    Node,
+    TemplateSyntaxError,
+    construct_relative_path,
+    token_kwargs,
+)
 
 
 @register.tag("markdown.file_2")

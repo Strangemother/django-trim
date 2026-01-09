@@ -5,7 +5,6 @@ from trim.models import django
 # from polls.models import Question as Poll
 
 
-
 class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 

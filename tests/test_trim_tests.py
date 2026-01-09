@@ -3,13 +3,17 @@ Test the trim.tests module itself to ensure testing utilities work correctly.
 """
 
 import pytest
-from django.contrib.auth.mixins import (LoginRequiredMixin,
-                                        PermissionRequiredMixin)
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import DetailView, ListView, UpdateView
 
-from trim.tests import (MixinOrderError, assert_mixin_order,
-                        assert_view_has_permission, assert_view_requires_login,
-                        assert_views_mixin_order, get_view_permissions)
+from trim.tests import (
+    MixinOrderError,
+    assert_mixin_order,
+    assert_view_has_permission,
+    assert_view_requires_login,
+    assert_views_mixin_order,
+    get_view_permissions,
+)
 
 
 # Test views with correct order
