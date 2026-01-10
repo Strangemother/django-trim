@@ -37,6 +37,45 @@ class JSONResponseMixin(object):
 
 
 class JsonView(JSONResponseMixin, TemplateView):
+    """
+
+    A JsonView is a JSONResponseMixin with TemplateView.
+
+    This view serializes data and returns it as a JSON response. 
+    The data can be wrapped in an object with a property name specified by the `prop` attribute, 
+    or returned directly if `prop` is None.
+
+    Attributes:
+        prop (str): The property name to wrap the serialized data in. If None, 
+                    the data is returned unwrapped. Defaults to "object".
+    Methods:
+        get_serialiser(): Returns a JsonSerializer instance for data serialization.
+        get(request, *args, **kwargs): Handles GET requests and returns JSON response
+                                       containing the serialized data.
+    
+    Example:
+
+        class MyJsonView(JsonView):
+            prop = "my_data"
+
+            def get_data(self):
+                return {"key": "value"} 
+
+    This will return a JSON response like:
+    
+        {"my_data": {"key": "value"}}    
+
+    With `prop` set to None, it would return:
+
+        class MyJsonView(JsonView):
+            prop = None
+            ...
+
+    Result:
+        
+        {"key": "value"}
+    """
+
     prop = "object"
 
     def get_serialiser(self):

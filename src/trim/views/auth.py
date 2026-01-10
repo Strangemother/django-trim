@@ -36,12 +36,43 @@ from django.contrib.auth.views import LoginView, LogoutView
 
 
 def is_staff_or_admin(user):
+    """
+    Check if a user has staff or admin privileges.
+
+    Args:
+        user: A Django User object or user-like object with is_superuser 
+              and is_staff attributes.
+
+    Returns:
+        bool: True if the user is either a superuser or staff member, 
+              False otherwise.
+
+    Example:
+
+        >>> from django.contrib.auth.models import User
+        >>> admin_user = User.objects.create(is_superuser=True)
+        >>> is_staff_or_admin(admin_user)
+        True
+        >>> regular_user = User.objects.create(is_staff=False, is_superuser=False)
+        >>> is_staff_or_admin(regular_user)
+        False
+    """
     return user.is_superuser or user.is_staff
 
 
 class IsStaffMixin(UserPassesTestMixin):
     """
-    Allow if the user is staff or admin.
+    A Test function mixin to restrict access to staff or admin users only.
+    If the user is not active or not staff/admin, access is denied.
+
+    Example:
+
+        from trim.views import views
+
+        class StaffOnlyView(views.IsStaffMixin, views.DetailView):
+            model = models.SomeModel
+            template_name = 'someapp/somemodel_detail.html'
+
     """
 
     def test_func(self):

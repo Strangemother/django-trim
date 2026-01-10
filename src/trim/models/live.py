@@ -64,16 +64,8 @@ class MagicModelModel(object):
 
     def __getattribute__(self, k):
         # Use __getattribute__ to intercept all attribute access
-        if k == "appname":
+        if k.startswith("_") or k in ("appname",):
             # Allow access to our internal appname attribute
-            return object.__getattribute__(self, k)
-        if k.startswith("_") or k in (
-            "__class__",
-            "__dict__",
-            "__wrapped__",
-            "__name__",
-            "__qualname__",
-        ):
             # Delegate to parent for special attributes
             return object.__getattribute__(self, k)
         # Return the model from Django's registry

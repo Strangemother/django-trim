@@ -3,8 +3,54 @@ from pathlib import Path
 
 
 def recombine(dir_path, output_filepath=None):
-    """Given a Directory of many parts, merge the files into
-    one.
+    """
+    Merge multiple split file parts from a directory into a single file.
+
+    This function takes a directory containing split file parts (typically with
+    extensions like .part_0, .part_1, etc.) and recombines them into a single
+    output file. The parts are merged in numerical order based on their suffix.
+
+    Args:
+        dir_path (str or Path): The directory path containing the split file parts
+            to be recombined.
+        output_filepath (str or Path, optional): The path where the merged file
+            should be written. Can be either a file path or a directory path.
+            If a directory is provided, the output filename will be derived from
+            the first part file (without the .part_N extension). If None, defaults
+            to the input directory. Defaults to None.
+
+    Returns:
+        Path: The Path object pointing to the created merged file.
+
+    Raises:
+        FileExists: If the output file already exists at the specified location.
+
+    Examples:
+        Merge parts in a directory to the same directory:
+
+            >>> output = recombine('/path/to/parts/')
+            >>> # Creates merged file in /path/to/parts/filename
+
+        Specify a custom output file path:
+
+            >>> output = recombine('/path/to/parts/', '/output/merged.zip')
+            >>> print(output)
+            /output/merged.zip
+
+        Specify an output directory:
+
+            >>> output = recombine('/path/to/parts/', '/output/dir/')
+            >>> # Creates merged file in /output/dir/filename
+
+    Notes:
+        - Part files must have extensions in the format .part_0, .part_1, etc.
+        - Parts are sorted numerically before merging
+        - The function prints progress information during the merge process
+        - The output file size is printed upon completion
+        - If output file exists, FileExists exception is raised to prevent overwriting
+
+    See Also:
+        split_i: Helper function used to extract part numbers for sorting
     """
 
     # get all files

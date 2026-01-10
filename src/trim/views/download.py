@@ -10,6 +10,47 @@ range_re = re.compile(r"bytes\s*=\s*(\d+)\s*-\s*(\d*)", re.I)
 
 
 def stream(request, path):
+    """
+    Stream a file to the client with support for HTTP range requests.
+
+    This function handles file streaming with support for partial content requests
+    (HTTP 206) using the Range header. It's useful for streaming large files,
+    videos, or audio where clients may request specific byte ranges.
+
+    Args:
+        request (HttpRequest): The Django HTTP request object containing headers
+            and metadata for the file request.
+        path (str): The filesystem path to the file that should be streamed.
+
+    Returns:
+        StreamingHttpResponse: A Django streaming response object with appropriate
+            headers set for content type, length, and range information.
+
+    Raises:
+        OSError: If the file at the specified path cannot be accessed or opened.
+        FileNotFoundError: If the file at the specified path does not exist.
+
+    Notes:
+        - Supports HTTP Range requests (RFC 7233) for partial content delivery
+        - Automatically detects content type using mimetypes
+        - Falls back to 'application/octet-stream' if content type cannot be determined
+        - Returns status 206 (Partial Content) for range requests
+        - Returns status 200 for full file requests
+        - Sets 'Accept-Ranges: bytes' to indicate range request support
+
+    Examples:
+
+        from django.views import View
+        class MyFileView(View):
+            def get(self, request, *args, **kwargs):
+                file_path = '/path/to/my/largefile.mp4'
+                return stream(request, file_path)   
+            
+    Security Warning:
+        This function does not perform any path validation or authorization checks.
+        Ensure proper validation is implemented to prevent directory traversal
+        attacks and unauthorized file access before calling this function.
+    """
     range_header = request.META.get("HTTP_RANGE", "").strip()
     range_match = range_re.match(range_header)
     size = os.path.getsize(path)
@@ -39,6 +80,48 @@ def stream(request, path):
 
 
 def stream(request, path):
+    """
+    Stream a file to the client with support for HTTP range requests.
+
+    This function handles file streaming with support for partial content requests
+    (HTTP 206) using the Range header. It's useful for streaming large files,
+    videos, or audio where clients may request specific byte ranges.
+
+    Args:
+        request (HttpRequest): The Django HTTP request object containing headers
+            and metadata for the file request.
+        path (str): The filesystem path to the file that should be streamed.
+
+    Returns:
+        StreamingHttpResponse: A Django streaming response object with appropriate
+            headers set for content type, length, and range information.
+
+    Raises:
+        OSError: If the file at the specified path cannot be accessed or opened.
+        FileNotFoundError: If the file at the specified path does not exist.
+
+    Notes:
+        - Supports HTTP Range requests (RFC 7233) for partial content delivery
+        - Automatically detects content type using mimetypes
+        - Falls back to 'application/octet-stream' if content type cannot be determined
+        - Returns status 206 (Partial Content) for range requests
+        - Returns status 200 for full file requests
+        - Sets 'Accept-Ranges: bytes' to indicate range request support
+        - Content-Length headers are intentionally omitted in this version
+
+    Examples:
+
+        from django.views import View
+        class MyFileView(View):
+            def get(self, request, *args, **kwargs):
+                file_path = '/path/to/my/largefile.mp4'
+                return stream(request, file_path)   
+            
+    Security Warning:
+        This function does not perform any path validation or authorization checks.
+        Ensure proper validation is implemented to prevent directory traversal
+        attacks and unauthorized file access before calling this function.
+    """
     range_header = request.META.get("HTTP_RANGE", "").strip()
     range_match = range_re.match(range_header)
     size = os.path.getsize(path)
