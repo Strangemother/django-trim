@@ -44,8 +44,8 @@ def stream(request, path):
         class MyFileView(View):
             def get(self, request, *args, **kwargs):
                 file_path = '/path/to/my/largefile.mp4'
-                return stream(request, file_path)   
-            
+                return stream(request, file_path)
+
     Security Warning:
         This function does not perform any path validation or authorization checks.
         Ensure proper validation is implemented to prevent directory traversal
@@ -115,8 +115,8 @@ def stream(request, path):
         class MyFileView(View):
             def get(self, request, *args, **kwargs):
                 file_path = '/path/to/my/largefile.mp4'
-                return stream(request, file_path)   
-            
+                return stream(request, file_path)
+
     Security Warning:
         This function does not perform any path validation or authorization checks.
         Ensure proper validation is implemented to prevent directory traversal

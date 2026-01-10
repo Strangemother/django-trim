@@ -40,11 +40,11 @@ def is_staff_or_admin(user):
     Check if a user has staff or admin privileges.
 
     Args:
-        user: A Django User object or user-like object with is_superuser 
+        user: A Django User object or user-like object with is_superuser
               and is_staff attributes.
 
     Returns:
-        bool: True if the user is either a superuser or staff member, 
+        bool: True if the user is either a superuser or staff member,
               False otherwise.
 
     Example:
