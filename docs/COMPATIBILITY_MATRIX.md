@@ -10,6 +10,7 @@
 | 3.11   | ✅             | ✅         | ✅         | ✅         |
 | 3.12   | ✅             | ✅         | ✅         | ✅         |
 | 3.13   | ✅             | ✅         | ✅         | ✅         |
+| 3.14   | ✅             | ✅         | ✅         | ✅         |
 
 **Legend:** ✅ Supported and tested | ❌ Not compatible
 
@@ -23,8 +24,9 @@
 | 3.11   | `py311-dj42` | `py311-dj50` | `py311-dj51` | `py311-dj52` |
 | 3.12   | `py312-dj42` | `py312-dj50` | `py312-dj51` | `py312-dj52` |
 | 3.13   | `py313-dj42` | `py313-dj50` | `py313-dj51` | `py313-dj52` |
+| 3.14   | `py314-dj42` | `py314-dj50` | `py314-dj51` | `py314-dj52` |
 
-**Total:** 20 environment combinations tested in CI/CD
+**Total:** 24 environment combinations tested in CI/CD
 
 ## Quick Recommendations
 
@@ -40,6 +42,7 @@
 - **3.11:** Active until Oct 2027 - good for production  
 - **3.12:** Active until Oct 2028 - recommended
 - **3.13:** Active until Oct 2029 - latest stable
+- **3.14:** Active until Oct 2030 - bleeding edge
 
 ## Django Version Notes
 
