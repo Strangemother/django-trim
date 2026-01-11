@@ -129,7 +129,6 @@ def path_includes(*names):
         flat_names += name
 
     for fln in flat_names:
-        print("Making", fln)
         d = (
             fln,
             (

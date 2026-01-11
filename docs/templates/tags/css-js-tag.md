@@ -1,62 +1,94 @@
 # CSS / JS Tags
 
-Generate a standard include of CSS and JavaScript files to a view with `{% css ... %}` and  `{% js ... %}`
+The `{% link.css %}` and `{% link.js %}` tags generate HTML elements for including static CSS and JavaScript files.
+
+**Syntax:**
+```jinja2
+{% link.css "path/to/file.css" %}
+{% link.js "path/to/file.js" %}
+```
+
+**Example:**
+```jinja2
+{% link.css "css/myapp/styles.css" %}
+{% link.js "js/myapp/script.js" %}
+```
+
+**Output:**
+```html
+<link rel="stylesheet" href="/static/css/myapp/styles.css">
+<script type="text/javascript" src="/static/js/myapp/script.js"></script>
+```
+
+## Contents
+
+- [Usage](#usage)
+- [CSS Files](#css-files)
+- [JavaScript Files](#javascript-files)
+- [Comparison](#comparison)
 
 ## Usage
 
-Basic usage is quick:
+Load the tag in your template:
 
 ```jinja2
 {% load link %}
-{% css "forms/admin.css" %}
-{% js "vendors/foo.min.js" %}
-
-{% link.css "forms/admin.css" %}
-{% link.js "vendors/foo.min.js" %}
 ```
 
-## link.js
-
-Insert a standard `<script type="text/javascript" src="..."></script>` tag into your HTML. The link given is the `static` url of your target file.
+Include a CSS file:
 
 ```jinja2
-{% load link %}
-{% link.js "js/myapp/myfile.js" %}
+{% link.css "css/myapp/styles.css" %}
 ```
 
+Include a JavaScript file:
+
 ```jinja2
-# Becomes
-<script type="text/javascript" src="/static/js/myapp/myfile.js"></script>
+{% link.js "js/myapp/script.js" %}
 ```
 
-This is identical to the standard method, but saves a memory cells:
+## CSS Files
+
+The `{% link.css %}` tag generates a standard stylesheet link element:
 
 ```jinja2
-# AKA {% link.js "js/myapp/myfile.js" %}
+{% link.css "css/forms/admin.css" %}
+```
 
+Output:
+```html
+<link rel="stylesheet" href="/static/css/forms/admin.css">
+```
+
+## JavaScript Files
+
+The `{% link.js %}` tag generates a standard script element:
+
+```jinja2
+{% link.js "js/vendors/library.min.js" %}
+```
+
+Output:
+```html
+<script type="text/javascript" src="/static/js/vendors/library.min.js"></script>
+```
+
+## Comparison
+
+These tags simplify the standard Django static file inclusion pattern:
+
+**Traditional Django:**
+```jinja2
 {% load static %}
-<script type="text/javascript" src="{% static "js/myapp/myfile.js" %}"></script>
+<link rel="stylesheet" href="{% static 'css/myapp/styles.css' %}">
+<script type="text/javascript" src="{% static 'js/myapp/script.js' %}"></script>
 ```
 
-## link.css
-
-Insert a standard `<link href="..."></link>` tag into your HTML. The link given is the `static` url of your target file.
-
+**With Trim:**
 ```jinja2
 {% load link %}
-{% link.css "css/myapp/myfile.css" %}
+{% link.css "css/myapp/styles.css" %}
+{% link.js "js/myapp/script.js" %}
 ```
 
-```jinja2
-# Becomes
-<link type="text/javalink" href="/static/css/myapp/myfile.css"></link>
-```
-
-This is identical to the standard method, but saves a memory cells:
-
-```jinja2
-# AKA {% link.css "css/myapp/myfile.css" %}
-
-{% load static %}
-<link type="text/javalink" href="{% static "css/myapp/myfile.css" %}"></link>
-```
+Both tags use Django's `static` template tag internally, ensuring compatibility with your `STATIC_URL` configuration.

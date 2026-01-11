@@ -9,7 +9,7 @@ If you're new to Django, Hello 👋! If you're experienced with Django, these tu
 
 For you new to Django, this tutorial will walk you through the steps to create a contact form using Django Trim. We'll cover everything from setting up the model to creating the view and URL routing. 
 
-**Note** this is focused on using django-trim to make the process easier, rather than teaching Django itself. If you want to learn Django itself, check out the [official Django tutorial](https://docs.djangoproject.com/en/stable/intro/tutorial01/) (I'll do my best to keep this aligned with it, but it's not a replacement).
+**Note** this is focused on using django-trim to make the process easier, rather than teaching explicit Django itself. If you want to learn Django itself, check out the [official Django tutorial](https://docs.djangoproject.com/en/stable/intro/tutorial01/) (I'll do my best to keep this aligned with it, but it's not a replacement).
 
 Okay on with making a contact form!
 
