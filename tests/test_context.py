@@ -4,9 +4,9 @@ Test trim.context module.
 Tests the context processor functionality for Django templates.
 """
 
-from django.test import RequestFactory, TestCase, override_settings
-from django.urls import path, include
 from django.http import HttpResponse
+from django.test import RequestFactory, TestCase, override_settings
+from django.urls import include, path
 
 
 def dummy_view(request):

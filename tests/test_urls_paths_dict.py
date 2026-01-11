@@ -6,7 +6,7 @@ This function is complex enough to warrant its own test file.
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, patch
 
-from django.views.generic import ListView, CreateView
+from django.views.generic import CreateView, ListView
 
 from trim import urls
 
