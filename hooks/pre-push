@@ -19,36 +19,8 @@ fi
 
 echo ""
 echo "⚠️  Some files need Black formatting!"
+echo "Automatically formatting files..."
+black src/ tests/
 echo ""
-echo "Do you want to:"
-echo "  1) Auto-format and continue push (you'll need to commit again)"
-echo "  2) Auto-format and abort push (recommended - lets you review changes)"
-echo "  3) Abort push without formatting"
-echo ""
-read -p "Choice (1/2/3): " choice
-
-case $choice in
-    1)
-        echo "Formatting files..."
-        black src/ tests/
-        echo ""
-        echo "✅ Files formatted! However, you need to commit these changes."
-        echo "Your push will continue, but the formatted files are uncommitted."
-        exit 0
-        ;;
-    2)
-        echo "Formatting files..."
-        black src/ tests/
-        echo ""
-        echo "✅ Files formatted! Please review, commit, and push again."
-        exit 1
-        ;;
-    3)
-        echo "❌ Push aborted. Please format your code with 'black src/ tests/' before pushing."
-        exit 1
-        ;;
-    *)
-        echo "Invalid choice. Aborting push."
-        exit 1
-        ;;
-esac
+echo "✅ Files formatted! Please review, commit, and push again."
+exit 1
