@@ -2,6 +2,7 @@
 Dedicated test suite for paths_dict function.
 This function is complex enough to warrant its own test file.
 """
+
 from unittest import TestCase
 from unittest.mock import MagicMock, Mock, patch
 
@@ -63,9 +64,7 @@ class TestPathsDict(TestCase):
         mock_views.ListView = Mock()
         patterns = {"CreateView": ("create", "new/")}
         # Execute
-        urls.paths_dict(
-            mock_views, patterns, DetailView=("detail", "<pk>/")
-        )
+        urls.paths_dict(mock_views, patterns, DetailView=("detail", "<pk>/"))
         # Assert - both patterns and kwargs should be processed
         call_arg = mock_paths.call_args[0][0]
         self.assertEqual(len(call_arg), 2)
@@ -78,9 +77,7 @@ class TestPathsDict(TestCase):
         mock_views = Mock()
         mock_views.ProductListView = Mock()
         # Execute
-        urls.paths_dict(
-            mock_views, {"ListView": ("list", "")}, view_prefix="Product"
-        )
+        urls.paths_dict(mock_views, {"ListView": ("list", "")}, view_prefix="Product")
         # Assert - should call getattr with 'ProductListView'
         self.assertTrue(hasattr(mock_views, "ProductListView"))
 
@@ -139,9 +136,7 @@ class TestPathsDict(TestCase):
         mock_views = Mock()
         mock_views.ListView = mock_view
         # Execute
-        urls.paths_dict(
-            mock_views, {"ListView": ("list", "items/", {"extra": "data"})}
-        )
+        urls.paths_dict(mock_views, {"ListView": ("list", "items/", {"extra": "data"})})
         # Assert
         call_arg = mock_paths.call_args[0][0]
         fname, entry = call_arg[0]
@@ -193,9 +188,7 @@ class TestPathsDict(TestCase):
         mock_views = Mock()
         mock_views.ListView = mock_view
         # Execute
-        urls.paths_dict(
-            mock_views, {"ListView": ("list", ("", "items/"))}
-        )
+        urls.paths_dict(mock_views, {"ListView": ("list", ("", "items/"))})
         # Assert
         call_arg = mock_paths.call_args[0][0]
         self.assertEqual(len(call_arg), 2)  # Two URLs
@@ -209,9 +202,7 @@ class TestPathsDict(TestCase):
         mock_views = Mock()
         mock_views.ListView = mock_view
         # Execute
-        urls.paths_dict(
-            mock_views, {"ListView": ("list", "")}, safe_prefix=True
-        )
+        urls.paths_dict(mock_views, {"ListView": ("list", "")}, safe_prefix=True)
         # Assert
         call_arg = mock_paths.call_args[0][0]
         fname, entry = call_arg[0]
@@ -227,9 +218,7 @@ class TestPathsDict(TestCase):
         mock_views.ListView = mock_view
         extra_dict = {"permission": "view"}
         # Execute
-        urls.paths_dict(
-            mock_views, {"ListView": ("list", "", extra_dict)}
-        )
+        urls.paths_dict(mock_views, {"ListView": ("list", "", extra_dict)})
         # Assert
         call_arg = mock_paths.call_args[0][0]
         fname, entry = call_arg[0]

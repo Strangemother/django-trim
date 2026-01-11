@@ -81,9 +81,7 @@ class TestUrls(unittest.TestCase):
         # Execute
         result = urls.path_includes("products")
         # Assert
-        expected = (
-            ("products", ("products/", mock_include.return_value)),
-        )
+        expected = (("products", ("products/", mock_include.return_value)),)
         mock_include.assert_called_once_with("products.urls")
         mock_paths.assert_called_once_with(expected)
         self.assertEqual(result, "result")
@@ -230,7 +228,9 @@ class TestUrls(unittest.TestCase):
         mock_trim_names.get_url.return_value = ""
         mock_paths_less.return_value = "result"
         # Execute
-        urls.paths_default("views", "models", ignore_missing_views=False, views=("list",))
+        urls.paths_default(
+            "views", "models", ignore_missing_views=False, views=("list",)
+        )
         # Assert
         mock_paths_less.assert_called_once_with(
             views="views", model_list="models", ignore_missing_views=False, list=""
