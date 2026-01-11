@@ -1,5 +1,5 @@
 #!/bin/bash
-# Pre-push hook to ensure Black formatting compliance
+# Pre-push hook to ensure Black and isort formatting compliance
 # Install: cp hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
 
 # Git LFS hook (if LFS is configured)
@@ -7,20 +7,39 @@ if command -v git-lfs >/dev/null 2>&1; then
     git lfs pre-push "$@"
 fi
 
+needs_formatting=false
+
 # Black formatting check
 echo ""
 echo "Running Black formatting check..."
-
-# Run Black in check mode
-if ! black --check src/ tests/ 2>&1 | grep -q "would reformat"; then
+if black --check src/ tests/ 2>&1 | grep -q "would reformat"; then
+    echo "⚠️  Some files need Black formatting!"
+    needs_formatting=true
+else
     echo "✅ Black formatting: All files properly formatted"
-    exit 0
+fi
+
+# isort check
+echo ""
+echo "Running isort import sorting check..."
+if ! isort --check-only src/ tests/ >/dev/null 2>&1; then
+    echo "⚠️  Some imports need sorting!"
+    needs_formatting=true
+else
+    echo "✅ isort: All imports properly sorted"
+fi
+
+# If any formatting is needed, apply it
+if [ "$needs_formatting" = true ]; then
+    echo ""
+    echo "Automatically formatting files..."
+    black src/ tests/
+    isort src/ tests/
+    echo ""
+    echo "✅ Files formatted! Please review, commit, and push again."
+    exit 1
 fi
 
 echo ""
-echo "⚠️  Some files need Black formatting!"
-echo "Automatically formatting files..."
-black src/ tests/
-echo ""
-echo "✅ Files formatted! Please review, commit, and push again."
-exit 1
+echo "✅ All formatting checks passed!"
+exit 0
