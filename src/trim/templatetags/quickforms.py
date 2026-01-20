@@ -78,6 +78,8 @@ def quickform(context, view_name, *url_args, **kwargs):
     instance = view(**initkwargs)
     instance.setup(request, *args, **kwargs)
 
+    if not hasattr(instance, 'get_form'):
+        return
     form = instance.get_form()
     # Mutate the form to apply the action URL.
     form.action_url = action_url

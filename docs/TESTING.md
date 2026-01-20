@@ -1,439 +1,379 @@
-# Testing Setup Guide
+# Testing Utilities
 
-Complete testing infrastructure for django-trim with multi-version Django support.
+`trim.tests` provides utilities to validate your view configurations, ensuring best practices and catching common mistakes during development.
+
+## Testing Documentation
+
++ **[Django Version Compatibility](../DJANGO_VERSIONS.md)** - Supported Django versions and testing matrix
++ **[Troubleshooting Guide](./TESTING_TROUBLESHOOTING.md)** - Solutions for common testing issues
++ **[Testing Setup](../TESTING_SETUP_COMPLETE.md)** - Initial test environment setup
+
+## Table of Contents
+
++ [Quick Start](#quick-start)
++ [Mixin Order Validation](#mixin-order-validation)
++ [Permission Inspection](#permission-inspection)
++ [API Reference](#api-reference)
+
+---
 
 ## Quick Start
 
-```bash
-# Install test dependencies
-pip install -e ".[test]"
+Import testing utilities in your test files:
 
-# Run all tests
-./quicktest
+```py
+from django.test import TestCase
+from trim import tests as trim_tests
+from myapp import views
 
-# Run with coverage
-./quicktest -c
-
-# Run specific test
-./quicktest -f test_mixin_order
-```
-
-## Installation
-
-### Install Development Dependencies
-
-```bash
-# Install django-trim with test dependencies
-pip install -e ".[test]"
-
-# Or install manually
-pip install pytest pytest-django pytest-cov pytest-xdist coverage[toml]
-```
-
-### Install Tox (for multi-version testing)
-
-```bash
-pip install tox
-```
-
-## Running Tests
-
-### Using quicktest Script (Recommended)
-
-The `quicktest` script provides an easy interface for running tests:
-
-```bash
-# Basic test run
-./quicktest
-
-# With coverage report
-./quicktest -c
-
-# Run specific test file or function
-./quicktest -f test_trim_tests
-./quicktest -f test_mixin_order
-
-# Run tests in parallel (faster)
-./quicktest -p
-
-# Run with keyword filter
-./quicktest -k "mixin and not slow"
-
-# Exit on first failure
-./quicktest -x
-
-# Show print statements
-./quicktest -s
-
-# Run last failed tests
-./quicktest --lf
-
-# Combine options
-./quicktest -c -p -x
-```
-
-### Multi-Version Django Testing
-
-```bash
-# Test all Django versions with tox
-./quicktest -m
-
-# Or use tox directly
-tox
-
-# Test specific Django version
-./quicktest -v 4.2
-./quicktest -v 5.0
-
-# Test specific environment with tox
-tox -e py311-django42
-tox -e py312-django50
-```
-
-### Using pytest Directly
-
-```bash
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=trim --cov-report=html --cov-report=term-missing
-
-# Run specific test file
-pytest tests/test_trim_tests.py
-
-# Run specific test function
-pytest tests/test_trim_tests.py::TestMixinOrderValidation::test_correct_order_passes
-
-# Run with keyword
-pytest -k "mixin"
-
-# Run in parallel
-pytest -n auto
-
-# Verbose output
-pytest -v
-
-# Stop on first failure
-pytest -x
-
-# Show print statements
-pytest -s
-```
-
-## Test Structure
-
-```
-django-trim/
-├── tests/
-│   ├── __init__.py
-│   ├── conftest.py              # Pytest configuration & fixtures
-│   ├── settings.py              # Django settings for testing
-│   ├── urls.py                  # URL configuration for testing
-│   ├── test_trim_tests.py       # Tests for trim.tests module
-│   ├── test_functional.py       # Functional tests
-│   ├── test_live.py             # Live model tests
-│   ├── test_rand.py             # Random utilities tests
-│   ├── test_urls.py             # URL utilities tests
-│   └── test_updated_params.py   # Parameter update tests
-├── quicktest                     # Quick test runner script
-├── tox.ini                       # Tox configuration for multi-version tests
-└── pyproject.toml                # pytest & coverage configuration
-```
-
-## Coverage Reports
-
-### Generate Coverage Report
-
-```bash
-# HTML report (opens in browser)
-./quicktest -c
-open htmlcov/index.html
-
-# Terminal report
-pytest --cov=trim --cov-report=term-missing
-
-# XML report (for CI)
-pytest --cov=trim --cov-report=xml
-```
-
-### Coverage Configuration
-
-Coverage settings are in `pyproject.toml`:
-
-- **Source**: `src/trim`
-- **Omit**: Tests, migrations, cache files
-- **Branch coverage**: Enabled
-- **Reports**: HTML, XML, terminal
-
-## Supported Django Versions
-
-django-trim supports current Django versions (as of Dec 2025):
-
-| Python | Django 4.2 LTS | Django 5.0 | Django 5.1 | Django 5.2 | Django 6.0 |
-|--------|---------------|-----------|-----------|-----------|-----------|
-| 3.8    | ✓             | ✗         | ✗         | ✗         | ✗         |
-| 3.9    | ✓             | ✗         | ✗         | ✗         | ✗         |
-| 3.10   | ✓             | ✓         | ✓         | ✓         | ✓         |
-| 3.11   | ✓             | ✓         | ✓         | ✓         | ✓         |
-| 3.12   | ✓             | ✓         | ✓         | ✓         | ✓         |
-
-**Key Versions:**
-- **4.2** - LTS (Long Term Support until April 2026) - Most stable
-- **5.2** - Current stable release
-- **6.0** - Latest release
-
-### Test Specific Version
-
-```bash
-# Create isolated environment and test
-./quicktest -v 4.2   # LTS version
-./quicktest -v 5.2   # Current stable
-./quicktest -v 6.0   # Latest
-
-# Or use tox directly
-tox -e py311-dj42    # Django 4.2 LTS
-tox -e py311-dj52    # Django 5.2
-tox -e py311-dj60    # Django 6.0
-```
-
-## Continuous Integration
-
-### GitHub Actions Example
-
-```yaml
-name: Tests
-
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.10', '3.11', '3.12']
-        django-version: ['4.2', '5.0', '5.1']
-        exclude:
-          - python-version: '3.8'
-            django-version: '5.0'
+class ViewSecurityTests(TestCase):
+    def test_view_mixin_order(self):
+        """Ensure mixins are in correct order"""
+        trim_tests.assert_mixin_order(views.SecureEditView)
     
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-    
-    - name: Install dependencies
-      run: |
-        pip install -e ".[test]"
-        pip install "Django~=${{ matrix.django-version }}.0"
-    
-    - name: Run tests
-      run: |
-        pytest --cov=trim --cov-report=xml
-    
-    - name: Upload coverage
-      uses: codecov/codecov-action@v3
+    def test_all_views(self):
+        """Validate all views in the module"""
+        trim_tests.assert_views_mixin_order(views)
 ```
 
-## Writing Tests
+---
 
-### Using trim.tests Utilities
+## Mixin Order Validation
 
-```python
+### Why Order Matters
+
+Django's Method Resolution Order (MRO) determines which methods are called first. Authentication mixins **must** come before view classes to intercept requests:
+
+```py
+# ✅ Correct - Mixin runs first
+class SecureView(IsStaffMixin, UpdateView):
+    pass
+
+# ❌ Wrong - View runs first, bypassing auth check
+class InsecureView(UpdateView, IsStaffMixin):
+    pass
+```
+
+### `assert_mixin_order()`
+
+Validates that authentication/permission mixins appear before view classes in the MRO.
+
+```py
+from trim.tests import assert_mixin_order
+from myapp.views import MySecureView
+
+# In your test:
+def test_mixin_order(self):
+    assert_mixin_order(MySecureView)
+```
+
+**Detects these mixins:**
+- `LoginRequiredMixin`
+- `PermissionRequiredMixin`
+- `UserPassesTestMixin`
+- `AccessMixin`
+- Any subclass (including `trim.views.IsStaffMixin`, `UserOwnedMixin`, etc.)
+
+**Error Output:**
+
+```
+MixinOrderError: Incorrect mixin order in MySecureView:
+  MRO: MySecureView -> UpdateView -> UserPassesTestMixin -> SingleObjectMixin -> View
+  Problems:
+    - UserPassesTestMixin (position 2) appears AFTER UpdateView (position 1)
+  Fix: Place auth mixins BEFORE view classes:
+    class MySecureView(AuthMixin, ViewClass):
+```
+
+### `assert_views_mixin_order()`
+
+Validates **all** view classes in a module:
+
+```py
+from trim.tests import assert_views_mixin_order
+from myapp import views
+
+class ViewTests(TestCase):
+    def test_all_views_configured_correctly(self):
+        """Ensure all views have correct mixin order"""
+        assert_views_mixin_order(views)
+```
+
+**Non-raising mode** (collect all errors):
+
+```py
+def test_collect_errors(self):
+    errors = assert_views_mixin_order(views, raise_exception=False)
+    if errors:
+        self.fail(f"Found {len(errors)} mixin order issues:\n" + 
+                  "\n---\n".join(errors))
+```
+
+---
+
+## Permission Inspection
+
+### `get_view_permissions()`
+
+Extract permission and authentication requirements from a view:
+
+```py
+from trim.tests import get_view_permissions
+
+info = get_view_permissions(MySecureView)
+print(info)
+# {
+#     'permissions': ['myapp.change_model', 'myapp.delete_model'],
+#     'any': False,  # Requires ALL permissions
+#     'login_required': True,
+#     'staff_required': True,
+#     'user_owned': False,
+#     'user_field': None
+# }
+```
+
+**Return Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `permissions` | `list[str]` | Required Django permissions |
+| `any` | `bool` | If `True`, user needs ANY permission (not ALL) |
+| `login_required` | `bool` | View requires authentication |
+| `staff_required` | `bool` | View has a `test_func` (heuristic for staff checks) |
+| `user_owned` | `bool` | View uses `UserOwnedMixin` |
+| `user_field` | `str` or `None` | Field name for user ownership check |
+
+### `assert_view_has_permission()`
+
+Verify a view requires a specific permission:
+
+```py
+from trim.tests import assert_view_has_permission
+
+def test_edit_permission(self):
+    assert_view_has_permission(
+        views.ArticleEditView,
+        'blog.change_article'
+    )
+```
+
+Raises `AssertionError` if the permission is not required.
+
+### `assert_view_requires_login()`
+
+Verify a view requires authentication:
+
+```py
+from trim.tests import assert_view_requires_login
+
+def test_profile_requires_login(self):
+    assert_view_requires_login(views.UserProfileView)
+```
+
+---
+
+## API Reference
+
+### Core Functions
+
+#### `assert_mixin_order(view_class, raise_exception=True)`
+
+Validate mixin order for a single view class.
+
+**Parameters:**
+- `view_class`: View class to validate
+- `raise_exception`: If `False`, returns `(is_valid, error_message)` tuple
+
+**Returns:** `(True, None)` if valid
+
+**Raises:** `MixinOrderError` if invalid (when `raise_exception=True`)
+
+---
+
+#### `assert_views_mixin_order(module, raise_exception=True)`
+
+Validate all views in a module.
+
+**Parameters:**
+- `module`: Python module containing view classes
+- `raise_exception`: If `False`, returns list of error messages
+
+**Returns:** `[]` if all valid, or list of errors
+
+**Raises:** `MixinOrderError` on first error (when `raise_exception=True`)
+
+---
+
+#### `get_view_permissions(view_class)`
+
+Extract permission and auth requirements.
+
+**Parameters:**
+- `view_class`: View class to inspect
+
+**Returns:** `dict` with keys:
+- `permissions`, `any`, `login_required`, `staff_required`, `user_owned`, `user_field`
+
+---
+
+#### `assert_view_has_permission(view_class, permission)`
+
+Assert view requires specific permission.
+
+**Raises:** `AssertionError` if permission not required
+
+---
+
+#### `assert_view_requires_login(view_class)`
+
+Assert view requires authentication.
+
+**Raises:** `AssertionError` if login not required
+
+---
+
+### Helper Functions
+
+#### `get_mro_position(klass, target_class)`
+
+Get position of a class in the Method Resolution Order.
+
+**Returns:** `int` position, or `-1` if not found
+
+---
+
+#### `find_auth_mixins(klass)`
+
+Find all auth/permission mixins in a view.
+
+**Returns:** `list` of `(mixin_class, position)` tuples
+
+---
+
+#### `find_view_base(klass)`
+
+Find the base Django view class.
+
+**Returns:** `(view_class, position)` tuple, or `(None, -1)`
+
+---
+
+## Complete Example
+
+```py
+# tests/test_views.py
 from django.test import TestCase
 from trim import tests as trim_tests
 from myapp import views
 
 
-class ViewSecurityTests(TestCase):
-    """Test view security configuration"""
+class ViewConfigurationTests(TestCase):
+    """Validate view security configuration"""
     
     def test_all_views_mixin_order(self):
-        """Ensure all views have correct mixin order"""
+        """All views must have correct mixin order"""
         trim_tests.assert_views_mixin_order(views)
     
-    def test_specific_view(self):
-        """Test specific view configuration"""
-        trim_tests.assert_mixin_order(views.SecureEditView)
+    def test_article_edit_security(self):
+        """Article edit requires correct permissions"""
+        trim_tests.assert_mixin_order(views.ArticleEditView)
         trim_tests.assert_view_has_permission(
-            views.SecureEditView,
-            'myapp.change_model'
+            views.ArticleEditView,
+            'blog.change_article'
         )
+    
+    def test_profile_requires_auth(self):
+        """User profile requires login"""
+        trim_tests.assert_view_requires_login(views.UserProfileView)
+    
+    def test_admin_dashboard_permissions(self):
+        """Admin dashboard has correct config"""
+        info = trim_tests.get_view_permissions(views.AdminDashboardView)
+        
+        self.assertTrue(info['staff_required'])
+        self.assertTrue(info['login_required'])
+    
+    def test_user_owned_resources(self):
+        """User-owned views configured correctly"""
+        info = trim_tests.get_view_permissions(views.AddressDetailView)
+        
+        self.assertTrue(info['user_owned'])
+        self.assertEqual(info['user_field'], 'owner')
+
+
+class IndividualViewTests(TestCase):
+    """Test specific view configurations"""
+    
+    def test_dangerous_view_not_misconfigured(self):
+        """Critical views must have correct security"""
+        critical_views = [
+            views.DeleteUserView,
+            views.AdminPanelView,
+            views.PaymentProcessView,
+        ]
+        
+        for view in critical_views:
+            with self.subTest(view=view.__name__):
+                trim_tests.assert_mixin_order(view)
+                # Ensure it has SOME form of protection
+                info = trim_tests.get_view_permissions(view)
+                self.assertTrue(
+                    info['permissions'] or 
+                    info['login_required'] or 
+                    info['staff_required'],
+                    f"{view.__name__} has no security configuration!"
+                )
 ```
 
-### Using Fixtures
-
-```python
-def test_with_user(user):
-    """Test with a regular user"""
-    assert user.username == "testuser"
-
-
-def test_with_staff(staff_user):
-    """Test with a staff user"""
-    assert staff_user.is_staff
-
-
-def test_with_admin(admin_user):
-    """Test with an admin user"""
-    assert admin_user.is_superuser
-```
-
-### Pytest Markers
-
-```python
-import pytest
-
-
-@pytest.mark.slow
-def test_slow_operation():
-    """Mark slow tests"""
-    pass
-
-
-@pytest.mark.integration
-def test_integration():
-    """Mark integration tests"""
-    pass
-
-
-# Run with: pytest -m "not slow"  # Skip slow tests
-```
-
-## Troubleshooting
-
-### Tests Not Found
-
-```bash
-# Ensure PYTHONPATH is set
-export PYTHONPATH="$PWD/src:$PYTHONPATH"
-
-# Or use quicktest which handles this
-./quicktest
-```
-
-### Django Not Configured
-
-```bash
-# Ensure settings module is set
-export DJANGO_SETTINGS_MODULE="tests.settings"
-
-# Or use quicktest
-./quicktest
-```
-
-### Import Errors
-
-```bash
-# Install in development mode
-pip install -e .
-
-# Or with test dependencies
-pip install -e ".[test]"
-```
-
-### Coverage Not Working
-
-```bash
-# Ensure pytest-cov is installed
-pip install pytest-cov
-
-# Run with coverage
-pytest --cov=trim
-```
+---
 
 ## Best Practices
 
-### 1. Run Tests Frequently
+### 1. Test Early, Test Often
 
-```bash
-# Quick test during development
-./quicktest -f test_name -x
+Add mixin order tests as soon as you create secured views:
 
-# Full test before commit
-./quicktest -c
+```py
+def test_new_secure_view(self):
+    trim_tests.assert_mixin_order(views.NewSecureView)
 ```
 
-### 2. Write Tests First
+### 2. Use Module-Wide Tests
 
-Follow TDD principles:
-1. Write failing test
-2. Implement feature
-3. Run test to verify
+Test all views at once to catch issues:
 
-### 3. Test Multiple Scenarios
+```py
+def test_all_views(self):
+    trim_tests.assert_views_mixin_order(views)
+```
 
-```python
-def test_view_access_scenarios(self):
-    """Test all access scenarios"""
-    scenarios = [
-        (None, 302),          # Anonymous -> redirect
-        (user, 403),          # Regular user -> forbidden
-        (staff_user, 200),    # Staff -> OK
-        (admin_user, 200),    # Admin -> OK
-    ]
+### 3. Document Security Requirements
+
+Combine tests with documentation:
+
+```py
+def test_payment_view_security(self):
+    """Payment view requires:
+    - User authentication
+    - 'payments.process_payment' permission
+    - User ownership of payment method
+    """
+    view = views.ProcessPaymentView
+    trim_tests.assert_mixin_order(view)
+    trim_tests.assert_view_has_permission(view, 'payments.process_payment')
     
-    for test_user, expected_status in scenarios:
-        with self.subTest(user=test_user):
-            # Test logic here
-            pass
+    info = trim_tests.get_view_permissions(view)
+    self.assertTrue(info['user_owned'])
 ```
 
-### 4. Use Markers
+### 4. CI/CD Integration
 
-```python
-@pytest.mark.unit
-def test_unit():
-    """Fast unit test"""
-    pass
+Run these tests in your continuous integration pipeline to prevent security misconfigurations from reaching production.
 
+---
 
-@pytest.mark.integration
-def test_integration():
-    """Slower integration test"""
-    pass
-```
+## Related
 
-### 5. Parallel Testing
-
-```bash
-# Run tests in parallel for speed
-./quicktest -p
-```
-
-## Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DJANGO_SETTINGS_MODULE` | `tests.settings` | Django settings module |
-| `PYTHONPATH` | `src/` | Python import path |
-| `PYTEST_ARGS` | `""` | Additional pytest arguments |
-| `DJANGO_VERSION` | current | Override Django version |
-
-## Scripts Reference
-
-### quicktest Options
-
-```
--h, --help          Show help message
--c, --coverage      Run with coverage report
--m, --multi         Run tests across all Django versions
--v, --version VER   Test specific Django version
--f, --filter TEST   Run specific test(s)
--p, --parallel      Run tests in parallel
--k, --keyword EXPR  Run tests matching keyword
--x, --exitfirst     Exit on first failure
--s, --stdout        Show print statements
---lf                Run last failed tests
---ff                Run failures first
-```
-
-## Resources
-
-- [pytest Documentation](https://docs.pytest.org/)
-- [pytest-django Documentation](https://pytest-django.readthedocs.io/)
-- [Coverage.py Documentation](https://coverage.readthedocs.io/)
-- [Tox Documentation](https://tox.wiki/)
-- [Django Testing Documentation](https://docs.djangoproject.com/en/stable/topics/testing/)
+- [Authenticated Views](views/authed-views.md)
+- [Views Overview](views/readme.md)
+- [Django Testing](https://docs.djangoproject.com/en/stable/topics/testing/)
