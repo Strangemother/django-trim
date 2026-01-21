@@ -264,12 +264,12 @@ def src_code_content_text(context, *args, **kwargs):
 
     md = get_markdown_object(context, **kwargs)
 
-    if content[0] == '\n':
+    if content[0] == "\n":
         content = content[1:]
 
     plain_markdown_text = textwrap.dedent(content)
-    info['html'] = md.convert(plain_markdown_text)
-    info['metadata'] = md.Meta
+    info["html"] = md.convert(plain_markdown_text)
+    info["metadata"] = md.Meta
 
     return {
         "markdown_object": info,
