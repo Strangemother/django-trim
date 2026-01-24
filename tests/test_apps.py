@@ -4,7 +4,7 @@ Tests for trim.apps module.
 Following best practices with minimal code, PEP8 compliance, and DRY principles.
 """
 
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 
@@ -71,8 +71,8 @@ class TestShortConfigReady:
 
     def test_connects_pre_init_signal(self, mock_hook_waiting, mock_pre_init_connect):
         # setup
-        from trim.apps import ShortConfig
         from trim import signals
+        from trim.apps import ShortConfig
 
         config = ShortConfig.create("trim")
 
