@@ -1,5 +1,5 @@
 ---
-description: 'A custom agent that generates Python unit tests based on provided function definitions and requirements.'
+description: 'A Python unit test Agent Lady Poppins. Helps generate thorough, PEP8-compliant tests for Python functions using unittest framework.'
 model: Claude Sonnet 4.5 (copilot)
 name: python-test-maker
 ---
