@@ -4,11 +4,12 @@
 {% human_timedelta cart.updated cart.created format="" %}
 """
 
-from datetime import timedelta
+from datetime import timedelta,datetime
 
 from django import template
 from django.urls import reverse
 from django.utils.translation import ngettext
+from django.utils import timezone
 
 register = template.Library()
 
@@ -47,9 +48,15 @@ def timedelta_tag(late_time, early_time, *targs, **kwargs):
         {% timedelta event.end event.start as duration %}
         <p>Duration: {{ duration.days }} days, {{ duration.seconds }} seconds</p>
     """
+    late_time = cast_now(late_time)
+    early_time = cast_now(early_time)
     td = late_time - early_time
     return td
 
+def cast_now(value):
+    if str(value).strip().lower() == 'now':
+        value = timezone.now()
+    return value
 
 @register.simple_tag(takes_context=False, name="human_timedelta")
 def str_timedelta_tag(late_time, early_time, *targs, **kwargs):
@@ -89,6 +96,8 @@ def str_timedelta_tag(late_time, early_time, *targs, **kwargs):
         <p>Django's timesince: {{ cart.created|timesince:cart.updated }}</p>
         <p>Trim's human_timedelta: {% human_timedelta cart.updated cart.created %}</p>
     """
+    late_time = cast_now(late_time)
+    early_time = cast_now(early_time)
     td = late_time - early_time
     return localize_timedelta(td)
 

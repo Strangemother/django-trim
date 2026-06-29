@@ -1,4 +1,5 @@
 import textwrap
+import re
 
 from django import template
 from django.conf import settings
@@ -13,6 +14,11 @@ except ImportError:
 
 
 register = template.Library()
+
+
+TABLE_SEPARATOR_RE = re.compile(
+    r"^\s*\|?(?:\s*:?-{3,}:?\s*\|)+\s*:?-{3,}:?\s*\|?\s*$"
+)
 
 
 @register.tag(name="markdown")
@@ -45,10 +51,7 @@ class MarkdownContentNode(template.Node):
             django_markdown_text = self.nodelist.render(context)
             # django_markdown_text = '\n'.join([m.lstrip() for m in django_markdown_text.split('\n')])
 
-            if django_markdown_text[0] == "\n":
-                django_markdown_text = django_markdown_text[1:]
-
-            plain_markdown_text = textwrap.dedent(django_markdown_text)
+            plain_markdown_text = normalize_markdown_text(django_markdown_text)
             return md.convert(plain_markdown_text)
 
 
@@ -231,7 +234,7 @@ def src_code_content_template(context, part_a=None, part_b=None, *args, **kwargs
 
     info = get_file_contents(filename, base_dir)
     if info["exists"]:
-        content = info["content"]
+        content = normalize_markdown_text(info["content"])
         md = get_markdown_object(context, **kwargs)
         info["html"] = md.convert(content)
         info["metadata"] = md.Meta
@@ -264,12 +267,9 @@ def src_code_content_text(context, *args, **kwargs):
 
     md = get_markdown_object(context, **kwargs)
 
-    if content[0] == '\n':
-        content = content[1:]
-
-    plain_markdown_text = textwrap.dedent(content)
-    info['html'] = md.convert(plain_markdown_text)
-    info['metadata'] = md.Meta
+    plain_markdown_text = normalize_markdown_text(content)
+    info["html"] = md.convert(plain_markdown_text)
+    info["metadata"] = md.Meta
 
     return {
         "markdown_object": info,
@@ -301,6 +301,33 @@ def get_markdown_object(context, **kwargs):
 
     md = markdown_orig.Markdown(extensions=extensions)
     return md
+
+
+def normalize_markdown_text(content):
+    if not content:
+        return content
+
+    normalized = textwrap.dedent(content.replace("\r\n", "\n").replace("\r", "\n"))
+    if normalized.startswith("\n"):
+        normalized = normalized[1:]
+
+    lines = normalized.split("\n")
+    normalized_lines = []
+
+    for index, line in enumerate(lines):
+        next_line = lines[index + 1] if index + 1 < len(lines) else ""
+        prev_line = normalized_lines[-1] if normalized_lines else ""
+
+        if _starts_markdown_table(line, next_line) and prev_line.strip():
+            normalized_lines.append("")
+
+        normalized_lines.append(line)
+
+    return "\n".join(normalized_lines)
+
+
+def _starts_markdown_table(line, next_line):
+    return "|" in line and bool(TABLE_SEPARATOR_RE.match(next_line))
 
 
 from pathlib import Path
