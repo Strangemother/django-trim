@@ -1,5 +1,5 @@
-import textwrap
 import re
+import textwrap
 
 from django import template
 from django.conf import settings
@@ -16,9 +16,7 @@ except ImportError:
 register = template.Library()
 
 
-TABLE_SEPARATOR_RE = re.compile(
-    r"^\s*\|?(?:\s*:?-{3,}:?\s*\|)+\s*:?-{3,}:?\s*\|?\s*$"
-)
+TABLE_SEPARATOR_RE = re.compile(r"^\s*\|?(?:\s*:?-{3,}:?\s*\|)+\s*:?-{3,}:?\s*\|?\s*$")
 
 
 @register.tag(name="markdown")

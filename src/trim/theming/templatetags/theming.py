@@ -28,7 +28,7 @@ from django.template.base import token_kwargs
 @register.tag("theme")
 def do_theme_extends(parser, token):
     """
-        django/template/loader_tags.py:278
+    django/template/loader_tags.py:278
     """
     # replace the token with the string tokeniser.
     bits = token.split_contents()
@@ -83,7 +83,7 @@ class ThemeExtendsNode(Node):
         self, nodelist, template_vars, template_dirs=None, extra_context=None, **kw
     ):
         self.nodelist = nodelist
-        self.parent_name = kw.get('parent_name', None) or None
+        self.parent_name = kw.get("parent_name", None) or None
         self.template_vars = template_vars
         self.template_dirs = template_dirs
         self.blocks = {n.name: n for n in nodelist.get_nodes_by_type(BlockNode)}
