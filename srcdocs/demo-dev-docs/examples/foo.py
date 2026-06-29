@@ -16,4 +16,4 @@ def without_leaf(full_path, partial_path):
         if part == rev_root[i]:
             continue
 
-    return Path(*tuple(reversed(rev_root[i+1:])))
+    return Path(*tuple(reversed(rev_root[i + 1 :])))
