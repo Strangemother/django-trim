@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static link %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trim the boilerplate from your Django projects with explicit, compatible shortcuts.">
+    {% link.css "css/home/home.css" %}
+    <title>Django Trim | Less boilerplate, more Django</title>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="{% url 'home:home' %}">
+            <img src="{% static 'images/home/django-trim-logo.png' %}" alt="Django Trim logo">
+            <span>Django Trim</span>
+        </a>
+        <nav aria-label="Primary navigation">
+            <a href="#quick-start">Quick start</a>
+            <a href="#toolkit">Toolkit</a>
+            <a class="nav-github" href="https://github.com/Strangemother/django-trim">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="page-layout">
+        {% include "home/_component_menu.html" %}
+        <div class="page-content">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <p class="kicker">A productivity layer for Django</p>
+                <h1 id="hero-title">Less boilerplate.<br><em>More Django.</em></h1>
+                <p class="lede">Trim the repetitive edges of everyday Django work with small, explicit helpers that stay close to the framework you already know.</p>
+                <div class="hero-actions">
+                    <a class="button button-primary" href="#quick-start">Get started <span aria-hidden="true">↓</span></a>
+                    <a class="button button-quiet" href="https://github.com/Strangemother/django-trim">View source <span aria-hidden="true">↗</span></a>
+                </div>
+            </div>
+            <div class="hero-note">
+                <span class="note-line"></span>
+                <p>Convenient and thoughtless.<br>Explicit when it matters.</p>
+            </div>
+        </section>
+
+        <section class="badges" aria-label="Project status">
+            <img src="https://img.shields.io/github/actions/workflow/status/Strangemother/django-trim/python-publish.yml?label=build" alt="Build status">
+            <img src="https://img.shields.io/pypi/v/django-trim?label=PyPI" alt="Latest PyPI version">
+            <img src="https://img.shields.io/pypi/dm/django-trim?label=downloads%2Fmonth" alt="Monthly PyPI downloads">
+            <img src="https://img.shields.io/pypi/pyversions/django-trim?label=python" alt="Supported Python versions">
+            <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="MIT license">
+        </section>
+
+        <section class="quick-start" id="quick-start" aria-labelledby="quick-start-title">
+            <div class="section-intro">
+                <p class="kicker">Start small</p>
+                <h2 id="quick-start-title">Install once.<br>Trim as you go.</h2>
+                <p>There is no new architecture to learn. Add the package, opt into the app, and keep using Django's familiar building blocks.</p>
+            </div>
+            <div class="code-stack">
+                <div class="code-block">
+                    <div class="code-label"><span class="dot"></span> terminal</div>
+                    <code>pip install django-trim</code>
+                </div>
+                <div class="code-block">
+                    <div class="code-label"><span class="dot"></span> settings.py</div>
+                    <pre><code>INSTALLED_APPS = [
+    <span class="code-muted"># ...</span>
+    <span class="code-string">'trim'</span>,
+]</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="toolkit" id="toolkit" aria-labelledby="toolkit-title">
+            <div class="section-heading">
+                <p class="kicker">The toolkit</p>
+                <h2 id="toolkit-title">The Django parts you use every day, made lighter.</h2>
+            </div>
+            <div class="tool-grid">
+                <article class="tool-card tool-card-featured">
+                    <span class="tool-index">01 / models</span>
+                    <h3>Functional fields</h3>
+                    <p>Readable shortcuts for common model fields, plus mixins that add behavior without changing the original model.</p>
+                    <a href="https://github.com/Strangemother/django-trim/tree/main/docs/models">Explore models <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="tool-card">
+                    <span class="tool-index">02 / views</span>
+                    <h3>Focused views</h3>
+                    <p>List, auth, JSON, upload, and download views that compose naturally with Django.</p>
+                    <a href="https://github.com/Strangemother/django-trim/tree/main/docs/views">Explore views <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="tool-card">
+                    <span class="tool-index">03 / forms</span>
+                    <h3>Quick forms</h3>
+                    <p>Functional fields and the quickform tag for moving from model to useful form with less ceremony.</p>
+                    <a href="https://github.com/Strangemother/django-trim/tree/main/docs/forms">Explore forms <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="tool-card">
+                    <span class="tool-index">04 / URLs</span>
+                    <h3>Named patterns</h3>
+                    <p>Generate URL patterns from view classes with clear, predictable helpers.</p>
+                    <a href="https://github.com/Strangemother/django-trim/tree/main/docs/urls">Explore URLs <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="tool-card">
+                    <span class="tool-index">05 / templates</span>
+                    <h3>Composed templates</h3>
+                    <p>Link, wrap, slot, and other template tags for keeping reusable interfaces tidy.</p>
+                    <a href="https://github.com/Strangemother/django-trim/tree/main/docs/templates">Explore templates <span aria-hidden="true">↗</span></a>
+                </article>
+                <article class="tool-card">
+                    <span class="tool-index">06 / admin</span>
+                    <h3>Less registration</h3>
+                    <p>Register every model in an app at once and get back to the work that matters.</p>
+                    <a href="https://github.com/Strangemother/django-trim/blob/main/docs/admin.md">Explore admin <span aria-hidden="true">↗</span></a>
+                </article>
+            </div>
+        </section>
+
+        <section class="code-example" aria-labelledby="example-title">
+            <div>
+                <p class="kicker">A small example</p>
+                <h2 id="example-title">The same Django.<br>Fewer keystrokes.</h2>
+            </div>
+            <div class="code-block example-block">
+                <div class="code-label"><span class="dot"></span> models.py</div>
+                <pre><code><span class="code-keyword">from</span> trim.models <span class="code-keyword">import</span> fields
+
+<span class="code-keyword">class</span> HenBasket(models.Model):
+    chicken = fields.fk(<span class="code-string">'Chicken'</span>)
+    owner = fields.user_fk()
+    full = fields.bool_false()
+    eggs = fields.int(<span class="code-number">6</span>)</code></pre>
+            </div>
+        </section>
+
+        <section class="docs-cta" aria-labelledby="docs-title">
+            <p class="kicker">Keep exploring</p>
+            <h2 id="docs-title">Your next Django shortcut<br>is probably in the docs.</h2>
+            <a class="button button-primary" href="https://github.com/Strangemother/django-trim/tree/main/docs">Browse the documentation <span aria-hidden="true">↗</span></a>
+        </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <span>django-trim</span>
+        <span>MIT licensed · Built for people who like Django.</span>
+        <a href="https://github.com/Strangemother/django-trim">GitHub <span aria-hidden="true">↗</span></a>
+    </footer>
+</body>
+</html>

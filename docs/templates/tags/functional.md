@@ -239,7 +239,7 @@ The tag handles different return types:
 
 ## Best Practices
 
-### ✅ DO
+### OK
 
 ```django
 <!-- Use with known, safe functions -->
@@ -252,7 +252,7 @@ The tag handles different return types:
 {% functional 'len' items %}
 ```
 
-### ❌ DON'T
+### NEVER
 
 ```django
 <!-- Don't use with user input -->

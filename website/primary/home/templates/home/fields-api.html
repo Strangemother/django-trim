@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load link %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A practical API reference for django-trim model field helpers.">
+    {% link.css "css/home/home.css" %}
+    <title>Fields API | Django Trim</title>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="{% url 'home:home' %}">
+            <span>Django Trim</span>
+        </a>
+        <nav aria-label="Primary navigation">
+            <a href="{% url 'home:home' %}">Home</a>
+            <a href="{% url 'home:fields' %}">Fields guide</a>
+            <a class="nav-github" href="https://github.com/Strangemother/django-trim">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="page-layout component-page api-page">
+        {% include "home/_component_menu.html" %}
+        <div class="page-content">
+            <section class="component-hero" aria-labelledby="api-title">
+                <p class="kicker">Models / fields / API</p>
+                <h1 id="api-title">The fields API.</h1>
+                <p class="component-lede">A practical reference for importing and using the most useful helpers from <code>trim.models.fields</code>.</p>
+                <div class="component-meta">
+                    <span>Copy the code</span>
+                    <span>Use familiar Django models</span>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="import-title">
+                <p class="kicker">01 / Import</p>
+                <h2 id="import-title">Bring the field vocabulary into your model.</h2>
+                <p>The public entry point is the <code>fields</code> object from <code>trim.models</code>. Each helper returns a normal Django model field, so migrations and model behavior remain part of Django's usual workflow.</p>
+                <div class="code-block doc-code">
+                    <div class="code-label"><span class="dot"></span> models.py</div>
+                    <pre><code><span class="code-keyword">from</span> django.db <span class="code-keyword">import</span> models
+<span class="code-keyword">from</span> trim.models <span class="code-keyword">import</span> fields</code></pre>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="tiny-title">
+                <p class="kicker">02 / Tiny example</p>
+                <h2 id="tiny-title">Start with a model that reads like its intent.</h2>
+                <p>This example uses a relation, a pair of integer defaults, and automatic creation and update timestamps.</p>
+                <div class="code-block doc-code">
+                    <div class="code-label"><span class="dot"></span> models.py</div>
+                    <pre><code><span class="code-keyword">class</span> StockChange(models.Model):
+    stockcount = fields.fk(StockCount)
+    from_count = fields.int(<span class="code-number">0</span>)
+    to_count = fields.int(<span class="code-number">1</span>)
+    created, updated = fields.dt_cu_pair()</code></pre>
+                </div>
+                <p class="api-note">The helper names describe the field’s role, while positional and keyword arguments continue through to the underlying Django field.</p>
+            </section>
+
+            <section class="doc-section" aria-labelledby="assets-title">
+                <p class="kicker">03 / Available assets</p>
+                <h2 id="assets-title">The useful half of the field shelf.</h2>
+                <div class="api-assets">
+                    <article>
+                        <span class="family-label">Text &amp; special text</span>
+                        <code>url</code> <code>text</code> <code>chars</code> <code>email</code>
+                        <code>binary</code> <code>slug</code> <code>ip_addr</code> <code>json</code>
+                    </article>
+                    <article>
+                        <span class="family-label">Boolean &amp; UUID</span>
+                        <code>null_bool</code> <code>true_bool</code> <code>false_bool</code>
+                        <code>boolean</code> <code>uuid_null</code> <code>pk_uuid</code> <code>uuid</code>
+                    </article>
+                    <article>
+                        <span class="family-label">Date &amp; time</span>
+                        <code>date</code> <code>datetime</code> <code>blank_dt</code>
+                        <code>dt_created</code> <code>dt_updated</code> <code>dt_cu_pair</code>
+                        <code>duration</code> <code>time</code>
+                    </article>
+                    <article>
+                        <span class="family-label">Relationships</span>
+                        <code>fk</code> <code>user_fk</code> <code>self_fk</code> <code>o2o</code>
+                        <code>user_o2o</code> <code>m2m</code> <code>self_m2m</code>
+                    </article>
+                    <article>
+                        <span class="family-label">Content types</span>
+                        <code>contenttype_fk</code> <code>generic_fk</code> <code>any</code>
+                    </article>
+                    <article>
+                        <span class="family-label">Numbers &amp; files</span>
+                        <code>integer</code> <code>float_</code> <code>small_int</code> <code>big_int</code>
+                        <code>pos_int</code> <code>decimal</code> <code>file</code> <code>image</code> <code>filepath</code>
+                    </article>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="params-title">
+                <p class="kicker">04 / Parameters</p>
+                <h2 id="params-title">Pass the arguments you already know.</h2>
+                <p>Helpers accept the arguments used by their Django equivalents. Defaults can be supplied directly, and keyword options such as <code>blank</code>, <code>null</code>, or <code>on_delete</code> remain available.</p>
+                <div class="api-example-list">
+                    <div class="api-example">
+                        <div>
+                            <span class="family-label">Default values</span>
+                            <p>Give a field a default without writing the field class.</p>
+                        </div>
+                        <div class="code-block doc-code">
+                            <pre><code>eggs = fields.int(<span class="code-number">6</span>)
+active = fields.bool_true()</code></pre>
+                        </div>
+                    </div>
+                    <div class="api-example">
+                        <div>
+                            <span class="family-label">Field options</span>
+                            <p>Continue to use normal Django keyword options.</p>
+                        </div>
+                        <div class="code-block doc-code">
+                            <pre><code>title = fields.chars(
+    max_length=<span class="code-number">120</span>,
+    blank=<span class="code-keyword">True</span>,
+)</code></pre>
+                        </div>
+                    </div>
+                    <div class="api-example">
+                        <div>
+                            <span class="family-label">Relations</span>
+                            <p>Provide the related model and deletion policy.</p>
+                        </div>
+                        <div class="code-block doc-code">
+                            <pre><code>owner = fields.fk(
+    <span class="code-string">"accounts.User"</span>,
+    on_delete=models.CASCADE,
+)</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="generic-title">
+                <p class="kicker">A little more power</p>
+                <h2 id="generic-title">Build a generic relation in one declaration.</h2>
+                <p>The <code>any</code> helper creates the three pieces needed to associate a model with an arbitrary object. Give the group a prefix to keep the generated names clear.</p>
+                <div class="code-block doc-code">
+                    <div class="code-label"><span class="dot"></span> generic association</div>
+                    <pre><code>unit, unit_content_type, unit_object_id = fields.any(
+    prefix=<span class="code-string">"unit"</span>,
+)</code></pre>
+                </div>
+            </section>
+
+            <section class="next-links" aria-labelledby="reference-title">
+                <p class="kicker">Continue reading</p>
+                <h2 id="reference-title">Use this page as a map.</h2>
+                <div class="next-link-grid">
+                    <a class="next-link" href="{% url 'home:fields' %}">
+                        <span>Fields guide</span><strong>↗</strong>
+                    </a>
+                    <a class="next-link" href="https://github.com/Strangemother/django-trim/blob/main/docs/models/fields.md">
+                        <span>Full field reference</span><strong>↗</strong>
+                    </a>
+                    <a class="next-link" href="https://github.com/Strangemother/django-trim/blob/main/docs/models/fields-auto.md">
+                        <span>Generated field list</span><strong>↗</strong>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <span>django-trim</span>
+        <span>MIT licensed · Built for people who like Django.</span>
+        <a href="https://github.com/Strangemother/django-trim">GitHub <span aria-hidden="true">↗</span></a>
+    </footer>
+</body>
+</html>

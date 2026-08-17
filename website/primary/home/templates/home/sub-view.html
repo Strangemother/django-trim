@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load link %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Use django-trim functional model fields to write clear, compatible Django models.">
+    {% link.css "css/home/home.css" %}
+    <title>Functional Fields | Django Trim</title>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="{% url 'home:home' %}">
+            <span>Django Trim</span>
+        </a>
+        <nav aria-label="Primary navigation">
+            <a href="{% url 'home:home' %}">Home</a>
+            <a class="nav-github" href="https://github.com/Strangemother/django-trim">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+    </header>
+
+    <main class="page-layout component-page">
+        {% include "home/_component_menu.html" %}
+        <div class="page-content">
+            <section class="component-hero" aria-labelledby="component-title">
+                <p class="kicker">Models / fields</p>
+                <h1 id="component-title">Functional fields.</h1>
+                <p class="component-lede">A small vocabulary for declaring common Django fields without giving up the models, migrations, and behavior you already trust.</p>
+                <div class="component-meta">
+                    <span>trim.models.fields</span>
+                    <span>Compatible with Django fields</span>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="why-title">
+                <p class="kicker">The idea</p>
+                <h2 id="why-title">Django, with the repetitive names trimmed away.</h2>
+                <p>Every helper shadows a standard Django field. The result is deliberately familiar: use a concise function while designing, then swap back to Django's built-in field whenever you need to.</p>
+                <p>That makes fields useful during the first pass of a project, when the model shape is changing quickly and clarity matters more than ceremony.</p>
+            </section>
+
+            <section class="doc-section" aria-labelledby="integrate-title">
+                <p class="kicker">Integrate</p>
+                <h2 id="integrate-title">One import, then keep modelling.</h2>
+                <p>Add django-trim to your project and import the field helpers from the models package.</p>
+                <div class="code-block doc-code">
+                    <div class="code-label"><span class="dot"></span> models.py</div>
+                    <pre><code><span class="code-keyword">from</span> django.db <span class="code-keyword">import</span> models
+<span class="code-keyword">from</span> trim.models <span class="code-keyword">import</span> fields
+
+<span class="code-keyword">class</span> StockChange(models.Model):
+    stockcount = fields.fk(StockCount)
+    from_count = fields.int(<span class="code-number">0</span>)
+    to_count = fields.int(<span class="code-number">1</span>)
+    created, updated = fields.dt_cu_pair()</code></pre>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="families-title">
+                <p class="kicker">Field families</p>
+                <h2 id="families-title">A shortcut for the shape in front of you.</h2>
+                <div class="field-families">
+                    <article>
+                        <span class="family-label">01 / text</span>
+                        <h3>Stringy values</h3>
+                        <p><code>url</code>, <code>text</code>, <code>chars</code>, <code>email</code>, <code>slug</code>, <code>ip_addr</code>, and <code>json</code>.</p>
+                    </article>
+                    <article>
+                        <span class="family-label">02 / state</span>
+                        <h3>Booleans &amp; UUIDs</h3>
+                        <p><code>null_bool</code>, <code>true_bool</code>, <code>false_bool</code>, <code>uuid</code>, and <code>pk_uuid</code>.</p>
+                    </article>
+                    <article>
+                        <span class="family-label">03 / time</span>
+                        <h3>Dates &amp; moments</h3>
+                        <p><code>date</code>, <code>datetime</code>, <code>dt_created</code>, <code>dt_updated</code>, <code>duration</code>, and <code>time</code>.</p>
+                    </article>
+                    <article>
+                        <span class="family-label">04 / relations</span>
+                        <h3>Connected models</h3>
+                        <p><code>fk</code>, <code>user_fk</code>, <code>self_fk</code>, <code>o2o</code>, <code>m2m</code>, and <code>self_m2m</code>.</p>
+                    </article>
+                    <article>
+                        <span class="family-label">05 / numbers</span>
+                        <h3>Counts &amp; precision</h3>
+                        <p><code>integer</code>, <code>float_</code>, <code>small_int</code>, <code>big_int</code>, <code>pos_int</code>, and <code>decimal</code>.</p>
+                    </article>
+                    <article>
+                        <span class="family-label">06 / files</span>
+                        <h3>Uploaded assets</h3>
+                        <p><code>file</code>, <code>image</code>, and <code>filepath</code> for common file-backed fields.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="doc-section split-doc" aria-labelledby="example-title">
+                <div>
+                    <p class="kicker">A useful pattern</p>
+                    <h2 id="example-title">Pairs for the moments worth remembering.</h2>
+                    <p><code>dt_cu_pair()</code> creates the conventional created and updated fields together, keeping audit timestamps consistent across your models.</p>
+                </div>
+                <div class="code-block doc-code">
+                    <div class="code-label"><span class="dot"></span> model timestamps</div>
+                    <pre><code>created, updated = fields.dt_cu_pair()</code></pre>
+                </div>
+            </section>
+
+            <section class="doc-section" aria-labelledby="alias-title">
+                <p class="kicker">Keep your vocabulary</p>
+                <h2 id="alias-title">Aliases make the helpers feel like yours.</h2>
+                <p>Field helpers include flipped aliases, so you can choose the naming direction that reads naturally in your project.</p>
+                <div class="code-block doc-code">
+                    <div class="code-label"><span class="dot"></span> equivalent names</div>
+                    <pre><code>user = fields.user_fk()
+owner = fields.fk_user()</code></pre>
+                </div>
+            </section>
+
+            <section class="next-links" aria-labelledby="next-title">
+                <p class="kicker">Continue with models</p>
+                <h2 id="next-title">There is more to trim.</h2>
+                <div class="next-link-grid">
+                    <a class="next-link" href="https://github.com/Strangemother/django-trim/blob/main/docs/models/fields-auto.md">
+                        <span>All field helpers</span><strong>↗</strong>
+                    </a>
+                    <a class="next-link" href="https://github.com/Strangemother/django-trim/blob/main/docs/models/auto_model_mixin.md">
+                        <span>Auto model mixin</span><strong>↗</strong>
+                    </a>
+                    <a class="next-link" href="https://github.com/Strangemother/django-trim/blob/main/docs/models/live.md">
+                        <span>Live model access</span><strong>↗</strong>
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <span>django-trim</span>
+        <span>MIT licensed · Built for people who like Django.</span>
+        <a href="https://github.com/Strangemother/django-trim">GitHub <span aria-hidden="true">↗</span></a>
+    </footer>
+</body>
+</html>
