@@ -3,7 +3,7 @@
     <!-- <p>Some of our favourite bits.</p> -->
     <div class="page-slider-container">
         <div class="left-cell">
-            <a href="#" class="left-button">Back</a>
+            <a href="#" class="left-button" aria-label="Show previous slide">Back</a>
         </div>
         <div class="center-cell">
             <div class="slide-container">
@@ -94,17 +94,48 @@
                 </div>
             </div>
 
-            <div class="pips-container">
+            <div class="pips-container" aria-label="Choose a slide">
                 <ul class="pips">
-                    <li></li>
-                    <li></li>
-                    <li></li>
-                    <li></li>
+                    <li><button type="button" aria-label="Show slide 1"></button></li>
+                    <li><button type="button" aria-label="Show slide 2"></button></li>
+                    <li><button type="button" aria-label="Show slide 3"></button></li>
+                    <li><button type="button" aria-label="Show slide 4"></button></li>
                 </ul>
             </div>
         </div>
         <div class="right-cell">
-            <a href="#" class="right-button">Next</a>
+            <a href="#" class="right-button" aria-label="Show next slide">Next</a>
         </div>
     </div>
 </section>
+
+<script>
+    (() => {
+        const slider = document.querySelector('.page-slider-container');
+        if (!slider) return;
+
+        const track = slider.querySelector('.slide-container');
+        const slides = slider.querySelectorAll('.slide');
+        const dots = slider.querySelectorAll('.pips button');
+        let current = 0;
+
+        const showSlide = (index) => {
+            current = (index + slides.length) % slides.length;
+            track.style.setProperty('--slide-index', current);
+            dots.forEach((dot, dotIndex) => {
+                dot.setAttribute('aria-current', dotIndex === current ? 'true' : 'false');
+            });
+        };
+
+        slider.querySelector('.left-button').addEventListener('click', (event) => {
+            event.preventDefault();
+            showSlide(current - 1);
+        });
+        slider.querySelector('.right-button').addEventListener('click', (event) => {
+            event.preventDefault();
+            showSlide(current + 1);
+        });
+        dots.forEach((dot, index) => dot.addEventListener('click', () => showSlide(index)));
+        showSlide(0);
+    })();
+</script>
